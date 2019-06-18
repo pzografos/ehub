@@ -1,6 +1,7 @@
 package com.tp.ehub.common.types;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * The <code>Command</code> represents a system trigger which aims at creating a
@@ -14,4 +15,11 @@ public interface Command {
 	 * @return the timestamp of the message
 	 */
 	OffsetDateTime timestamp();
+	
+	/**
+	 * Get the company UUID of the message
+	 * 
+	 * @return the company UUID of the message
+	 */
+	UUID company();
 }

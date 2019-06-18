@@ -1,8 +1,8 @@
 package com.tp.ehub.common.types;
 
-public interface CommandHandler <C extends Command>{
+public interface CommandHandler{
 
-	void accept(C command);
+	void accept(Command command);
 	
-	void handleError(C command);
+	void handleError(Command command);
 }

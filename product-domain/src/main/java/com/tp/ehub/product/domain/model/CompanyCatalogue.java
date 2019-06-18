@@ -10,7 +10,7 @@ public class CompanyCatalogue implements Entity<UUID>{
 	
 	private UUID companyId;
 	
-	private Map<UUID, String> codes = new HashMap<UUID, String>();
+	private Map<UUID, Product> products = new HashMap<UUID, Product>();
 	
 	public CompanyCatalogue(UUID companyId) {
 		this.companyId = companyId;
@@ -25,8 +25,8 @@ public class CompanyCatalogue implements Entity<UUID>{
 		return companyId;
 	}
 
-	public Map<UUID, String> getCodes() {
-		return codes;
+	public Map<UUID, Product> getProducts() {
+		return products;
 	}
 
 }

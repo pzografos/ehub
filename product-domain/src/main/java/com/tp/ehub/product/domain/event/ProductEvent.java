@@ -11,6 +11,6 @@ public interface ProductEvent extends Event{
 	 * 
 	 * @return the product UUID of the message
 	 */
-	UUID id();
+	UUID product();
 	
 }

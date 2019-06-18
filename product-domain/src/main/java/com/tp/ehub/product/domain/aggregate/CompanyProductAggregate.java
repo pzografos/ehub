@@ -7,6 +7,8 @@ import com.tp.ehub.product.domain.event.ProductCreated;
 import com.tp.ehub.product.domain.event.ProductDeleted;
 import com.tp.ehub.product.domain.event.ProductEvent;
 import com.tp.ehub.product.domain.model.CompanyCatalogue;
+import com.tp.ehub.product.domain.model.Product;
+import com.tp.ehub.product.domain.model.ProductStatus;
 
 public class CompanyProductAggregate extends AbstractAggregate<ProductEvent, CompanyCatalogue, UUID> {
 	
@@ -14,9 +16,14 @@ public class CompanyProductAggregate extends AbstractAggregate<ProductEvent, Com
 	protected CompanyCatalogue mutate(CompanyCatalogue entity, ProductEvent event) {
 		//TODO replace with visitor pattern
 		if (event.getClass().isInstance(ProductDeleted.class)) {
-			entity.getCodes().remove(event.id());
+			entity.getProducts().get(event.product()).setStatus(ProductStatus.DELETED);
 		} else if (event.getClass().isInstance(ProductCreated.class)) {
-			entity.getCodes().put(event.id(), ((ProductCreated)event).code());
+			ProductCreated productCreated = (ProductCreated) event;
+			//TODO Check if another product with the same code exists in the company's products
+			Product product = new Product(UUID.randomUUID());
+			product.setStatus(ProductStatus.CREATED);
+			product.setCode(productCreated.code());
+			entity.getProducts().put(product.getProductId(), product);
 		} 
 		return entity;
 	}

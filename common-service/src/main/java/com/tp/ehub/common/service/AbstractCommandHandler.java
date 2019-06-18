@@ -7,18 +7,17 @@ import java.util.function.Function;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.types.Aggregate;
-import com.tp.ehub.common.types.AggregateEntity;
 import com.tp.ehub.common.types.Command;
 import com.tp.ehub.common.types.CommandHandler;
+import com.tp.ehub.common.types.Entity;
 import com.tp.ehub.common.types.Event;
 
-public abstract class AbstractCommandHandler<C extends Command, E extends Event, T extends AggregateEntity<K>, K>
-		implements CommandHandler<C> {
+public abstract class AbstractCommandHandler<E extends Event, T extends Entity<K>, K> implements CommandHandler {
 
 	@Inject
 	private Aggregate<E, T, K> aggregate;
 
-	public final void accept(C command) {
+	public final void accept(Command command) {
 		aggregate.load(aggregateKey().apply(command));
 		try {
 			commandToEvents().apply(command, aggregate.root()).stream().forEach(aggregate::apply);
@@ -29,7 +28,7 @@ public abstract class AbstractCommandHandler<C extends Command, E extends Event,
 	}
 	
 	@Override
-	public final void handleError(C command) {
+	public final void handleError(Command command) {
 		throw new RuntimeException(String.format("Could not apply command {}", command));
 	}
 
@@ -40,7 +39,7 @@ public abstract class AbstractCommandHandler<C extends Command, E extends Event,
 	 * 
 	 * @return the events to apply
 	 */
-	public abstract BiFunction<C, T, Collection<E>> commandToEvents();
+	public abstract BiFunction<Command, T, Collection<E>> commandToEvents();
 	
-	public abstract Function<C, K> aggregateKey();
+	public abstract Function<Command, K> aggregateKey();
 }
