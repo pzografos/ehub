@@ -1,14 +1,33 @@
 package com.tp.ehub.product.domain.event;
 
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.BuilderVisibility;
-import org.immutables.value.Value.Style.ImplementationVisibility;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * Product is deleted
  */
-@Value.Style(visibility = ImplementationVisibility.PACKAGE, builderVisibility = BuilderVisibility.PACKAGE, depluralize = true, jdkOnly = true)
-@Value.Immutable
-public interface ProductDeleted extends ProductEvent{
+public final class ProductDeleted implements ProductEvent{
+	
+	private OffsetDateTime timestamp;
+	
+	private UUID product;
+
+	public void timestamp(OffsetDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	@Override
+	public OffsetDateTime timestamp() {
+		return timestamp;
+	}
+
+	public void product(UUID product) {
+		this.product = product;
+	}
+	
+	@Override
+	public UUID product() {
+		return product;
+	}
 
 }

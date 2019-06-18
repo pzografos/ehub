@@ -1,4 +1,6 @@
-package com.tp.ehub.common.types;
+package com.tp.ehub.common.service;
+
+import com.tp.ehub.common.model.Command;
 
 public interface CommandHandler{
 

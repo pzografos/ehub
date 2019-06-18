@@ -2,7 +2,7 @@ package com.tp.ehub.product.domain.model;
 
 import java.util.UUID;
 
-import com.tp.ehub.common.types.Entity;
+import com.tp.ehub.common.model.Entity;
 
 public class Product implements Entity<UUID>{
 

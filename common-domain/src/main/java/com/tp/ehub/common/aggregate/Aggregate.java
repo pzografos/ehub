@@ -1,4 +1,7 @@
-package com.tp.ehub.common.types;
+package com.tp.ehub.common.aggregate;
+
+import com.tp.ehub.common.event.Event;
+import com.tp.ehub.common.model.Entity;
 
 /**
  * The <code>Aggregate</code> represents a partial snapshot of the system's

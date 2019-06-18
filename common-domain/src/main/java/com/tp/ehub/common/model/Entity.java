@@ -1,4 +1,4 @@
-package com.tp.ehub.common.types;
+package com.tp.ehub.common.model;
 
 /**
  * The <code>Entity</code> represents an object that is not fundamentally

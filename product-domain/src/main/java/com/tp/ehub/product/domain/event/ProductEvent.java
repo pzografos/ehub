@@ -2,7 +2,7 @@ package com.tp.ehub.product.domain.event;
 
 import java.util.UUID;
 
-import com.tp.ehub.common.types.Event;
+import com.tp.ehub.common.event.Event;
 
 public interface ProductEvent extends Event{
 

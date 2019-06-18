@@ -1,16 +1,13 @@
 package com.tp.ehub.common.service;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.common.types.Aggregate;
-import com.tp.ehub.common.types.Command;
-import com.tp.ehub.common.types.CommandHandler;
-import com.tp.ehub.common.types.Entity;
-import com.tp.ehub.common.types.Event;
+import com.tp.ehub.common.aggregate.Aggregate;
+import com.tp.ehub.common.event.Event;
+import com.tp.ehub.common.model.Command;
+import com.tp.ehub.common.model.Entity;
 
 public abstract class AbstractCommandHandler<E extends Event, T extends Entity<K>, K> implements CommandHandler {
 
@@ -18,9 +15,9 @@ public abstract class AbstractCommandHandler<E extends Event, T extends Entity<K
 	private Aggregate<E, T, K> aggregate;
 
 	public final void accept(Command command) {
-		aggregate.load(aggregateKey().apply(command));
+		aggregate.load(aggregateKey(command));
 		try {
-			commandToEvents().apply(command, aggregate.root()).stream().forEach(aggregate::apply);
+			events(aggregate.root(), command).stream().forEach(aggregate::apply);
 			aggregate.publish();
 		} catch (IllegalArgumentException e) {
 			handleError(command);
@@ -37,9 +34,11 @@ public abstract class AbstractCommandHandler<E extends Event, T extends Entity<K
 	 * produces the events to apply on the aggregate. It is responsible for
 	 * implementing all the validations and the actual business logic.
 	 * 
+	 * @param rootEntity the root entity
+	 * @param the command to apply
 	 * @return the events to apply
 	 */
-	public abstract BiFunction<Command, T, Collection<E>> commandToEvents();
+	public abstract Collection<E> events(T rootEntity, Command command);
 	
-	public abstract Function<Command, K> aggregateKey();
+	public abstract K aggregateKey(Command command);
 }

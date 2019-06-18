@@ -16,6 +16,11 @@
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>product-domain</artifactId>
 			<version>${project.version}</version>		
+		</dependency>
+		<dependency>
+			<groupId>com.tp.ehub</groupId>
+			<artifactId>commands</artifactId>
+			<version>${project.version}</version>		
 		</dependency>	
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
@@ -38,6 +43,6 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-		</dependency>
+		</dependency>	
 	</dependencies>
 </project>

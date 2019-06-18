@@ -1,4 +1,4 @@
-package com.tp.ehub.common.types;
+package com.tp.ehub.common.event;
 
 import java.util.Collection;
 import java.util.function.Predicate;

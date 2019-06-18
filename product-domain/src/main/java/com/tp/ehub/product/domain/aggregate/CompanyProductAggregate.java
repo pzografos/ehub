@@ -2,7 +2,7 @@ package com.tp.ehub.product.domain.aggregate;
 
 import java.util.UUID;
 
-import com.tp.ehub.common.service.AbstractAggregate;
+import com.tp.ehub.common.aggregate.AbstractAggregate;
 import com.tp.ehub.product.domain.event.ProductCreated;
 import com.tp.ehub.product.domain.event.ProductDeleted;
 import com.tp.ehub.product.domain.event.ProductEvent;
@@ -20,7 +20,7 @@ public class CompanyProductAggregate extends AbstractAggregate<ProductEvent, Com
 		} else if (event.getClass().isInstance(ProductCreated.class)) {
 			ProductCreated productCreated = (ProductCreated) event;
 			//TODO Check if another product with the same code exists in the company's products
-			Product product = new Product(UUID.randomUUID());
+			Product product = new Product(productCreated.product());
 			product.setStatus(ProductStatus.CREATED);
 			product.setCode(productCreated.code());
 			entity.getProducts().put(product.getProductId(), product);

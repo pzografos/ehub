@@ -1,4 +1,4 @@
-package com.tp.ehub.common.service;
+package com.tp.ehub.common.aggregate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,11 +7,10 @@ import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.common.types.Aggregate;
-import com.tp.ehub.common.types.Entity;
-import com.tp.ehub.common.types.Event;
-import com.tp.ehub.common.types.EventStore;
-import com.tp.ehub.common.types.Repository;
+import com.tp.ehub.common.event.Event;
+import com.tp.ehub.common.event.EventStore;
+import com.tp.ehub.common.model.Entity;
+import com.tp.ehub.common.model.Repository;
 
 /**
  * Base implementation for the <code>AggregateEntity</code>.

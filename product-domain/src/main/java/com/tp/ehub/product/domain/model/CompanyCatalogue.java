@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.tp.ehub.common.types.Entity;
+import com.tp.ehub.common.model.Entity;
 
 public class CompanyCatalogue implements Entity<UUID>{
 	

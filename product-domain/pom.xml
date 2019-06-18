@@ -14,13 +14,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
-			<artifactId>common-types</artifactId>
+			<artifactId>common-domain</artifactId>
 			<version>${project.version}</version>		
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
-			<artifactId>common-service</artifactId>
-			<version>${project.version}</version>
+			<artifactId>commands</artifactId>
+			<version>${project.version}</version>		
 		</dependency>		
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -33,10 +33,6 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-		</dependency>
-	    <dependency>
-	      <groupId>org.immutables</groupId>
-	      <artifactId>value</artifactId>
-	    </dependency>		
+		</dependency>	
 	</dependencies>
 </project>

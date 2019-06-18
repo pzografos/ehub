@@ -1,4 +1,4 @@
-package com.tp.ehub.common.types;
+package com.tp.ehub.common.model;
 
 import java.util.Optional;
 
