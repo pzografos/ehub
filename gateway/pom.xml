@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ehub-gateway</artifactId>
+    <packaging>war</packaging>
+    <name>E-Hub Gateway</name>
+
+    <parent>
+        <groupId>com.tp.ehub</groupId>
+        <artifactId>ehub-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../ehub-parent/pom.xml</relativePath>
+    </parent>
+
+    <build>
+        <finalName>gateway</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <skipDockerBuild>false</skipDockerBuild>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tp.ehub</groupId>
+            <artifactId>command</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>com.tp.ehub</groupId>
+            <artifactId>messaging-kafka</artifactId>
+        </dependency>    
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>         
+        <dependency>
+            <groupId>com.tp.ehub</groupId>
+            <artifactId>common-domain</artifactId>
+        </dependency>   
+        <dependency>
+            <groupId>com.tp.ehub</groupId>
+            <artifactId>common-infrastructure</artifactId>
+        </dependency>            
+    </dependencies>
+
+</project>
