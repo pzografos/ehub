@@ -3,8 +3,17 @@ package com.tp.ehub.product.model.event;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tp.ehub.model.event.AbstractEvent;
+import com.tp.ehub.serialization.JsonMessage;
 
+@JsonMessage
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ 
+	    @Type(value = ProductCreated.class, name = "Product.Created"),
+		@Type(value = ProductDeleted.class, name = "Product.Deleted") })
 public abstract class ProductEvent extends AbstractEvent<UUID> {
 
 	protected UUID productId;

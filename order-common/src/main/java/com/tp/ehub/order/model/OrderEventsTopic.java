@@ -15,6 +15,6 @@ public class OrderEventsTopic extends AbstractTopic<UUID, OrderEvent> {
 	}
 
 	private OrderEventsTopic(ObjectMapper mapper) {
-		super("commands", mapper, UUID.class, OrderEvent.class);
+		super("order-events", mapper, UUID.class, OrderEvent.class);
 	}
 }

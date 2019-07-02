@@ -44,7 +44,7 @@ public class ProductResource {
 
 			CreateProductCommand command = new CreateProductCommand();
 			command.setCompanyId(UUID.randomUUID());
-			command.setCode("1234");
+			command.setCode(productCode);
 			command.setDescription("very good product");
 			command.setName("theProduct");
 			command.setQuantity(2L);

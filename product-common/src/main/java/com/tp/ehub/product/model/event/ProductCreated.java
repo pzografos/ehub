@@ -1,7 +1,9 @@
 package com.tp.ehub.product.model.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("Product.Created")
 public class ProductCreated extends ProductEvent {
 
 	public static final String NAME = "PRODUCT_CREATED";
