@@ -60,6 +60,8 @@ public class ProductResource {
 	
 	@GET
 	public Response getProducts() {
+		LOGGER.info("This is a test info log");
+		LOGGER.debug("This is a test debug log");
 		return Response.ok("Hello from products").build();
 	}
 

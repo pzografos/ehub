@@ -22,14 +22,6 @@ public class Main {
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 		
-		try {
-			// TODO: remove when docker compose is fixed
-			Thread.sleep(20000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		CommandHandler commandHandler = container.select(CommandHandler.class).get();
 		OrderEventHandler orderEventHandler = container.select(OrderEventHandler.class).get();
 

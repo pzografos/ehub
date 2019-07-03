@@ -17,7 +17,7 @@
 		<push.docker.image.tag>false</push.docker.image.tag>
 		<io.projectreactor.kafka>1.1.0.RELEASE</io.projectreactor.kafka>
 		<io.lettuce.core>5.1.7.RELEASE</io.lettuce.core>
-		<ch.qos.logback>1.2.1</ch.qos.logback>
+		<ch.qos.logback>1.2.3</ch.qos.logback>
 		<weld.se.core.version>3.0.1.Final</weld.se.core.version>
 		<java.ee.version>8.0</java.ee.version>
 		<com.fasterxml.jackson>2.9.9</com.fasterxml.jackson>
@@ -126,7 +126,7 @@
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${ch.qos.logback}</version>
-			</dependency>
+			</dependency>		
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
