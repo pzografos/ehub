@@ -45,8 +45,7 @@ public class TopicKafkaSender<K, M extends Message> implements MessageSender<K, 
 		sender.send(outboundFlux.map(this::senderRecord))
 			.doOnError(e -> LOGGER.error("Send failed", e))
 			.doOnNext(r -> LOGGER.info(String.format("Successfully sent message to topic %s at partion %d with offset %d", topic.getName(), r.recordMetadata().partition(), r.recordMetadata().offset())))
-			.collectList()
-			.block();
+			.subscribe();
 	}
 	
 	@Override

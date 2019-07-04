@@ -1,5 +1,7 @@
 package com.tp.ehub.repository.message;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -27,13 +29,17 @@ public abstract class AbstractMessageStore<K, M extends Message> implements Mess
 
 	@Override
 	public Stream<M> getbyKey(K key) {
-		return receiver.receive(key)
-				.doOnError(e -> LOGGER.error("Send failed", e))
+		
+		List<M> messages = new ArrayList<>();
+		
+		receiver.receive(key)
+				.doOnError(e -> LOGGER.error("Receive failed", e))
 				.takeUntil(receiver::isLast)
 				.map(MessageRecord::getMessage)
-				.collectList()
-				.block()
-				.stream();
+				.doOnNext(m -> messages.add(m))
+				.doOnComplete(() -> LOGGER.info("Drain for key {} completed", key));
+		
+		return messages.stream();
 	}
 
 	@Override
