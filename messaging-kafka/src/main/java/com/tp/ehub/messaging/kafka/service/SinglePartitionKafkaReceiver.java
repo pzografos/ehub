@@ -10,6 +10,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tp.ehub.messaging.kafka.KafkaCluster;
 import com.tp.ehub.messaging.kafka.KafkaRecord;
@@ -57,7 +59,7 @@ public class SinglePartitionKafkaReceiver<K, M extends Message> implements KeyMe
 		receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(topic.getName(), kafkaRecord.getPartition()))); 
 		
 		Consumer<String, byte[]> consumer = ConsumerFactory.INSTANCE.createConsumer(receiverOptions);
-		
+						
 		return kafkaRecord.getOffset().equals(getLastOffset(consumer));
 	}
 		

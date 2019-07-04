@@ -17,5 +17,5 @@ public class OrderCreated extends OrderEvent {
 	public String getEventName() {
 		return NAME;
 	}
-	
+
 }

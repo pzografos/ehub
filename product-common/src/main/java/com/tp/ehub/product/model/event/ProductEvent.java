@@ -3,6 +3,7 @@ package com.tp.ehub.product.model.event;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -50,6 +51,12 @@ public abstract class ProductEvent extends AbstractEvent<UUID> {
 	@Override
 	public void setTimestamp(ZonedDateTime timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	@JsonIgnore
+	@Override
+	public UUID getKey() {
+		return companyId;
 	}
 	
 }

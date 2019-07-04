@@ -2,7 +2,6 @@ package com.tp.ehub.model.event;
 
 import java.time.ZonedDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tp.ehub.serialization.JsonMessage;
 
 /**
@@ -12,21 +11,9 @@ import com.tp.ehub.serialization.JsonMessage;
 @JsonMessage
 public abstract class AbstractEvent<K> implements Event<K> {
 
-	protected K key;
-
 	protected ZonedDateTime timestamp;
 	
 	protected Long version;
-	
-	@Override
-	@JsonIgnore
-	public K getKey() {
-		return key;
-	}
-
-	public void setKey(K key) {
-		this.key = key;
-	}
 
 	@Override
 	public ZonedDateTime getTimestamp() {
