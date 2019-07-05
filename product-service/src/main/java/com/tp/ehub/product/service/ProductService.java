@@ -15,12 +15,11 @@ import com.tp.ehub.repository.AggregateRepository;
 public class ProductService {
 
 	@Inject
-	private AggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> aggregateRepository;
+	AggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> aggregateRepository;
 
 	public void createProduct(Product product, UUID companyId) {
 		ProductCatalogueAggregate aggregate = aggregateRepository.get(companyId);
-		boolean createProductAllowed = aggregate.getRoot().getProducts().values().stream()
-				.noneMatch(p -> p.getCode().equals(product.getCode()));
+		boolean createProductAllowed = aggregate.getRoot().getProducts().values().stream().noneMatch(p -> p.getCode().equals(product.getCode()));
 		if (createProductAllowed) {
 			ProductCreated productCreated = new ProductCreated();
 			productCreated.setProductId(product.getId());

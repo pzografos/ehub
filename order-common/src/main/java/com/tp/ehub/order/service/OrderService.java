@@ -4,5 +4,5 @@ import com.tp.ehub.order.model.Order;
 
 public interface OrderService {
 
-	public Order placeOrder(Order order);
+	Order placeOrder(Order order);
 }

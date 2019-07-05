@@ -10,12 +10,11 @@ import com.tp.ehub.repository.EntityCache;
 
 /**
  * Temp implementation
- * 
+ * <p>
  * TODO: replace by Redis implementation
- *
  */
 @Dependent
-public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCatalogue>{
+public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCatalogue> {
 
 	@Override
 	public Optional<ProductCatalogue> get(UUID id) {
@@ -24,12 +23,12 @@ public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCat
 
 	@Override
 	public void cache(ProductCatalogue entity) {
-		
+
 	}
 
 	@Override
 	public void evict(UUID id) {
-		
+
 	}
 
 }

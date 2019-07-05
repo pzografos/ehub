@@ -10,8 +10,8 @@ import com.tp.ehub.command.DeleteProductCommand;
  * be used by <code>JacksonMapper</code>.
  *
  */
-public class CommandsModule extends SimpleModule{
-	
+public class CommandsModule extends SimpleModule {
+
 	public CommandsModule() {
 		super();
 

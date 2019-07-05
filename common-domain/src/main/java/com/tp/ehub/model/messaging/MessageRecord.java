@@ -2,8 +2,8 @@ package com.tp.ehub.model.messaging;
 
 public interface MessageRecord<K, M extends Message>{
 	
-	public K getKey();
+	K getKey();
 	
-	public M getMessage();
+	M getMessage();
 	
 }

@@ -21,5 +21,5 @@ public interface MessageSender<K, M extends Message> extends Closeable {
 	 * 
 	 * @param outboundFlux the stream of messages to send
 	 */
-	public void send(Flux<MessageRecord<K, M>> outboundFlux);
+	void send(Flux<MessageRecord<K, M>> outboundFlux);
 }

@@ -6,10 +6,10 @@ import com.tp.ehub.model.entity.Entity;
 
 public interface EntityCache<K, T extends Entity<K>> {
 
-	public Optional<T> get(K id);
+	Optional<T> get(K id);
 	
-	public void cache(T entity);
+	void cache(T entity);
 	
-	public void evict(K id);
+	void evict(K id);
 }
 

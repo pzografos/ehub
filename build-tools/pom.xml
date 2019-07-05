@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.tp.ehub</groupId>
+	<artifactId>ehub-build-tools</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>EHUB Build Tools Module</name>
+
+	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker.maven.plugin.version}</version>
+				<configuration>
+					<skipDockerBuild>true</skipDockerBuild>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+
+	<distributionManagement>
+		<repository>
+			<id>inopus.artifactory</id>
+			<name>release</name>
+			<url>http://192.168.50.121/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>inopus.artifactory</id>
+			<name>snapshot</name>
+			<url>http://192.168.50.121/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>	
+
+</project>

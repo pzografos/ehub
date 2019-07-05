@@ -20,6 +20,7 @@ import reactor.kafka.receiver.ReceiverOptions;
 
 public class ConsumerGroupKafkaReceiver<K, M extends Message> implements GlobalMessageReceiver<K,M>{
 
+
 	private KafkaCluster kafka;
 	
 	private Topic<K,M> topic;

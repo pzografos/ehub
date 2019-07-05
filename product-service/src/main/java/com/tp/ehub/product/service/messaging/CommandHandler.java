@@ -17,20 +17,17 @@ import com.tp.ehub.service.messaging.GlobalMessageReceiver;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 
-public class CommandHandler implements Consumer<Command>{
+public class CommandHandler implements Consumer<Command> {
 
 	@Inject
-	@Receiver("commands-receiver")
-	private GlobalMessageReceiver<String, Command> commandsReceiver;
-	
+	@Receiver("commands")
+	GlobalMessageReceiver<String, Command> commandsReceiver;
+
 	@Inject
-	private ProductService service;
-	
+	ProductService service;
+
 	public void run(Scheduler productScheduler) {
-		final Flux<Command> commandsFlux = commandsReceiver.receive("product_command_receiver_v1.0", true)
-				.map(MessageRecord::getMessage)
-				.subscribeOn(productScheduler)
-				;
+		final Flux<Command> commandsFlux = commandsReceiver.receive("product_command_receiver_v1.0", true).map(MessageRecord::getMessage).subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
 	}
 

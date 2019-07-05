@@ -10,8 +10,7 @@ import com.tp.ehub.product.model.event.ProductEvent;
 import com.tp.ehub.repository.aggregate.AbstractAggregateRepository;
 
 @Dependent
-public class ProductCatalogueRepository
-		extends AbstractAggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> {
+public class ProductCatalogueRepository extends AbstractAggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> {
 
 	public ProductCatalogueRepository() {
 		super();

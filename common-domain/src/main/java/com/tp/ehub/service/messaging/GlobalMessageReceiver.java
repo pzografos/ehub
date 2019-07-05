@@ -28,6 +28,6 @@ public interface GlobalMessageReceiver<K, M extends Message> {
 	 *                   just the ones that arrive from the function call onwards
 	 * @return the messages for the group
 	 */
-	public Flux<MessageRecord<K, M>> receive(String consumerId, boolean fromStart);
+	Flux<MessageRecord<K, M>> receive(String consumerId, boolean fromStart);
 
 }

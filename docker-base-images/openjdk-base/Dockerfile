@@ -1,4 +1,4 @@
-FROM openjdk:11-slim
+FROM azul/zulu-openjdk-alpine:11
 
 ENV APPLICATION_HOME=/opt/application
 

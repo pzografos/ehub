@@ -19,26 +19,30 @@ import reactor.core.publisher.Flux;
 
 public abstract class AbstractMessageStore<K, M extends Message> implements MessageStore<K, M> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMessageStore.class);
-
 	@Inject
-	private KeyMessageReceiver<K, M> receiver;
+	Logger log;
 
-	@Inject
-	private MessageSender<K, M> sender;
+	KeyMessageReceiver<K, M> receiver;
+
+	MessageSender<K, M> sender;
+
+	protected AbstractMessageStore(MessageSender<K, M> sender, KeyMessageReceiver<K, M> receiver) {
+		this.sender = sender;
+		this.receiver = receiver;
+	}
 
 	@Override
 	public Stream<M> getbyKey(K key) {
-		
+
 		List<M> messages = new ArrayList<>();
-		
+
 		receiver.receive(key)
-				.doOnError(e -> LOGGER.error("Receive failed", e))
+				.doOnError(e -> log.error("Receive failed", e))
 				.takeUntil(receiver::isLast)
 				.map(MessageRecord::getMessage)
 				.doOnNext(m -> messages.add(m))
-				.doOnComplete(() -> LOGGER.info("Drain for key {} completed", key));
-		
+				.doOnComplete(() -> log.info("Drain for key {} completed", key));
+
 		return messages.stream();
 	}
 

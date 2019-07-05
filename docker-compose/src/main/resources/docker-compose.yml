@@ -16,16 +16,39 @@ services:
   product-service:
     image: tp/product-service
     ports:
-      - 8787:8787
+      - 8788:8787
     depends_on:
       - kafka
+      - redis
     environment:
       - KAFKA_BROKERS=kafka:9092
-      - REDIS_NODES=redis://192.168.3.3:7000,redis://192.168.3.3:7001,redis://192.168.3.3:7002
+      - REDIS_NODES=redis://redis:7000
     networks:
       core:
         aliases:
           - product-service
+  order-service:
+    image: tp/order-service
+    ports:
+      - 8787:8787
+    depends_on:
+      - kafka
+      - redis
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_NODES=redis://redis:7000
+    networks:
+      core:
+        aliases:
+          - product-service
+  redis:
+    image: redis
+    ports:
+      - 7000:7000
+    networks:
+      core:
+        aliases:
+          - redis
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
