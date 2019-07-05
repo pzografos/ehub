@@ -36,28 +36,17 @@ public class ProductResource {
 	CommandService commandService;
 
 	@POST
-	public Response createProduct() {
+	public Response createProduct(CreateProductCommand command) {
 
 		try {
-
-			String productCode = "1234";
-
-			CreateProductCommand command = new CreateProductCommand();
-			command.setCompanyId(UUID.randomUUID());
-			command.setCode(productCode);
-			command.setDescription("very good product");
-			command.setName("theProduct");
-			command.setQuantity(2L);
-			command.setTimestamp(ZonedDateTime.now());
-
 			commandService.create(command);
-			return Response.created(URI.create(uriInfo.getPath() + "/" + productCode)).build();
+			return Response.created(URI.create(uriInfo.getPath() + "/" + command.getCode())).build();
 		} catch (Exception e) {
 			LOGGER.error("Create product failed", e);
 			throw new InternalServerErrorException(e);
 		}
 	}
-	
+
 	@GET
 	public Response getProducts() {
 		LOGGER.info("This is a test info log");

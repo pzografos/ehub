@@ -14,25 +14,24 @@ import com.tp.ehub.service.messaging.GlobalMessageReceiver;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 
-public class OrderEventHandler implements Consumer<OrderEvent>{
+public class OrderEventHandler implements Consumer<OrderEvent> {
 
 	@Inject
-	@Receiver("order-events-receiver")
-	private GlobalMessageReceiver<UUID, OrderEvent> orderEventsReceiver;
-	
+	@Receiver("order-events")
+	GlobalMessageReceiver<UUID, OrderEvent> orderEventsReceiver;
+
 	@Inject
-	private ProductService service;
+	ProductService service;
 
 	public void run(Scheduler productScheduler) {
-		final Flux<OrderEvent> eventsFlux = orderEventsReceiver.receive("product_order_event_receiver_v1.0", true)
-				.map(MessageRecord::getMessage).subscribeOn(productScheduler);
+		final Flux<OrderEvent> eventsFlux = orderEventsReceiver.receive("product_order_event_receiver_v1.0", true).map(MessageRecord::getMessage).subscribeOn(productScheduler);
 		eventsFlux.subscribe(this);
 	}
-	
+
 	@Override
 	public void accept(OrderEvent orderEvent) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

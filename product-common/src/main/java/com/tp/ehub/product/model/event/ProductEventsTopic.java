@@ -5,16 +5,19 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.factory.ObjectMapperFactory;
 import com.tp.ehub.messaging.kafka.AbstractTopic;
+import com.tp.ehub.messaging.kafka.service.Topic;
 
-public class ProductEventsTopic extends AbstractTopic<UUID, ProductEvent>{
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-	public static ProductEventsTopic get() {
-		ObjectMapper mapper = ObjectMapperFactory.newInstance();
-		mapper.registerModule(new ProductEventsModule());
-		return new ProductEventsTopic(mapper);
+@ApplicationScoped
+@Named("product-events")
+public class ProductEventsTopic extends AbstractTopic<UUID, ProductEvent> {
+
+	@Inject
+	public ProductEventsTopic(@Named("objectMapper") ObjectMapper objectMapper) {
+		super("product-events", objectMapper, UUID.class, ProductEvent.class);
 	}
-	
-	private ProductEventsTopic(ObjectMapper mapper) {
-		super("product-events", mapper, UUID.class, ProductEvent.class);
-	}
+
 }

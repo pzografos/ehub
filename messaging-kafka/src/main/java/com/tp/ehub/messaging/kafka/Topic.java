@@ -14,15 +14,15 @@ import com.tp.ehub.model.messaging.Message;
  */
 public interface Topic<K, M extends Message> {
 
-	public String getName();
+	String getName();
 
-	public Function<String, K> getKeyDeserializer();
+	Function<String, K> getKeyDeserializer();
 
-	public Function<K, String> getKeySerializer();
+	Function<K, String> getKeySerializer();
 
-	public Function<byte[], M> getValueDeserializer();
+	Function<byte[], M> getValueDeserializer();
 
-	public Function<M, byte[]> getValueSerializer();
+	Function<M, byte[]> getValueSerializer();
 
 	/**
 	 * A function from the message key to the <code>String</code> value responsible

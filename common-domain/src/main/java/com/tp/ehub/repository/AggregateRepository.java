@@ -6,7 +6,7 @@ import com.tp.ehub.model.event.Event;
 
 public interface AggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> {
 
-	public A get(K id);
+	A get(K id);
 
-	public void save(A aggregate);
+	void save(A aggregate);
 }

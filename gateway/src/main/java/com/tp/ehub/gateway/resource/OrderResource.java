@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.tp.ehub.command.CreateOrderCommand;
 import com.tp.ehub.gateway.service.CommandService;
 
 @Path("orders")
@@ -27,18 +28,13 @@ public class OrderResource {
 	CommandService commandService;
 
 	@POST
-	public Response createOrder() {
-
+	public Response createOrder(CreateOrderCommand createOrderCommand) {
 		try {
-			String productCode = "1234";
-//			Long quantity = 1L;
-
-//			commandService.create(new CreateOrderCommand(productCode, quantity));
-			return Response.created(URI.create(uriInfo.getPath() + "/" + productCode)).build();
+			commandService.create(createOrderCommand);
+			return Response.created(URI.create(uriInfo.getPath() + "/" + createOrderCommand.getKey())).build();
 		} catch (Exception e) {
 			throw new InternalServerErrorException(e);
 		}
 	}
-
 
 }

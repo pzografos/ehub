@@ -20,12 +20,12 @@ public interface MessageStore<K, M extends Message> {
 	 * @param key the message key
 	 * @return the list of messages
 	 */
-	public Stream<M> getbyKey(K key);
+	Stream<M> getbyKey(K key);
 
 	/**
 	 * Publishes a stream of messages to the store
 	 * 
 	 * @param messages the messages to publish
 	 */
-	public void publish(Stream<MessageRecord<K, M>> messages);
+	void publish(Stream<MessageRecord<K, M>> messages);
 }

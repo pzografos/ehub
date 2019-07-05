@@ -17,7 +17,7 @@ import com.tp.ehub.repository.MessageStore;
 
 /**
  * Base implementation of the <code>AggregateRepository</code>.
- * 
+ *
  * <p>
  * It loads the aggregate by first looking for the aggregate root in the cache.
  * If not found it creates a new one. It then adds all the events from the point
@@ -30,22 +30,22 @@ import com.tp.ehub.repository.MessageStore;
  * if the entity is loading it from a previous point will make no difference in
  * functionality only in performance.
  * </p>
- * 
+ *
  * @param <A> The type of the <code>Aggregate</code>
  * @param <E> The type of the <code>Event</code> that the aggregate is made of
  * @param <T> The type of the aggregate's root entity
  * @param <K> The type of the aggregate's root entity unique identifier
  */
-public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K>
-		implements AggregateRepository<A, E, T, K> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregateRepository.class);
+public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> implements AggregateRepository<A, E, T, K> {
 
 	@Inject
-	private EntityCache<K, T> cache;
+	Logger log;
 
 	@Inject
-	private MessageStore<K, E> store;
+	EntityCache<K, T> cache;
+
+	@Inject
+	MessageStore<K, E> store;
 
 	protected AbstractAggregateRepository() {
 
@@ -72,14 +72,14 @@ public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, 
 			store.publish(aggregate.getNewEvents().map(EventMessageRecord::new));
 			cache.cache(aggregate.getRoot());
 		} catch (Exception ex) {
-			LOGGER.error(String.format("Failed to save %s. Reason: %s.", aggregate.getRoot().toString(), ex.getMessage()), ex);
+			log.error(String.format("Failed to save %s. Reason: %s.", aggregate.getRoot().toString(), ex.getMessage()), ex);
 			cache.evict(aggregate.getRoot().getId());
 		}
 	}
 
 	/**
 	 * Specifies a way to create the aggregate from a root entity
-	 * 
+	 *
 	 * @param root the root entity to start with
 	 * @return the updated Aggregate
 	 */
@@ -87,10 +87,10 @@ public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, 
 
 	/**
 	 * Specifies a way to create a new entity for the aggregate
-	 * 
+	 *
 	 * @param id the new enitity's ID
 	 * @return the new entity instance
 	 */
 	protected abstract T create(K id);
-	
+
 }

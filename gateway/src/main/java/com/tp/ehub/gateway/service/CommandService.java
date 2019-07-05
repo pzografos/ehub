@@ -1,20 +1,22 @@
 package com.tp.ehub.gateway.service;
 
-import static reactor.core.publisher.Flux.just;
-
-import javax.inject.Inject;
-
 import com.tp.ehub.command.Command;
 import com.tp.ehub.messaging.kafka.KafkaRecord;
+import com.tp.ehub.messaging.kafka.service.Sender;
+import com.tp.ehub.messaging.kafka.service.TopicKafkaSender;
 import com.tp.ehub.service.messaging.MessageSender;
+import reactor.core.publisher.Flux;
+
+import javax.inject.Inject;
 
 public class CommandService {
 
 	@Inject
-	private MessageSender<String, Command> sender;
-	
-	public void create(Command command) throws Exception {
-		sender.send(just(new KafkaRecord<String, Command>(command.getKey(), command)));
+	@Sender("commands")
+	MessageSender<String, Command> commandsTopicSender;
+
+	public void create(Command command) {
+		commandsTopicSender.send(Flux.just(new KafkaRecord<String, Command>(command.getKey(), command)));
 	}
 
 }

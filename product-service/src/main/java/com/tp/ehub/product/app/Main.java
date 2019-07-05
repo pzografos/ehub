@@ -13,7 +13,7 @@ import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 public class Main {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class Main {
 		Scheduler productScheduler = Schedulers.newParallel("product-service-scheduler", 2);
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
-		
+
 		CommandHandler commandHandler = container.select(CommandHandler.class).get();
 		OrderEventHandler orderEventHandler = container.select(OrderEventHandler.class).get();
 

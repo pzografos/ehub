@@ -20,7 +20,7 @@ public interface Event<K> extends Message, Versionable {
 	 * 
 	 * @return the event key
 	 */
-	public K getKey();
+	K getKey();
 
 	/**
 	 * Gets a name for this event that uniquely identifies it among other events in
@@ -28,5 +28,5 @@ public interface Event<K> extends Message, Versionable {
 	 * 
 	 * @return the event name
 	 */
-	public String getEventName();
+	String getEventName();
 }

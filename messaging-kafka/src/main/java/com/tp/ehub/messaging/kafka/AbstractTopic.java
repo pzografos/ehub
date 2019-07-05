@@ -38,13 +38,13 @@ public abstract class AbstractTopic<K, M extends Message> implements Topic<K, M>
 		if (keyClass.equals(String.class)) {
 			return s -> (K) s;
 		}
-		
+
 		Method keyReaderMethod = StringCreatorExtractor.stringCreator(keyClass);
-		
+
 		if (keyReaderMethod == null) {
 			return null;
 		}
-		
+
 		return keyValue -> {
 			try {
 				return (K) keyReaderMethod.invoke(null, keyValue);

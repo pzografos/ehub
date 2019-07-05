@@ -11,12 +11,11 @@ import com.tp.ehub.serialization.JsonMessage;
 
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ 
-	    @Type(value = OrderCreated.class, name = "Order.Created")})
+@JsonSubTypes({ @Type(value = OrderCreated.class, name = "Order.Created") })
 public abstract class OrderEvent extends AbstractEvent<UUID> {
 
 	protected UUID orderId;
-	
+
 	protected UUID companyId;
 
 	protected OrderEvent(UUID orderId) {
@@ -26,7 +25,7 @@ public abstract class OrderEvent extends AbstractEvent<UUID> {
 	public UUID getOrderId() {
 		return orderId;
 	}
-	
+
 	public UUID getCompanyId() {
 		return companyId;
 	}
@@ -40,5 +39,5 @@ public abstract class OrderEvent extends AbstractEvent<UUID> {
 	public UUID getKey() {
 		return companyId;
 	}
-	
+
 }

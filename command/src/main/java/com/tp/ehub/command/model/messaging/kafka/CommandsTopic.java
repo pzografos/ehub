@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.command.Command;
 import com.tp.ehub.factory.ObjectMapperFactory;
 import com.tp.ehub.messaging.kafka.AbstractTopic;
+import com.tp.ehub.messaging.kafka.service.Topic;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@ApplicationScoped
+@Named("commands")
 public class CommandsTopic extends AbstractTopic<String, Command> {
 
-	public static CommandsTopic get() {
-		ObjectMapper mapper = ObjectMapperFactory.newInstance();
-		mapper.registerModule(new CommandsModule());
-		return new CommandsTopic(mapper);
-	}
-	
-	private CommandsTopic(ObjectMapper mapper) {
-		super("commands", mapper, String.class, Command.class);
+	@Inject
+	public CommandsTopic(@Named("objectMapper") ObjectMapper objectMapper) {
+		super("commands", objectMapper, String.class, Command.class);
 	}
 }
