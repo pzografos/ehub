@@ -37,9 +37,9 @@ public class EhubPropertyProducer {
 	}
 
 	private String getKey(final InjectionPoint ip) {
-		return (ip.getAnnotated().isAnnotationPresent(EhubProperty.class) && !ip.getAnnotated().getAnnotation(EhubProperty.class).value().isEmpty()) ?
-				ip.getAnnotated().getAnnotation(EhubProperty.class).value() :
-				ip.getMember().getName();
+		return (ip.getAnnotated().isAnnotationPresent(EhubProperty.class) && !ip.getAnnotated().getAnnotation(EhubProperty.class).value().isEmpty())
+				? ip.getAnnotated().getAnnotation(EhubProperty.class).value()
+				: ip.getMember().getName();
 	}
 
 	@PostConstruct

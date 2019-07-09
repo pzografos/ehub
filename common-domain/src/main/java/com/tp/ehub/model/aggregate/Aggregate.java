@@ -17,10 +17,12 @@ import com.tp.ehub.model.event.Event;
  * </ul>
  * </p>
  * 
- * @param <E> The type of the <code>Event</code> that the aggregate is made
- * of
- * @param <T> The type of the aggregate's root entity
- * @param <K> The type of the aggregate's root entity unique identifier
+ * @param <E> 
+ * 			  The type of the <code>Event</code> that the aggregate is made of
+ * @param <T>
+ *            The type of the aggregate's root entity
+ * @param <K>
+ *            The type of the aggregate's root entity unique identifier
  */
 public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> {
 
@@ -34,7 +36,8 @@ public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> {
 	/**
 	 * Applies a new Event to the aggregate
 	 * 
-	 * @param E the type of event to apply
+	 * @param event
+	 *            the event to apply
 	 */
 	void apply(E event);
 

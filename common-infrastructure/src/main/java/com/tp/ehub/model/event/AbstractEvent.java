@@ -12,7 +12,7 @@ import com.tp.ehub.serialization.JsonMessage;
 public abstract class AbstractEvent<K> implements Event<K> {
 
 	protected ZonedDateTime timestamp;
-	
+
 	protected Long version;
 
 	@Override
@@ -32,5 +32,5 @@ public abstract class AbstractEvent<K> implements Event<K> {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-	
+
 }

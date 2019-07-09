@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 public class OrderCreated extends OrderEvent {
 
 	public static final String NAME = "ORDER_CREATED";
-	
+
 	public OrderCreated(UUID orderId) {
 		super(orderId);
 	}

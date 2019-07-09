@@ -1,8 +1,6 @@
 package com.tp.ehub.gateway.resource;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

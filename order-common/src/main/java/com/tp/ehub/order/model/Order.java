@@ -11,9 +11,9 @@ public class Order implements Identifiable<UUID> {
 	private UUID id;
 
 	private Map<String, Integer> basket;
-	
+
 	private ZonedDateTime timestamp;
-	
+
 	public Order() {
 
 	}

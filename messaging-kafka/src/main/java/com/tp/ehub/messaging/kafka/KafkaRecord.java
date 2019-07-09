@@ -4,20 +4,20 @@ import com.tp.ehub.model.messaging.Message;
 import com.tp.ehub.model.messaging.MessageRecord;
 
 public class KafkaRecord<K, M extends Message> implements MessageRecord<K, M> {
-	
+
 	private K key;
-	
+
 	private M message;
-	
+
 	private Integer partition;
-	
+
 	private Long offset;
-		
+
 	public KafkaRecord(K key, M message) {
 		this.key = key;
 		this.message = message;
 	}
-	
+
 	public KafkaRecord(K key, M message, Integer partition, Long offset) {
 		this.key = key;
 		this.message = message;
@@ -42,5 +42,5 @@ public class KafkaRecord<K, M extends Message> implements MessageRecord<K, M> {
 	public Long getOffset() {
 		return offset;
 	}
-	
+
 }

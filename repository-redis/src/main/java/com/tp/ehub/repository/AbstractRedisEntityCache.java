@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import com.tp.ehub.database.redis.RedisCluster;
 import com.tp.ehub.model.entity.Entity;
-import com.tp.ehub.repository.EntityCache;
 
 import io.lettuce.core.TransactionResult;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -50,7 +49,7 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
 	public final void evict(K id) {
 		// TODO implement
@@ -66,7 +65,8 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 		boolean exists = sync.exists(storeRedisKey) != 0L;
 
 		if (!exists && updatedElement == null) {
-			// no-op delete for migrated old state values (e.g. multiple tombstones)
+			// no-op delete for migrated old state values (e.g. multiple
+			// tombstones)
 			return this;
 		}
 
@@ -82,7 +82,9 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 
 		Exception exception = result.stream()
 				.filter(commandResult -> Exception.class.isAssignableFrom(commandResult.getClass()))
-				.map(Exception.class::cast).findFirst().orElse(null);
+				.map(Exception.class::cast)
+				.findFirst()
+				.orElse(null);
 
 		if (exception != null) {
 			throw new RuntimeException(exception);

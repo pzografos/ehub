@@ -63,18 +63,22 @@
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>command</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>common-domain</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>common-infrastructure</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>messaging-kafka</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.projectreactor.kafka</groupId>
@@ -83,14 +87,17 @@
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>repository-redis</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>order-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>product-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

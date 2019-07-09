@@ -18,10 +18,12 @@
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>messaging-kafka</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>common-domain</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

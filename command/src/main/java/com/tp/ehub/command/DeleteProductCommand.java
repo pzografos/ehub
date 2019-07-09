@@ -6,19 +6,23 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+/**
+ * A <code>Command</code> to delete an existing product
+ *
+ */
 @JsonTypeName("Commands.DeleteProduct")
-public class DeleteProductCommand implements Command{
+public class DeleteProductCommand implements Command {
 
 	public static final String NAME = "DELETE_PRODUCT";
-	
+
 	private ZonedDateTime timestamp;
-	
+
 	private UUID productId;
 
 	private UUID companyId;
 
 	public DeleteProductCommand() {
-		
+
 	}
 
 	@Override

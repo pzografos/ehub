@@ -9,9 +9,10 @@ import com.tp.ehub.model.messaging.Message;
  * <p>
  * Events have keys that are not unique per event but help the application to
  * group the events in a meaningful way.
- * </p> 
+ * </p>
  * 
- * @param <K> the type of key to user for the event
+ * @param <K>
+ *            the type of key to user for the event
  */
 public interface Event<K> extends Message, Versionable {
 
@@ -23,8 +24,8 @@ public interface Event<K> extends Message, Versionable {
 	K getKey();
 
 	/**
-	 * Gets a name for this event that uniquely identifies it among other events in
-	 * the system
+	 * Gets a name for this event that uniquely identifies it among other events
+	 * in the system
 	 * 
 	 * @return the event name
 	 */

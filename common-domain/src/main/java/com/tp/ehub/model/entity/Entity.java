@@ -11,7 +11,8 @@ import com.tp.ehub.model.Identifiable;
  * save and retrieve it safely from an data store
  * </p>
  * 
- * @param <K> the type of this entity's unique identifier
+ * @param <K>
+ *            the type of this entity's unique identifier
  */
 public interface Entity<K> extends Identifiable<K>{
 

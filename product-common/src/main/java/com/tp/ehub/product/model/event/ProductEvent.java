@@ -12,15 +12,14 @@ import com.tp.ehub.serialization.JsonMessage;
 
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ 
-	    @Type(value = ProductCreated.class, name = "Product.Created"),
-		@Type(value = ProductDeleted.class, name = "Product.Deleted") })
+@JsonSubTypes({ @Type(value = ProductCreated.class, name = "Product.Created"), 
+				@Type(value = ProductDeleted.class, name = "Product.Deleted") })
 public abstract class ProductEvent extends AbstractEvent<UUID> {
 
 	protected UUID productId;
-	
+
 	private UUID companyId;
-	
+
 	private ZonedDateTime timestamp;
 
 	protected ProductEvent() {
@@ -52,11 +51,11 @@ public abstract class ProductEvent extends AbstractEvent<UUID> {
 	public void setTimestamp(ZonedDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
-	
+
 	@JsonIgnore
 	@Override
 	public UUID getKey() {
 		return companyId;
 	}
-	
+
 }

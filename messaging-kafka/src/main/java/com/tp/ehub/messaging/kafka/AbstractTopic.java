@@ -65,8 +65,7 @@ public abstract class AbstractTopic<K, M extends Message> implements Topic<K, M>
 			try {
 				return mapper.readValue(message, messageClass);
 			} catch (IOException e) {
-				throw new IllegalArgumentException(
-						format("Failed to deserialize message from `%s`", new String(message)), e);
+				throw new IllegalArgumentException(format("Failed to deserialize message from `%s`", new String(message)), e);
 			}
 		};
 	}

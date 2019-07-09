@@ -25,8 +25,8 @@ public interface Topic<K, M extends Message> {
 	Function<M, byte[]> getValueSerializer();
 
 	/**
-	 * A function from the message key to the <code>String</code> value responsible
-	 * for partition calculation.
+	 * A function from the message key to the <code>String</code> value
+	 * responsible for partition calculation.
 	 * 
 	 * @return the function of <code>K</code> to <code>String</code>
 	 * @see #partitionFn()
@@ -57,8 +57,8 @@ public interface Topic<K, M extends Message> {
 	}
 
 	/**
-	 * How many times a KafkaProducer will retry sending a batch of messages before
-	 * throwing an exception for this topic
+	 * How many times a KafkaProducer will retry sending a batch of messages
+	 * before throwing an exception for this topic
 	 * 
 	 * @return the number of producer retries
 	 */

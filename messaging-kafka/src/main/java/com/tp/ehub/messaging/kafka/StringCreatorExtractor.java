@@ -7,21 +7,20 @@ import java.lang.reflect.Method;
 
 final class StringCreatorExtractor {
 
-	private StringCreatorExtractor() {}
-	
+	private StringCreatorExtractor() {
+	}
+
 	static Method stringCreator(Class<?> keyType) {
-		for (Method method: keyType.getMethods()) {
-			if (
-				asList("valueOf", "fromString", "from").contains(method.getName())
-				&& method.getParameterCount() == 1
-				&& method.getParameterTypes()[0].equals(String.class)
-				&& method.getReturnType().equals(keyType)
-				&& isStatic(method.getModifiers())
-			) {
+		for (Method method : keyType.getMethods()) {
+			if (asList("valueOf", "fromString", "from").contains(method.getName()) 
+					&& method.getParameterCount() == 1 
+					&& method.getParameterTypes()[0].equals(String.class)
+					&& method.getReturnType().equals(keyType) 
+					&& isStatic(method.getModifiers())) {
 				return method;
 			}
 		}
-		
+
 		return null;
 	}
 }
