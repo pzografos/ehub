@@ -3,7 +3,6 @@ package com.tp.ehub.order.service.messaging;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -14,13 +13,12 @@ import com.tp.ehub.model.messaging.MessageRecord;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.order.service.OrderService;
 import com.tp.ehub.service.messaging.GlobalMessageReceiver;
+
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 
 @ApplicationScoped
 public class CommandHandler implements Consumer<Command> {
-
-
 
 	@Inject
 	@Receiver("commands")

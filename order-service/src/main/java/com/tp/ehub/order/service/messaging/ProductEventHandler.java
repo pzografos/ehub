@@ -1,22 +1,21 @@
 package com.tp.ehub.order.service.messaging;
 
-import com.tp.ehub.command.Command;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+
 import com.tp.ehub.messaging.kafka.service.ConsumerGroupKafkaReceiver;
 import com.tp.ehub.messaging.kafka.service.Receiver;
-import com.tp.ehub.messaging.kafka.service.SinglePartitionKafkaReceiver;
 import com.tp.ehub.model.messaging.MessageRecord;
 import com.tp.ehub.order.service.OrderService;
 import com.tp.ehub.product.model.event.ProductEvent;
-import com.tp.ehub.service.messaging.GlobalMessageReceiver;
-import org.slf4j.Logger;
+
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.UUID;
-import java.util.function.Consumer;
 
 @ApplicationScoped
 public class ProductEventHandler implements Consumer<ProductEvent> {

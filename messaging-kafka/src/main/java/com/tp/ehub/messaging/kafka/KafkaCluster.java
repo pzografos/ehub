@@ -1,10 +1,9 @@
 package com.tp.ehub.messaging.kafka;
 
-import com.tp.ehub.common.infra.property.EhubProperty;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.Serializable;
+
+import com.tp.ehub.common.infra.property.EhubProperty;
 
 /**
  * Provides all the environment-specific details of a Kafka cluster installation

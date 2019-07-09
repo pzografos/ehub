@@ -22,20 +22,20 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 import reactor.kafka.sender.SenderRecord;
 
-public class TopicKafkaSender<K, M extends Message> implements MessageSender<K, M>{
+public class TopicKafkaSender<K, M extends Message> implements MessageSender<K, M> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TopicKafkaSender.class);
 
 	private KafkaCluster kafka;
 
-	private Topic<K,M> topic;
+	private Topic<K, M> topic;
 
 	private KafkaSender<String, byte[]> sender;
 
 	public TopicKafkaSender(KafkaCluster kafka, Topic<K, M> topic) {
 		this.kafka = kafka;
 		this.topic = topic;
-		SenderOptions<String, byte[]> senderOptions = SenderOptions.<String, byte[]>create(producerProps());
+		SenderOptions<String, byte[]> senderOptions = SenderOptions.<String, byte[]> create(producerProps());
 		senderOptions.stopOnError(true);
 		this.sender = KafkaSender.create(senderOptions);
 	}
@@ -43,9 +43,10 @@ public class TopicKafkaSender<K, M extends Message> implements MessageSender<K, 
 	@Override
 	public void send(Flux<MessageRecord<K, M>> outboundFlux) {
 		sender.send(outboundFlux.map(this::senderRecord))
-			.doOnError(e -> LOGGER.error("Send failed", e))
-			.doOnNext(r -> LOGGER.info(String.format("Successfully sent message to topic %s at partion %d with offset %d", topic.getName(), r.recordMetadata().partition(), r.recordMetadata().offset())))
-			.subscribe();
+				.doOnError(e -> LOGGER.error("Send failed", e))
+				.doOnNext(r -> LOGGER.info(String.format("Successfully sent message to topic %s at partion %d with offset %d", topic.getName(), r.recordMetadata().partition(),
+						r.recordMetadata().offset())))
+				.subscribe();
 	}
 
 	@Override
@@ -53,9 +54,8 @@ public class TopicKafkaSender<K, M extends Message> implements MessageSender<K, 
 		sender.close();
 	}
 
-	protected Map<String, Object> producerProps(){
-		return Map.ofEntries(
-				new AbstractMap.SimpleEntry<>(ProducerConfig.RETRIES_CONFIG, topic.getProducerRetries()),
+	protected Map<String, Object> producerProps() {
+		return Map.ofEntries(new AbstractMap.SimpleEntry<>(ProducerConfig.RETRIES_CONFIG, topic.getProducerRetries()),
 				new AbstractMap.SimpleEntry<>(ProducerConfig.ACKS_CONFIG, topic.getProducerAcknowledgements()),
 				new AbstractMap.SimpleEntry<>(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBrokers()),
 				new AbstractMap.SimpleEntry<>(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class),

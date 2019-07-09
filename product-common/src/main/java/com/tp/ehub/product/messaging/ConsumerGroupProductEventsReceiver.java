@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ConsumerGroupProductEventsReceiver extends ConsumerGroupKafkaReceiver<UUID, ProductEvent> {
 
 	@Inject
-	public ConsumerGroupProductEventsReceiver(@Named("product-events") Topic<UUID, ProductEvent> topic,KafkaCluster kafka) {
+	public ConsumerGroupProductEventsReceiver(@Named("product-events") Topic<UUID, ProductEvent> topic, KafkaCluster kafka) {
 		super(kafka, topic);
 	}
 }

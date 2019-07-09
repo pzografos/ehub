@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 public class ProductDeleted extends ProductEvent {
 
 	public static final String NAME = "PRODUCT_DELETED";
-	
+
 	public ProductDeleted() {
 		super();
 	}

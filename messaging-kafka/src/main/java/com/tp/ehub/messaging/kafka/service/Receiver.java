@@ -9,8 +9,8 @@ import static java.lang.annotation.ElementType.*;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@Target({FIELD, METHOD, TYPE, PARAMETER})
+@Target({ FIELD, METHOD, TYPE, PARAMETER })
 public @interface Receiver {
-	
+
 	String value();
 }

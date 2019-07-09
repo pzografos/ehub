@@ -7,21 +7,25 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+/**
+ * A <code>Command</code> to create a new order
+ *
+ */
 @JsonTypeName("Commands.CreateOrder")
 public class CreateOrderCommand implements Command {
 
 	public static final String NAME = "CREATE_ORDER";
-	
+
 	private UUID companyId;
-	
+
 	private Map<String, Integer> basket;
-	
+
 	private ZonedDateTime timestamp;
 
 	public CreateOrderCommand() {
 
 	}
-	
+
 	public UUID getCompanyId() {
 		return companyId;
 	}
@@ -52,7 +56,7 @@ public class CreateOrderCommand implements Command {
 	public String getCommandName() {
 		return NAME;
 	}
-	
+
 	@Override
 	@JsonIgnore
 	public String getKey() {

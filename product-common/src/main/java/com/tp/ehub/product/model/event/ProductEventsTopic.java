@@ -2,14 +2,12 @@ package com.tp.ehub.product.model.event;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tp.ehub.factory.ObjectMapperFactory;
-import com.tp.ehub.messaging.kafka.AbstractTopic;
-import com.tp.ehub.messaging.kafka.service.Topic;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tp.ehub.messaging.kafka.AbstractTopic;
 
 @ApplicationScoped
 @Named("product-events")

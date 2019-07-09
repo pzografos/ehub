@@ -64,10 +64,12 @@
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>common-domain</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>common-infrastructure</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

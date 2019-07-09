@@ -16,7 +16,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ TYPE, METHOD, FIELD, PARAMETER })
 public @interface EhubProperty {
 
-	@Nonbinding String value() default "";
+	@Nonbinding
+	String value() default "";
 
-	@Nonbinding boolean required() default true;
+	@Nonbinding
+	boolean required() default true;
 }

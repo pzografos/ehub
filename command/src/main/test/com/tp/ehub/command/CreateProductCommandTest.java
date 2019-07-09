@@ -7,6 +7,8 @@ import static org.junit.Assert.assertThat;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +16,8 @@ import com.tp.ehub.command.model.messaging.kafka.CommandsTopic;
 
 public class CreateProductCommandTest {
 	
-	private CommandsTopic topic = CommandsTopic.get();
+	@Inject
+	private CommandsTopic topic;
 
 	@DisplayName("Serialization")
 	@Test
