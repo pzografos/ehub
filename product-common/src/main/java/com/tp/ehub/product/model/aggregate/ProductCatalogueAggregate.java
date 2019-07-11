@@ -2,7 +2,7 @@ package com.tp.ehub.product.model.aggregate;
 
 import java.util.UUID;
 
-import com.tp.ehub.model.aggregate.AbstractAggregate;
+import com.tp.ehub.common.infra.model.AbstractAggregate;
 import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductStatus;

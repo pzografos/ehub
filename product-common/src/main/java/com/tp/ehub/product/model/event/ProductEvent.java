@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tp.ehub.model.event.AbstractEvent;
-import com.tp.ehub.serialization.JsonMessage;
+import com.tp.ehub.common.infra.model.AbstractEvent;
+import com.tp.ehub.common.infra.serialization.JsonMessage;
 
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")

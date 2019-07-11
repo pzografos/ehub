@@ -1,9 +1,9 @@
 package com.tp.ehub.product.messaging;
 
-import com.tp.ehub.messaging.kafka.KafkaCluster;
-import com.tp.ehub.messaging.kafka.Topic;
-import com.tp.ehub.messaging.kafka.service.ConsumerGroupKafkaReceiver;
-import com.tp.ehub.messaging.kafka.service.Receiver;
+import com.tp.ehub.common.infra.messaging.kafka.KafkaCluster;
+import com.tp.ehub.common.infra.messaging.kafka.Topic;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.ConsumerGroupKafkaReceiver;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.Receiver;
 import com.tp.ehub.product.model.event.ProductEvent;
 
 import javax.enterprise.context.ApplicationScoped;

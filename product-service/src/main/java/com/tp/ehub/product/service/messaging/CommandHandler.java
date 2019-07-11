@@ -8,11 +8,11 @@ import javax.inject.Inject;
 import com.tp.ehub.command.Command;
 import com.tp.ehub.command.CreateProductCommand;
 import com.tp.ehub.command.DeleteProductCommand;
+import com.tp.ehub.common.domain.messaging.MessageRecord;
+import com.tp.ehub.common.domain.messaging.receiver.GlobalMessageReceiver;
 import com.tp.ehub.messaging.kafka.service.Receiver;
-import com.tp.ehub.model.messaging.MessageRecord;
 import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.service.ProductService;
-import com.tp.ehub.service.messaging.GlobalMessageReceiver;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;

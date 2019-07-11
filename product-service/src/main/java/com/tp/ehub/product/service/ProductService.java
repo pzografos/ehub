@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import com.tp.ehub.common.domain.repository.AggregateRepository;
 import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.aggregate.ProductCatalogueAggregate;
 import com.tp.ehub.product.model.event.ProductCreated;
 import com.tp.ehub.product.model.event.ProductDeleted;
 import com.tp.ehub.product.model.event.ProductEvent;
-import com.tp.ehub.repository.AggregateRepository;
 
 public class ProductService {
 

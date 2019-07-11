@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 
+import com.tp.ehub.common.domain.repository.RootEntityCache;
 import com.tp.ehub.product.model.ProductCatalogue;
-import com.tp.ehub.repository.EntityCache;
 
 /**
  * Temp implementation
@@ -14,7 +14,7 @@ import com.tp.ehub.repository.EntityCache;
  * TODO: replace by Redis implementation
  */
 @Dependent
-public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCatalogue> {
+public class ProductCatalogueEntityCache implements RootEntityCache<UUID, ProductCatalogue> {
 
 	@Override
 	public Optional<ProductCatalogue> get(UUID id) {

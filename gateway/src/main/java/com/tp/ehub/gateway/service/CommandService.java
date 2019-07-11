@@ -3,9 +3,9 @@ package com.tp.ehub.gateway.service;
 import javax.inject.Inject;
 
 import com.tp.ehub.command.Command;
-import com.tp.ehub.messaging.kafka.KafkaRecord;
-import com.tp.ehub.messaging.kafka.service.Sender;
-import com.tp.ehub.service.messaging.MessageSender;
+import com.tp.ehub.common.domain.messaging.sender.MessageSender;
+import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
+import com.tp.ehub.common.infra.messaging.kafka.sender.Sender;
 
 import reactor.core.publisher.Flux;
 

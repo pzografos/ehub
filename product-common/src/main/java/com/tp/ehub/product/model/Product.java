@@ -2,9 +2,9 @@ package com.tp.ehub.product.model;
 
 import java.util.UUID;
 
-import com.tp.ehub.model.entity.Entity;
+import com.tp.ehub.common.domain.model.RootEntity;
 
-public class Product implements Entity<UUID> {
+public class Product implements RootEntity<UUID> {
 
 	private UUID productId;
 

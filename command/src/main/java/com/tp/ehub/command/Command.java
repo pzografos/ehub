@@ -3,8 +3,8 @@ package com.tp.ehub.command;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tp.ehub.model.messaging.Message;
-import com.tp.ehub.serialization.JsonMessage;
+import com.tp.ehub.common.domain.messaging.Message;
+import com.tp.ehub.common.infra.serialization.JsonMessage;
 
 /**
  * The <code>Command</code> represents a trigger for the system. In its most
