@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.tp.ehub.command.model.messaging.kafka.CommandsTopic;
+import com.tp.ehub.command.messaging.CommandsTopic;
 
 public class CreateProductCommandTest {
 	

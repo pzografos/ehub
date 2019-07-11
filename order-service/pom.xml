@@ -10,7 +10,7 @@
         <groupId>com.tp.ehub</groupId>
         <artifactId>ehub-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../ehub-parent/pom.xml</relativePath>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <build>
@@ -73,20 +73,6 @@
         <dependency>
             <groupId>com.tp.ehub</groupId>
             <artifactId>common-infrastructure</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tp.ehub</groupId>
-            <artifactId>messaging-kafka</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.kafka</groupId>
-            <artifactId>reactor-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.tp.ehub</groupId>
-            <artifactId>repository-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

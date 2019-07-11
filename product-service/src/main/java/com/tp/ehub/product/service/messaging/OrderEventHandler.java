@@ -5,11 +5,11 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.messaging.kafka.service.Receiver;
-import com.tp.ehub.model.messaging.MessageRecord;
+import com.tp.ehub.common.domain.messaging.MessageRecord;
+import com.tp.ehub.common.domain.messaging.receiver.GlobalMessageReceiver;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.Receiver;
 import com.tp.ehub.order.model.event.OrderEvent;
 import com.tp.ehub.product.service.ProductService;
-import com.tp.ehub.service.messaging.GlobalMessageReceiver;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;

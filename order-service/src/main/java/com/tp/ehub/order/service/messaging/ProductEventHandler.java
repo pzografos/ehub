@@ -8,9 +8,9 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.tp.ehub.messaging.kafka.service.ConsumerGroupKafkaReceiver;
-import com.tp.ehub.messaging.kafka.service.Receiver;
-import com.tp.ehub.model.messaging.MessageRecord;
+import com.tp.ehub.common.domain.messaging.MessageRecord;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.ConsumerGroupKafkaReceiver;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.Receiver;
 import com.tp.ehub.order.service.OrderService;
 import com.tp.ehub.product.model.event.ProductEvent;
 

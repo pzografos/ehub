@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-import com.tp.ehub.model.Identifiable;
+import com.tp.ehub.common.domain.model.Identifiable;
 
 public class Order implements Identifiable<UUID> {
 

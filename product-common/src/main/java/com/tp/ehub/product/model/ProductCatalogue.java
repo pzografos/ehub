@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.tp.ehub.model.entity.Entity;
+import com.tp.ehub.common.domain.model.RootEntity;
 
-public class ProductCatalogue implements Entity<UUID> {
+public class ProductCatalogue implements RootEntity<UUID> {
 
 	private UUID companyId;
 

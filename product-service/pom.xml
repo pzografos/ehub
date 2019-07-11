@@ -11,7 +11,7 @@
 		<groupId>com.tp.ehub</groupId>
 		<artifactId>ehub-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../ehub-parent/pom.xml</relativePath>
+		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
 	<build>
