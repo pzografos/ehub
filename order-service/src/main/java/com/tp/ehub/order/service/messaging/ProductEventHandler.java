@@ -1,6 +1,5 @@
 package com.tp.ehub.order.service.messaging;
 
-import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -9,8 +8,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.infra.messaging.kafka.receiver.ConsumerGroupKafkaReceiver;
-import com.tp.ehub.common.infra.messaging.kafka.receiver.Receiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.order.service.OrderService;
 import com.tp.ehub.product.model.event.ProductEvent;
 
@@ -24,8 +23,7 @@ public class ProductEventHandler implements Consumer<ProductEvent> {
 	Logger log;
 
 	@Inject
-	@Receiver("product-events")
-	ConsumerGroupKafkaReceiver<UUID, ProductEvent> productEventsReceiver;
+	MessageReceiver receiver;
 
 	@Inject
 	OrderService orderService;
@@ -38,7 +36,11 @@ public class ProductEventHandler implements Consumer<ProductEvent> {
 	}
 
 	public void run(Scheduler scheduler) {
-		final Flux<ProductEvent> commandsFlux = productEventsReceiver.receive("product_event_receiver_v1.0", true).map(MessageRecord::getMessage).subscribeOn(scheduler);
-		commandsFlux.subscribe(this);
+		
+		final Flux<ProductEvent> eventsFlux = receiver.receiveAll(ProductEvent.class, new MessageReceiverOptions("product_event_receiver_v1.0", true)) 
+				.map(MessageRecord::getMessage)
+				.subscribeOn(scheduler);
+		
+		eventsFlux.subscribe(this);		
 	}
 }

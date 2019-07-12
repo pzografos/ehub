@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @param <M>
  *            The type of messages to store
  */
-public interface MessageStore<K, M extends Message> {
+public interface MessageStore<K, M extends Message<K>> {
 
 	/**
 	 * Retrieves all messages for the given key.

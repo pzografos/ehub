@@ -3,7 +3,7 @@ package com.tp.ehub.common.infra.messaging.kafka;
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
 
-public class KafkaRecord<K, M extends Message> implements MessageRecord<K, M> {
+public class KafkaRecord<K, M extends Message<K>> implements MessageRecord<K, M> {
 
 	private K key;
 

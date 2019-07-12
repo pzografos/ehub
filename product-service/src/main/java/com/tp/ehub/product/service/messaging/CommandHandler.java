@@ -9,8 +9,8 @@ import com.tp.ehub.command.Command;
 import com.tp.ehub.command.CreateProductCommand;
 import com.tp.ehub.command.DeleteProductCommand;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.messaging.receiver.GlobalMessageReceiver;
-import com.tp.ehub.messaging.kafka.service.Receiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.service.ProductService;
 
@@ -20,14 +20,15 @@ import reactor.core.scheduler.Scheduler;
 public class CommandHandler implements Consumer<Command> {
 
 	@Inject
-	@Receiver("commands")
-	GlobalMessageReceiver<String, Command> commandsReceiver;
+	MessageReceiver commandsReceiver;
 
 	@Inject
 	ProductService service;
 
 	public void run(Scheduler productScheduler) {
-		final Flux<Command> commandsFlux = commandsReceiver.receive("product_command_receiver_v1.0", true).map(MessageRecord::getMessage).subscribeOn(productScheduler);
+		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, new MessageReceiverOptions("product_command_receiver_v1.0", true)) 
+				.map(MessageRecord::getMessage)
+				.subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
 	}
 

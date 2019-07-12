@@ -1,4 +1,4 @@
-package com.tp.ehub.common.infra.messaging.kafka;
+package com.tp.ehub.common.infra.messaging.kafka.container;
 
 import static org.apache.kafka.common.utils.Utils.murmur2;
 import static org.apache.kafka.common.utils.Utils.toPositive;
@@ -7,14 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 import com.tp.ehub.common.domain.messaging.Message;
+import com.tp.ehub.common.domain.messaging.container.MessageContainer;
 
 /**
  * Provides all the implementation details of a Kafka topic
  *
  */
-public interface Topic<K, M extends Message> {
-
-	String getName();
+public interface Topic<K, M extends Message<K>> extends MessageContainer<K, M> {
 
 	Function<String, K> getKeyDeserializer();
 
@@ -23,6 +22,8 @@ public interface Topic<K, M extends Message> {
 	Function<byte[], M> getValueDeserializer();
 
 	Function<M, byte[]> getValueSerializer();
+	
+	Class<M> getMessageClass();
 
 	/**
 	 * A function from the message key to the <code>String</code> value
@@ -54,29 +55,6 @@ public interface Topic<K, M extends Message> {
 	 */
 	default int getPartitions() {
 		return 15;
-	}
-
-	/**
-	 * How many times a KafkaProducer will retry sending a batch of messages
-	 * before throwing an exception for this topic
-	 * 
-	 * @return the number of producer retries
-	 */
-	default int getProducerRetries() {
-		return 10;
-	}
-
-	/**
-	 * How many replicas (including the partition leader) have to acknowledge a
-	 * message in order for the producer to consider it as sent
-	 * <p>
-	 * We set it to <code>all</code> in order to leave the broker decide through
-	 * <code>min.insync.replicas</code> configuration
-	 * 
-	 * @return Acknowledge policy
-	 */
-	default String getProducerAcknowledgements() {
-		return "all";
 	}
 
 }

@@ -6,7 +6,7 @@ import javax.inject.Named;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.command.Command;
-import com.tp.ehub.common.infra.messaging.kafka.AbstractTopic;
+import com.tp.ehub.common.infra.messaging.kafka.container.AbstractTopic;
 
 @ApplicationScoped
 @Named("commands")
