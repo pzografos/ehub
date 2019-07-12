@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import com.tp.ehub.command.Command;
 import com.tp.ehub.command.CreateOrderCommand;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.messaging.receiver.GlobalMessageReceiver;
-import com.tp.ehub.common.infra.messaging.kafka.receiver.Receiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
+import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.order.service.OrderService;
 
@@ -19,10 +19,9 @@ import reactor.core.scheduler.Scheduler;
 
 @ApplicationScoped
 public class CommandHandler implements Consumer<Command> {
-
+	
 	@Inject
-	@Receiver("commands")
-	GlobalMessageReceiver<String, Command> commandsReceiver;
+	MessageReceiver commandsReceiver;
 
 	@Inject
 	OrderService orderService;
@@ -44,7 +43,9 @@ public class CommandHandler implements Consumer<Command> {
 	}
 
 	public void run(Scheduler scheduler) {
-		final Flux<Command> commandsFlux = commandsReceiver.receive("product_command_receiver_v1.0", true).map(MessageRecord::getMessage).subscribeOn(scheduler);
+		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, new MessageReceiverOptions("order_command_receiver_v1.0", true)) 
+				.map(MessageRecord::getMessage)
+				.subscribeOn(scheduler);
 		commandsFlux.subscribe(this);
 	}
 }

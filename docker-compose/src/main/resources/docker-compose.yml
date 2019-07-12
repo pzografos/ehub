@@ -27,20 +27,6 @@ services:
       core:
         aliases:
           - product-service
-  order-service:
-    image: tp/order-service
-    ports:
-      - 8787:8787
-    depends_on:
-      - kafka
-      - redis
-    environment:
-      - KAFKA_BROKERS=kafka:9092
-      - REDIS_NODES=redis://redis:7000
-    networks:
-      core:
-        aliases:
-          - product-service
   redis:
     image: redis
     ports:

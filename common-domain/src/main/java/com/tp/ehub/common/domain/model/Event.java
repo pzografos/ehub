@@ -14,14 +14,7 @@ import com.tp.ehub.common.domain.model.Versionable;
  * @param <K>
  *            the type of key to user for the event
  */
-public interface Event<K> extends Message, Versionable {
-
-	/**
-	 * Gets the event key
-	 * 
-	 * @return the event key
-	 */
-	K getKey();
+public interface Event<K> extends Message<K>, Versionable {
 
 	/**
 	 * Gets a name for this event that uniquely identifies it among other events

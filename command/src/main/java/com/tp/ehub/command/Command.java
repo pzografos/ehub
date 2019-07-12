@@ -17,8 +17,9 @@ import com.tp.ehub.common.infra.serialization.JsonMessage;
 		@Type(value = CreateOrderCommand.class, name = "Commands.CreateOrder"), 
 		@Type(value = CreateProductCommand.class, name = "Commands.CreateProduct"),
 		@Type(value = DeleteProductCommand.class, name = "Commands.DeleteProduct") })
-public interface Command extends Message {
+public interface Command extends Message<String> {
 
+	@Override
 	String getKey();
 
 	String getCommandName();

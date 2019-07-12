@@ -6,9 +6,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
-import com.tp.ehub.common.infra.messaging.kafka.Topic;
+import com.tp.ehub.common.infra.messaging.kafka.container.Topic;
 
-class RecordTransformer<K, M extends Message> implements Function<ConsumerRecord<String, byte[]>, KafkaRecord<K, M>> {
+class RecordTransformer<K, M extends Message<K>> implements Function<ConsumerRecord<String, byte[]>, KafkaRecord<K, M>> {
 
 	private Topic<K, M> topic;
 

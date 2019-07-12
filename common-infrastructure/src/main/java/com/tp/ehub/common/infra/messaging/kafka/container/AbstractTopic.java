@@ -1,4 +1,4 @@
-package com.tp.ehub.common.infra.messaging.kafka;
+package com.tp.ehub.common.infra.messaging.kafka.container;
 
 import static java.lang.String.format;
 
@@ -10,7 +10,7 @@ import java.util.function.Function;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.messaging.Message;
 
-public abstract class AbstractTopic<K, M extends Message> implements Topic<K, M> {
+public abstract class AbstractTopic<K, M extends Message<K>> implements Topic<K, M> {
 
 	protected String name;
 
@@ -30,6 +30,11 @@ public abstract class AbstractTopic<K, M extends Message> implements Topic<K, M>
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public Class<M> getMessageClass(){
+		return this.messageClass;
 	}
 
 	@SuppressWarnings("unchecked")
