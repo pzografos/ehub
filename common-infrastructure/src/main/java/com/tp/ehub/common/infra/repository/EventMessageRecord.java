@@ -1,7 +1,7 @@
 package com.tp.ehub.common.infra.repository;
 
+import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.model.Event;
 
 class EventMessageRecord<K, E extends Event<K>> implements MessageRecord<K, E> {
 

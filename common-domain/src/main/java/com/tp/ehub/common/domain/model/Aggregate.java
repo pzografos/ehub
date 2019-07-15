@@ -2,6 +2,8 @@ package com.tp.ehub.common.domain.model;
 
 import java.util.stream.Stream;
 
+import com.tp.ehub.common.domain.messaging.Event;
+
 /**
  * Based on the DDD definition the <code>Aggregate<code> represents a cluster 
  * of domain objects that can be treated as a single unit. 
@@ -21,7 +23,7 @@ import java.util.stream.Stream;
  * @param <K>
  *            The type of the aggregate's root entity unique identifier
  */
-public interface Aggregate<E extends Event<K>, T extends RootEntity<K>, K> {
+public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> {
 
 	/**
 	 * Get the root entity

@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.common.domain.model.RootEntity;
+import com.tp.ehub.common.domain.model.Entity;
 import com.tp.ehub.common.domain.repository.RootEntityCache;
 
 import io.lettuce.core.TransactionResult;
@@ -15,7 +15,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 
-public abstract class AbstractRedisEntityCache<K, T extends RootEntity<K>> implements RootEntityCache<K, T> {
+public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implements RootEntityCache<K, T> {
 
 	@Inject
 	private RedisCluster redisCluster;
