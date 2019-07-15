@@ -1,4 +1,4 @@
-package com.tp.ehub.product.service.messaging;
+package com.tp.ehub.product.app;
 
 import java.util.function.Consumer;
 
@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
-import com.tp.ehub.order.model.event.OrderEvent;
+import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.product.service.ProductServiceImpl;
 
 import reactor.core.publisher.Flux;

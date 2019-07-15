@@ -1,12 +1,10 @@
 package com.tp.ehub.order.app;
 
-import com.tp.ehub.order.service.messaging.CommandHandler;
-import com.tp.ehub.order.service.messaging.ProductEventHandler;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
-
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
+
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 public class Main {
 
@@ -17,10 +15,8 @@ public class Main {
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 
 		CommandHandler commandHandler = container.select(CommandHandler.class).get();
-		ProductEventHandler productEventHandler = container.select(ProductEventHandler.class).get();
 
 		commandHandler.run(scheduler);
-		productEventHandler.run(scheduler);
 
 	}
 }

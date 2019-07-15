@@ -1,4 +1,4 @@
-package com.tp.ehub.order.model.event;
+package com.tp.ehub.order.messaging.event;
 
 import java.util.UUID;
 

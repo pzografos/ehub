@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.infra.messaging.kafka.container.AbstractTopic;
-import com.tp.ehub.order.model.event.OrderEvent;
+import com.tp.ehub.order.messaging.event.OrderEvent;
 
 @ApplicationScoped
 @Named("order-events")

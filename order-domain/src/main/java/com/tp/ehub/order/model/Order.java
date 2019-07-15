@@ -9,6 +9,8 @@ import com.tp.ehub.common.domain.model.Entity;
 public class Order implements Entity<UUID> {
 
 	private UUID id;
+	
+	private UUID companyId;
 
 	private Map<String, Integer> basket;
 
@@ -25,6 +27,14 @@ public class Order implements Entity<UUID> {
 	@Override
 	public UUID getId() {
 		return id;
+	}
+
+	public UUID getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(UUID companyId) {
+		this.companyId = companyId;
 	}
 
 	public Map<String, Integer> getBasket() {

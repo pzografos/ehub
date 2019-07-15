@@ -1,4 +1,4 @@
-package com.tp.ehub.product.service.messaging;
+package com.tp.ehub.product.app;
 
 import java.util.UUID;
 import java.util.function.Consumer;
