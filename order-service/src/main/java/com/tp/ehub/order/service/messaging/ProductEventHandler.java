@@ -11,7 +11,7 @@ import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.order.service.OrderService;
-import com.tp.ehub.product.model.event.ProductEvent;
+import com.tp.ehub.product.messaging.event.ProductEvent;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;

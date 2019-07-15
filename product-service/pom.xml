@@ -78,22 +78,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
-			<artifactId>messaging-kafka</artifactId>
+			<artifactId>product-domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
-			<artifactId>repository-redis</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tp.ehub</groupId>
-			<artifactId>product-common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tp.ehub</groupId>
-			<artifactId>order-common</artifactId>
+			<artifactId>order-domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

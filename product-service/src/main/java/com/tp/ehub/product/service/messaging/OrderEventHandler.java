@@ -8,7 +8,7 @@ import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.order.model.event.OrderEvent;
-import com.tp.ehub.product.service.ProductService;
+import com.tp.ehub.product.service.ProductServiceImpl;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
@@ -19,7 +19,7 @@ public class OrderEventHandler implements Consumer<OrderEvent> {
 	MessageReceiver receiver;
 
 	@Inject
-	ProductService service;
+	ProductServiceImpl service;
 
 	public void run(Scheduler productScheduler) {
 		

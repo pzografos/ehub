@@ -7,10 +7,10 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.messaging.MessageStore;
 import com.tp.ehub.common.domain.model.Aggregate;
-import com.tp.ehub.common.domain.model.Event;
-import com.tp.ehub.common.domain.model.RootEntity;
+import com.tp.ehub.common.domain.model.Entity;
 import com.tp.ehub.common.domain.repository.AggregateRepository;
 import com.tp.ehub.common.domain.repository.RootEntityCache;
 
@@ -36,7 +36,7 @@ import com.tp.ehub.common.domain.repository.RootEntityCache;
  * @param <K>
  *            The type of the aggregate's root entity unique identifier
  */
-public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends RootEntity<K>, K> implements AggregateRepository<A, E, T, K> {
+public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> implements AggregateRepository<A, E, T, K> {
 
 	@Inject
 	Logger log;

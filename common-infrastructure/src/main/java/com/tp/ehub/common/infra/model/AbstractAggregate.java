@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.model.Aggregate;
-import com.tp.ehub.common.domain.model.Event;
-import com.tp.ehub.common.domain.model.RootEntity;
+import com.tp.ehub.common.domain.model.Entity;
 
 /**
  * Base implementation for the <code>Aggregate</code>.
@@ -18,7 +18,7 @@ import com.tp.ehub.common.domain.model.RootEntity;
  * @param <K>
  *            The type of the aggregate's root entity unique identifier
  */
-public abstract class AbstractAggregate<E extends Event<K>, T extends RootEntity<K>, K> implements Aggregate<E, T, K> {
+public abstract class AbstractAggregate<E extends Event<K>, T extends Entity<K>, K> implements Aggregate<E, T, K> {
 
 	private T rootEntity;
 

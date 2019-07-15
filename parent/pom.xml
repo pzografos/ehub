@@ -30,9 +30,9 @@
 		<module>../common-domain</module>
 		<module>../common-infrastructure</module>
 		<module>../command</module>
-		<module>../order-common</module>
+		<module>../order-domain</module>
 		<module>../order-service</module>
-		<module>../product-common</module>
+		<module>../product-domain</module>
 		<module>../product-service</module>
 		<module>../gateway</module>
 		<module>../docker-compose</module>
