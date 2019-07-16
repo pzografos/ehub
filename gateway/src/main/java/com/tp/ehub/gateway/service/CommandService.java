@@ -14,7 +14,7 @@ public class CommandService {
 	MessageSender sender;
 
 	public void create(Command command) {
-		sender.send(Flux.just(new KafkaRecord<String, Command>(command.getKey(), command)), Command.class);
+		sender.send(Flux.just(new KafkaRecord<>(command.getKey(), command)), Command.class);
 	}
 
 }

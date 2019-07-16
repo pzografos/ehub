@@ -9,7 +9,7 @@
 
 	<parent>
 		<groupId>com.tp.ehub</groupId>
-		<artifactId>ehub-parent</artifactId>
+		<artifactId>parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
         <relativePath>../parent/pom.xml</relativePath>
 	</parent>

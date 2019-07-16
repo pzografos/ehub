@@ -1,12 +1,13 @@
 version: '3.2'
 services:
   gateway:
-    image: tp/ehub-gateway
+    image: tp/gateway:latest
     ports:
       - 8080:8080
       - 8000:8000
     environment:
       - KAFKA_BROKERS=kafka:9092
+      - debug=true
     depends_on:
       - kafka
     networks:
@@ -14,9 +15,23 @@ services:
         aliases:
           - gateway
   product-service:
-    image: tp/product-service
+    image: tp/product-service:latest
     ports:
       - 8788:8787
+    depends_on:
+      - kafka
+      - redis
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_NODES=redis://redis:7000
+    networks:
+      core:
+        aliases:
+          - product-service
+  order-service:
+    image: tp/order-service:latest
+    ports:
+      - 8787:8787
     depends_on:
       - kafka
       - redis
@@ -56,6 +71,7 @@ services:
       KAFKA_LISTENERS: INSIDE://kafka:9092,OUTSIDE://0.0.0.0:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
     ports:
       - target: 9094
         published: 9094
