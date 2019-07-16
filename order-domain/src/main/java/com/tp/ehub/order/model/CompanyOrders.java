@@ -11,6 +11,8 @@ public class CompanyOrders implements Entity<UUID> {
 	private UUID companyId;
 
 	private Map<UUID, Order> orders = new HashMap<UUID, Order>();
+	
+	private Map<UUID, Long> stock = new HashMap<UUID, Long>();
 
 	public CompanyOrders(UUID companyId) {
 		this.companyId = companyId;
@@ -23,6 +25,14 @@ public class CompanyOrders implements Entity<UUID> {
 
 	public Map<UUID, Order> getOrders() {
 		return orders;
+	}
+
+	public Map<UUID, Long> getStock() {
+		return stock;
+	}
+	
+	public void updateStock(UUID productId, Long quantity) {
+		stock.put(productId, quantity);
 	}
 
 }

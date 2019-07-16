@@ -14,9 +14,14 @@ import com.tp.ehub.common.infra.serialization.JsonMessage;
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ 
-		@Type(value = CreateOrderCommand.class, name = "Commands.CreateOrder"), 
 		@Type(value = CreateProductCommand.class, name = "Commands.CreateProduct"),
-		@Type(value = DeleteProductCommand.class, name = "Commands.DeleteProduct") })
+		@Type(value = DeleteProductCommand.class, name = "Commands.DeleteProduct"),
+		@Type(value = DeleteProductCommand.class, name = "Commands.UpdateProductStock"),
+
+		@Type(value = CreateOrderCommand.class, name = "Commands.CreateOrder"), 
+		@Type(value = CancelOrderCommand.class, name = "Commands.CancelOrder"), 
+		@Type(value = CompleteOrderCommand.class, name = "Commands.CompleteOrder")
+})
 public interface Command extends Message<String> {
 
 	@Override

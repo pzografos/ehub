@@ -12,7 +12,7 @@ public class Order implements Entity<UUID> {
 	
 	private UUID companyId;
 
-	private Map<String, Integer> basket;
+	private Map<UUID, Long> basket;
 
 	private ZonedDateTime timestamp;
 
@@ -37,11 +37,11 @@ public class Order implements Entity<UUID> {
 		this.companyId = companyId;
 	}
 
-	public Map<String, Integer> getBasket() {
+	public Map<UUID, Long> getBasket() {
 		return basket;
 	}
 
-	public void setBasket(Map<String, Integer> basket) {
+	public void setBasket(Map<UUID, Long> basket) {
 		this.basket = basket;
 	}
 

@@ -7,8 +7,10 @@ import com.tp.ehub.order.model.Order;
 public interface OrderService {
 
 	Order placeOrder(Order order);
-	
-	void cancelOrder(UUID orderID);
-	
-	void completeOrder(UUID orderID);
+
+	void cancelOrder(UUID companyId, UUID orderId);
+
+	void completeOrder(UUID companyId, UUID orderId);
+
+	void updateProductStock(UUID companyId, UUID productId, long quantity);
 }

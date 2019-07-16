@@ -47,11 +47,11 @@ public class CommandHandler implements Consumer<Command> {
 			break;
 		case CancelOrderCommand.NAME:
 			CancelOrderCommand cancel = (CancelOrderCommand) command;
-			service.cancelOrder(cancel.getOrderId());
+			service.cancelOrder(cancel.getCompanyId(), cancel.getOrderId());
 			break;
 		case CompleteOrderCommand.NAME:
 			CompleteOrderCommand complete = (CompleteOrderCommand) command;
-			service.cancelOrder(complete.getOrderId());
+			service.cancelOrder(complete.getCompanyId(), complete.getOrderId());
 			break;			
 		default:
 			return;

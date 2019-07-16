@@ -6,8 +6,11 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.domain.repository.AggregateRepository;
+import com.tp.ehub.order.messaging.event.OrderCancelled;
+import com.tp.ehub.order.messaging.event.OrderCompleted;
 import com.tp.ehub.order.messaging.event.OrderCreated;
 import com.tp.ehub.order.messaging.event.OrderEvent;
+import com.tp.ehub.order.messaging.event.StockChanged;
 import com.tp.ehub.order.model.CompanyOrders;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.product.model.aggregate.CompanyOrdersAggregate;
@@ -20,13 +23,15 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order placeOrder(Order order) {		
 		
-		CompanyOrdersAggregate aggregate = aggregateRepository.get(order.getId());
+		CompanyOrdersAggregate aggregate = aggregateRepository.get(order.getCompanyId());
 		
-		boolean placeOrderAllowed = true; //TODO: get information from productService
-		
+		boolean placeOrderAllowed = order.getBasket().entrySet().stream()
+				.noneMatch( basketItem -> aggregate.getRoot().getStock().get(basketItem.getKey()) < basketItem.getValue());
+				
 		if (placeOrderAllowed) {
 			OrderCreated orderCreated = new OrderCreated(order.getId());
 			orderCreated.setCompanyId(order.getCompanyId());
+			orderCreated.setBasket(order.getBasket());
 			orderCreated.setTimestamp(ZonedDateTime.now());
 			aggregate.apply(orderCreated);
 		}
@@ -34,12 +39,38 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public void cancelOrder(UUID orderID) {
+	public void cancelOrder(UUID companyId, UUID orderId) {
 		
+		CompanyOrdersAggregate aggregate = aggregateRepository.get(companyId);
+		Order order = aggregate.getRoot().getOrders().get(orderId);
+		
+		OrderCancelled orderCancelled = new OrderCancelled(companyId);
+		orderCancelled.setOrderId(orderId);
+		orderCancelled.setBasket(order.getBasket());
+		orderCancelled.setTimestamp(ZonedDateTime.now());
+		aggregate.apply(orderCancelled);		
 	}
 	
 	@Override
-	public void completeOrder(UUID orderID) {
+	public void completeOrder(UUID companyId, UUID orderId) {
 		
+		CompanyOrdersAggregate aggregate = aggregateRepository.get(companyId);
+		Order order = aggregate.getRoot().getOrders().get(orderId);
+
+		OrderCompleted orderCompleted = new OrderCompleted(companyId);
+		orderCompleted.setOrderId(orderId);
+		orderCompleted.setBasket(order.getBasket());
+		orderCompleted.setTimestamp(ZonedDateTime.now());
+		aggregate.apply(orderCompleted);	
+	}
+
+	@Override
+	public void updateProductStock(UUID companyId, UUID productId, long quantity) {
+		CompanyOrdersAggregate aggregate = aggregateRepository.get(companyId);
+		StockChanged stockChanged = new StockChanged(companyId);
+		stockChanged.setProductId(productId);
+		stockChanged.setQuantity(quantity);
+		stockChanged.setTimestamp(ZonedDateTime.now());
+		aggregate.apply(stockChanged);
 	}
 }

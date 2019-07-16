@@ -5,13 +5,13 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.infra.messaging.kafka.AbstractMessageStore;
-import com.tp.ehub.product.messaging.event.ProductEvent;
+import com.tp.ehub.order.messaging.event.OrderEvent;
 
-public class OrderEventsStore extends AbstractMessageStore<UUID, ProductEvent> {
+public class OrderEventsStore extends AbstractMessageStore<UUID, OrderEvent> {
 
 	@Inject
 	public OrderEventsStore() {
-		super(ProductEvent.class);
+		super(OrderEvent.class);
 	}
 
 }

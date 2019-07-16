@@ -13,7 +13,8 @@ import com.tp.ehub.common.infra.serialization.JsonMessage;
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = ProductCreated.class, name = "Product.Created"), 
-				@Type(value = ProductDeleted.class, name = "Product.Deleted") })
+				@Type(value = ProductDeleted.class, name = "Product.Deleted"),
+				@Type(value = ProductDeleted.class, name = "Product.StockUpdated") })
 public abstract class ProductEvent extends AbstractEvent<UUID> {
 
 	protected UUID productId;

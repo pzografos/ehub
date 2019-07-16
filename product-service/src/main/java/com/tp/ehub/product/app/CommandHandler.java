@@ -44,11 +44,11 @@ public class CommandHandler implements Consumer<Command> {
 			product.setName(cpc.getName());
 			product.setDescription(cpc.getDescription());
 			product.setQuantity(cpc.getQuantity());
-			service.createProduct(product, cpc.getCompanyId());
+			service.createProduct(cpc.getCompanyId(), product);
 			break;
 		case DeleteProductCommand.NAME:
 			DeleteProductCommand dpc = (DeleteProductCommand) command;
-			service.deleteProduct(dpc.getProductId(), dpc.getCompanyId());
+			service.deleteProduct(dpc.getCompanyId(), dpc.getProductId());
 			break;
 		default:
 			return;
