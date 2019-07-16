@@ -10,7 +10,6 @@ import com.tp.ehub.order.messaging.event.OrderCancelled;
 import com.tp.ehub.order.messaging.event.OrderCompleted;
 import com.tp.ehub.order.messaging.event.OrderCreated;
 import com.tp.ehub.order.messaging.event.OrderEvent;
-import com.tp.ehub.order.messaging.event.StockChanged;
 import com.tp.ehub.order.model.CompanyOrders;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.product.model.aggregate.CompanyOrdersAggregate;
@@ -26,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
 		CompanyOrdersAggregate aggregate = aggregateRepository.get(order.getCompanyId());
 		
 		boolean placeOrderAllowed = order.getBasket().entrySet().stream()
-				.noneMatch( basketItem -> aggregate.getRoot().getStock().get(basketItem.getKey()) < basketItem.getValue());
+				.noneMatch( basketItem -> aggregate.getStock().get(basketItem.getKey()) < basketItem.getValue());
 				
 		if (placeOrderAllowed) {
 			OrderCreated orderCreated = new OrderCreated(order.getId());
@@ -62,15 +61,5 @@ public class OrderServiceImpl implements OrderService {
 		orderCompleted.setBasket(order.getBasket());
 		orderCompleted.setTimestamp(ZonedDateTime.now());
 		aggregate.apply(orderCompleted);	
-	}
-
-	@Override
-	public void updateProductStock(UUID companyId, UUID productId, long quantity) {
-		CompanyOrdersAggregate aggregate = aggregateRepository.get(companyId);
-		StockChanged stockChanged = new StockChanged(companyId);
-		stockChanged.setProductId(productId);
-		stockChanged.setQuantity(quantity);
-		stockChanged.setTimestamp(ZonedDateTime.now());
-		aggregate.apply(stockChanged);
 	}
 }

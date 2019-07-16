@@ -13,8 +13,7 @@ import com.tp.ehub.common.infra.serialization.JsonMessage;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = OrderCreated.class, name = "Order.Created"),
 				@Type(value = OrderCancelled.class, name = "Order.Cancelled"),
-				@Type(value = OrderCompleted.class, name = "Order.Completed"), 
-				@Type(value = StockChanged.class, name = "Order.StockChanged") })
+				@Type(value = OrderCompleted.class, name = "Order.Completed")})
 public abstract class OrderEvent extends AbstractEvent<UUID> {
 
 	protected UUID companyId;

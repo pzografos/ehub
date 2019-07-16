@@ -12,5 +12,4 @@ public interface OrderService {
 
 	void completeOrder(UUID companyId, UUID orderId);
 
-	void updateProductStock(UUID companyId, UUID productId, long quantity);
 }

@@ -1,5 +1,7 @@
 package com.tp.ehub.product.model.aggregate;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import com.tp.ehub.common.infra.model.AbstractAggregate;
@@ -7,11 +9,12 @@ import com.tp.ehub.order.messaging.event.OrderCancelled;
 import com.tp.ehub.order.messaging.event.OrderCompleted;
 import com.tp.ehub.order.messaging.event.OrderCreated;
 import com.tp.ehub.order.messaging.event.OrderEvent;
-import com.tp.ehub.order.messaging.event.StockChanged;
 import com.tp.ehub.order.model.CompanyOrders;
 import com.tp.ehub.order.model.Order;
 
 public class CompanyOrdersAggregate extends AbstractAggregate<OrderEvent, CompanyOrders, UUID> {
+	
+	private Map<UUID, Long> stock = new HashMap<UUID, Long>();
 
 	public CompanyOrdersAggregate(CompanyOrders rootEntity) {
 		super(rootEntity);
@@ -37,13 +40,16 @@ public class CompanyOrdersAggregate extends AbstractAggregate<OrderEvent, Compan
 			OrderCompleted completed = (OrderCompleted) event;
 			entity.getOrders().remove(completed.getOrderId());
 			return entity;
-		case StockChanged.NAME:
-			StockChanged stockChanged = (StockChanged) event;
-			entity.getStock().put(stockChanged.getProductId(), stockChanged.getQuantity());
-			return entity;
 		default:
 			return entity;
 		}
 	}
 
+	public Map<UUID, Long> getStock() {
+		return stock;
+	}
+
+	public void updateStock(UUID productId, Long quantity) {
+		stock.put(productId, quantity);
+	}
 }
