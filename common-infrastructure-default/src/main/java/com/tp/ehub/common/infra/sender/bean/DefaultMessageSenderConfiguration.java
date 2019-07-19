@@ -1,7 +1,6 @@
 package com.tp.ehub.common.infra.sender.bean;
 
 import com.tp.ehub.common.domain.messaging.sender.MessageSenderConfiguration;
-import com.tp.ehub.common.infra.qualifier.Random;
 import com.tp.ehub.common.infra.sender.factory.kafka.KafkaCluster;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteArraySerializer;

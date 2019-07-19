@@ -19,9 +19,9 @@ public class RandomMessageReceiverConfiguration implements MessageReceiverConfig
 	@Inject
 	KafkaCluster kafka;
 
-	MessageReceiverOptions options;
+	private MessageReceiverOptions options;
 
-	Properties props;
+	private Properties props;
 
 	@Override
 	public Properties getProps() {
