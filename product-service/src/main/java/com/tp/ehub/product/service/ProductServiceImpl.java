@@ -15,7 +15,7 @@ import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.aggregate.ProductCatalogueAggregate;
 
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
 	@Inject
 	AggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> aggregateRepository;
@@ -52,40 +52,36 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public void addQuantities(UUID companyId, Map<UUID, Long> productQuantities) {
 		ProductCatalogueAggregate aggregate = aggregateRepository.get(companyId);
-		productQuantities.entrySet().stream().forEach(
-					entry -> {
-						UUID productId = entry.getKey();
-						Long quantity = entry.getValue();
-						Long updatedQuantity = aggregate.getRoot().getProducts().get(productId).getQuantity() + quantity;
-						ProductStockUpdated productStockUpdated = new ProductStockUpdated();
-						productStockUpdated.setCompanyId(companyId);
-						productStockUpdated.setProductId(productId);
-						productStockUpdated.setQuantity(updatedQuantity);
-						productStockUpdated.setTimestamp(ZonedDateTime.now());
-						aggregate.apply(productStockUpdated);
-					}
-				);
+		productQuantities.entrySet().stream().forEach(entry -> {
+			UUID productId = entry.getKey();
+			Long quantity = entry.getValue();
+			Long updatedQuantity = aggregate.getRoot().getProducts().get(productId).getQuantity() + quantity;
+			ProductStockUpdated productStockUpdated = new ProductStockUpdated();
+			productStockUpdated.setCompanyId(companyId);
+			productStockUpdated.setProductId(productId);
+			productStockUpdated.setQuantity(updatedQuantity);
+			productStockUpdated.setTimestamp(ZonedDateTime.now());
+			aggregate.apply(productStockUpdated);
+		});
 		aggregateRepository.save(aggregate);
 	}
 
 	@Override
 	public void removeQuantities(UUID companyId, Map<UUID, Long> productQuantities) {
 		ProductCatalogueAggregate aggregate = aggregateRepository.get(companyId);
-		productQuantities.entrySet().stream().forEach(
-					entry -> {
-						UUID productId = entry.getKey();
-						Long quantity = entry.getValue();
-						Long updatedQuantity = aggregate.getRoot().getProducts().get(productId).getQuantity() - quantity;
-						ProductStockUpdated productStockUpdated = new ProductStockUpdated();
-						productStockUpdated.setCompanyId(companyId);
-						productStockUpdated.setProductId(productId);
-						productStockUpdated.setQuantity(updatedQuantity);
-						productStockUpdated.setTimestamp(ZonedDateTime.now());
-						aggregate.apply(productStockUpdated);
-					}
-				);
+		productQuantities.entrySet().stream().forEach(entry -> {
+			UUID productId = entry.getKey();
+			Long quantity = entry.getValue();
+			Long updatedQuantity = aggregate.getRoot().getProducts().get(productId).getQuantity() - quantity;
+			ProductStockUpdated productStockUpdated = new ProductStockUpdated();
+			productStockUpdated.setCompanyId(companyId);
+			productStockUpdated.setProductId(productId);
+			productStockUpdated.setQuantity(updatedQuantity);
+			productStockUpdated.setTimestamp(ZonedDateTime.now());
+			aggregate.apply(productStockUpdated);
+		});
 		aggregateRepository.save(aggregate);
-		
+
 	}
 
 }

@@ -6,7 +6,16 @@ public class MessageReceiverOptions {
 	private String partitionSelector;
 	private boolean fromStart;
 
-	public void setConsumerId(String consumerId) {
+	public MessageReceiverOptions(String consumerId) {
+		this.consumerId = consumerId;
+	}
+
+	public MessageReceiverOptions(String consumerId, boolean fromStart) {
+		this(consumerId);
+		this.fromStart = fromStart;
+	}
+
+	private void setConsumerId(String consumerId) {
 		this.consumerId = consumerId;
 	}
 

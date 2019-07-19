@@ -28,7 +28,10 @@ public abstract class AbstractMessageStore<K, M extends Message<K>> implements M
 
 	@Inject
 	MessageSender sender;
-	
+
+	@Inject
+	MessageReceiverOptions options;
+
 	Class<M> messageClass;
 
 	protected AbstractMessageStore(Class<M> messageClass) {
@@ -39,9 +42,6 @@ public abstract class AbstractMessageStore<K, M extends Message<K>> implements M
 	public Stream<M> getbyKey(K key) {
 
 		List<M> messages = new ArrayList<>();
-		
-		MessageReceiverOptions options = new MessageReceiverOptions();
-		options.setConsumerId(UUID.randomUUID().toString());
 
 		receiver.receiveByKey(key, messageClass, options)
 				.doOnError(e -> log.error("Receive failed", e))

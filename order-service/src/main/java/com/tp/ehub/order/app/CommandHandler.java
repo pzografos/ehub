@@ -26,13 +26,12 @@ public class CommandHandler implements Consumer<Command> {
 	@Inject
 	OrderService service;
 
+	@Inject
+	MessageReceiverOptions options;
+
 	public void run(Scheduler productScheduler) {
-		MessageReceiverOptions options = new MessageReceiverOptions();
-		options.setConsumerId("order_command_receiver_v1.0");
-		options.setFromStart(true);
-		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, options) 
-				.map(MessageRecord::getMessage)
-				.subscribeOn(productScheduler);
+
+		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, options).map(MessageRecord::getMessage).subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
 	}
 
@@ -55,7 +54,7 @@ public class CommandHandler implements Consumer<Command> {
 		case CompleteOrderCommand.NAME:
 			CompleteOrderCommand complete = (CompleteOrderCommand) command;
 			service.cancelOrder(complete.getCompanyId(), complete.getOrderId());
-			break;			
+			break;
 		default:
 			return;
 		}

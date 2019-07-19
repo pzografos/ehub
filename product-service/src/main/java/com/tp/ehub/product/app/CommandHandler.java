@@ -25,15 +25,12 @@ public class CommandHandler implements Consumer<Command> {
 	@Inject
 	ProductService service;
 
+	@Inject
+	MessageReceiverOptions options;
+
 	public void run(Scheduler productScheduler) {
-		
-		MessageReceiverOptions options = new MessageReceiverOptions();
-		options.setConsumerId("product_command_receiver_v1.0");
-		options.setFromStart(true);
-		
-		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, options) 
-				.map(MessageRecord::getMessage)
-				.subscribeOn(productScheduler);
+
+		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, options).map(MessageRecord::getMessage).subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
 	}
 
