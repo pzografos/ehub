@@ -46,7 +46,7 @@
         </dependency>   
         <dependency>
             <groupId>com.tp.ehub</groupId>
-            <artifactId>common-infrastructure</artifactId>
+            <artifactId>common-infrastructure-default</artifactId>
             <version>${project.version}</version>
         </dependency>            
     </dependencies>

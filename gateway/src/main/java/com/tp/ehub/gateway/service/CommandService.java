@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.tp.ehub.command.Command;
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
-import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
+import com.tp.ehub.common.infra.sender.factory.kafka.KafkaRecord;
 
 import reactor.core.publisher.Flux;
 

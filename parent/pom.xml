@@ -30,6 +30,7 @@
 		<module>../docker-base-images</module>
 		<module>../common-domain</module>
 		<module>../common-infrastructure</module>
+		<module>../common-infrastructure-default</module>
 		<module>../command</module>
 		<module>../order-domain</module>
 		<module>../order-service</module>

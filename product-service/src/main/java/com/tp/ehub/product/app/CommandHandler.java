@@ -1,21 +1,18 @@
 package com.tp.ehub.product.app;
 
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import javax.inject.Inject;
-
 import com.tp.ehub.command.Command;
 import com.tp.ehub.command.CreateProductCommand;
 import com.tp.ehub.command.DeleteProductCommand;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
-import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.product.model.Product;
 import com.tp.ehub.product.service.ProductService;
-
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
+
+import javax.inject.Inject;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CommandHandler implements Consumer<Command> {
 
@@ -25,12 +22,9 @@ public class CommandHandler implements Consumer<Command> {
 	@Inject
 	ProductService service;
 
-	@Inject
-	MessageReceiverOptions options;
-
 	public void run(Scheduler productScheduler) {
 
-		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class, options).map(MessageRecord::getMessage).subscribeOn(productScheduler);
+		final Flux<Command> commandsFlux = commandsReceiver.receiveAll(Command.class).map(MessageRecord::getMessage).subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
 	}
 

@@ -3,7 +3,7 @@ package com.tp.ehub.common.domain.messaging.receiver;
 public class MessageReceiverOptions {
 
 	private String consumerId;
-	private String partitionSelector;
+
 	private boolean fromStart;
 
 	public MessageReceiverOptions(String consumerId) {
@@ -21,14 +21,6 @@ public class MessageReceiverOptions {
 
 	public void setFromStart(boolean fromStart) {
 		this.fromStart = fromStart;
-	}
-
-	public String getPartitionSelector() {
-		return partitionSelector;
-	}
-
-	public void setPartitionSelector(String partitionSelector) {
-		this.partitionSelector = partitionSelector;
 	}
 
 	public String getConsumerId() {

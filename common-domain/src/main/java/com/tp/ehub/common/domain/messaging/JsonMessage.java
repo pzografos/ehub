@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * in previous API versions which may not be needed by the current API version.
  * Such properties should not fail during deserialization and <em>it is assumed
  * that their omission by the current API version was intended.</em></li>
- * <li>Messages originated from the codebase may not need a specific property
+ * <li>Messages originated from the codebase may not need a specific qualifier
  * compared to a previous API version. Such properties should not be serialized
  * as in most cases the other end have assigned a default value in such a case
  * and have not set them as optional.</li>
