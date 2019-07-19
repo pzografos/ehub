@@ -8,9 +8,9 @@ import javax.inject.Inject;
 import com.tp.ehub.common.infra.repository.AbstractAggregateRepository;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.CompanyOrders;
+import com.tp.ehub.order.model.aggregate.CompanyOrdersAggregate;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 import com.tp.ehub.product.messaging.event.ProductCreated;
-import com.tp.ehub.product.model.aggregate.CompanyOrdersAggregate;
 
 @Dependent
 public class CompanyOrdersRepository extends AbstractAggregateRepository<CompanyOrdersAggregate, OrderEvent, CompanyOrders, UUID> {

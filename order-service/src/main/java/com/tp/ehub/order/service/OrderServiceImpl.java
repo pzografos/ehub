@@ -12,7 +12,7 @@ import com.tp.ehub.order.messaging.event.OrderCreated;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.CompanyOrders;
 import com.tp.ehub.order.model.Order;
-import com.tp.ehub.product.model.aggregate.CompanyOrdersAggregate;
+import com.tp.ehub.order.model.aggregate.CompanyOrdersAggregate;
 
 public class OrderServiceImpl implements OrderService {
 

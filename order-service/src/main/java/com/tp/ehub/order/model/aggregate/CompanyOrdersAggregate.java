@@ -1,4 +1,4 @@
-package com.tp.ehub.product.model.aggregate;
+package com.tp.ehub.order.model.aggregate;
 
 import java.util.HashMap;
 import java.util.Map;

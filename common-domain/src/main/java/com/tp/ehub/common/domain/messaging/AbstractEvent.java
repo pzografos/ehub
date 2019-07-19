@@ -1,9 +1,6 @@
-package com.tp.ehub.common.infra.messaging;
+package com.tp.ehub.common.domain.messaging;
 
 import java.time.ZonedDateTime;
-
-import com.tp.ehub.common.domain.messaging.Event;
-import com.tp.ehub.common.infra.serialization.JsonMessage;
 
 /**
  * Base event implementation

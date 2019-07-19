@@ -7,11 +7,11 @@ import com.tp.ehub.product.model.Product;
 
 public interface ProductService {
 
-	public void createProduct(UUID companyId, Product product);
+	void createProduct(UUID companyId, Product product);
 
-	public void deleteProduct(UUID companyId, UUID productId);
+	void deleteProduct(UUID companyId, UUID productId);
 	
-	public void addQuantities(UUID companyId, Map<UUID, Long> productQuantities);
+	void addQuantities(UUID companyId, Map<UUID, Long> productQuantities);
 	
-	public void removeQuantities(UUID companyId, Map<UUID, Long> productQuantities);
+	void removeQuantities(UUID companyId, Map<UUID, Long> productQuantities);
 }
