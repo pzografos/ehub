@@ -39,8 +39,11 @@ public abstract class AbstractMessageStore<K, M extends Message<K>> implements M
 	public Stream<M> getbyKey(K key) {
 
 		List<M> messages = new ArrayList<>();
+		
+		MessageReceiverOptions options = new MessageReceiverOptions();
+		options.setConsumerId(UUID.randomUUID().toString());
 
-		receiver.receiveByKey(key, messageClass, new MessageReceiverOptions(UUID.randomUUID().toString()))
+		receiver.receiveByKey(key, messageClass, options)
 				.doOnError(e -> log.error("Receive failed", e))
 				.takeUntil(receiver::isLast)
 				.map(MessageRecord::getMessage)

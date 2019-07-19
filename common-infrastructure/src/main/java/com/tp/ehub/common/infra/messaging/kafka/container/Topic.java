@@ -26,26 +26,32 @@ public interface Topic<K, M extends Message<K>> extends MessageContainer<K, M> {
 	Class<M> getMessageClass();
 
 	/**
-	 * A function from the message key to the <code>String</code> value
+	 * A function from the message to the <code>String</code> value
 	 * responsible for partition calculation.
 	 * 
-	 * @return the function of <code>K</code> to <code>String</code>
+	 * @return the function of <code>M</code> to <code>String</code>
 	 * @see #partitionFn()
 	 */
-	Function<K, String> getPartitionSelector();
+	Function<M, String> getPartitionSelector();
+	
+	/**
+	 * Gives the owning partition for the provided message
+	 * 
+	 * @return the partition for the message
+	 */
+	default Integer getPartition(M message) {
+		String partitionKey = getPartitionSelector().apply(message);
+		return getPartition(partitionKey);
+	}
 
 	/**
-	 * Gives the owning partition of the provided key based on
-	 * <code>#partitionFn()<code>
+	 * Gives the owning partition for the provided partition key
 	 * 
 	 * @see #partitions()
-	 * @return Function to find partition per record
+	 * @return the partition for the key
 	 */
-	default Function<K, Integer> getPartitioner() {
-		return key -> {
-			String partitionKey = getPartitionSelector().apply(key);
-			return toPositive(murmur2(partitionKey.getBytes(StandardCharsets.UTF_8))) % getPartitions();
-		};
+	default Integer getPartition(String partitionKey) {
+		return toPositive(murmur2(partitionKey.getBytes(StandardCharsets.UTF_8))) % getPartitions();
 	}
 
 	/**
