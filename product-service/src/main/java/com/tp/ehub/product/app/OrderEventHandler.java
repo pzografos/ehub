@@ -25,7 +25,11 @@ public class OrderEventHandler implements Consumer<OrderEvent> {
 
 	public void run(Scheduler productScheduler) {
 		
-		final Flux<OrderEvent> eventsFlux = receiver.receiveAll(OrderEvent.class, new MessageReceiverOptions("product_order_event_receiver_v1.0", true)) 
+		MessageReceiverOptions options = new MessageReceiverOptions();
+		options.setConsumerId("product_order_event_receiver_v1.0");
+		options.setFromStart(true);
+		
+		final Flux<OrderEvent> eventsFlux = receiver.receiveAll(OrderEvent.class, options) 
 				.map(MessageRecord::getMessage)
 				.subscribeOn(productScheduler);
 		

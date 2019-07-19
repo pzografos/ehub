@@ -73,7 +73,7 @@ public class TopicKafkaSender implements MessageSender {
 	private <K, M extends Message<K>> SenderRecord<String, byte[], String> senderRecord(Topic<K, M> topic, MessageRecord<K, M> messageRecord) {
 		String recordKey = topic.getKeySerializer().apply(messageRecord.getKey());
 		byte[] recordValue = topic.getValueSerializer().apply(messageRecord.getMessage());
-		Integer partition = topic.getPartitioner().apply(messageRecord.getKey());
+		Integer partition = topic.getPartition(messageRecord.getMessage());
 		ProducerRecord<String, byte[]> pr = new ProducerRecord<String, byte[]>(topic.getName(), partition, recordKey, recordValue);
 		return SenderRecord.create(pr, recordKey);
 	}

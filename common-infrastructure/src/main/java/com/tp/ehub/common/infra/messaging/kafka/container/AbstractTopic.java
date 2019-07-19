@@ -87,8 +87,8 @@ public abstract class AbstractTopic<K, M extends Message<K>> implements Topic<K,
 	}
 
 	@Override
-	public Function<K, String> getPartitionSelector() {
-		return key -> key.toString();
+	public Function<M, String> getPartitionSelector() {
+		return message -> message.getKey().toString();
 	}
 
 }

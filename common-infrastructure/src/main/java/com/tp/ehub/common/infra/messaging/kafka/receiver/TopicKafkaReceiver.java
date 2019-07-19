@@ -3,6 +3,7 @@ package com.tp.ehub.common.infra.messaging.kafka.receiver;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,11 +57,13 @@ public class TopicKafkaReceiver implements MessageReceiver {
 		
 		Topic<K, M> topic = (Topic<K, M>) registry.get(type);
 		
-		Integer partition = topic.getPartitioner().apply(key);
-
 		ReceiverOptions<String, byte[]> receiverOptions = ReceiverOptions.<String, byte[]> create(consumerProps(options));
 
-		receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(topic.getName(), partition)));
+		if (Objects.nonNull(options.getPartitionSelector())) {
+			Integer partition = topic.getPartition(options.getPartitionSelector());
+			receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(topic.getName(), partition)));
+		}
+		
 		RecordTransformer<K, M> transformer = new RecordTransformer<K, M>(topic);
 
 		KafkaReceiver<String, byte[]> receiver = KafkaReceiver.create(receiverOptions);
@@ -75,7 +78,10 @@ public class TopicKafkaReceiver implements MessageReceiver {
 		@SuppressWarnings("unchecked")
 		MessageContainer<K, M> container = registry.get(record.getMessage().getClass());
 		
-		ReceiverOptions<String, byte[]> receiverOptions = ReceiverOptions.<String, byte[]> create(consumerProps(new MessageReceiverOptions(UUID.randomUUID().toString())));
+		MessageReceiverOptions options = new MessageReceiverOptions();
+		options.setConsumerId(UUID.randomUUID().toString());
+		
+		ReceiverOptions<String, byte[]> receiverOptions = ReceiverOptions.<String, byte[]> create(consumerProps(options));
 		receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(container.getName(), kafkaRecord.getPartition())));
 
 		Consumer<String, byte[]> consumer = ConsumerFactory.INSTANCE.createConsumer(receiverOptions);
