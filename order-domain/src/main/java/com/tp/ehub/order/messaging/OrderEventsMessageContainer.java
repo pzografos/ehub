@@ -7,15 +7,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tp.ehub.common.infra.messaging.kafka.container.AbstractTopic;
+import com.tp.ehub.common.domain.messaging.container.AbstractMessageContainer;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 
 @ApplicationScoped
 @Named("order-events")
-public class OrderEventsTopic extends AbstractTopic<UUID, OrderEvent> {
+public class OrderEventsMessageContainer extends AbstractMessageContainer<UUID, OrderEvent> {
 
 	@Inject
-	public OrderEventsTopic(@Named("objectMapper") ObjectMapper objectMapper) {
+	public OrderEventsMessageContainer(@Named("objectMapper") ObjectMapper objectMapper) {
 		super("order-events", objectMapper, UUID.class, OrderEvent.class);
 	}
 

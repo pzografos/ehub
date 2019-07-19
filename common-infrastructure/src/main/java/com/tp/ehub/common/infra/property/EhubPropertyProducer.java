@@ -1,10 +1,11 @@
 package com.tp.ehub.common.infra.property;
 
+import java.util.Objects;
+import java.util.Properties;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import java.util.Objects;
-import java.util.Properties;
 
 public class EhubPropertyProducer {
 

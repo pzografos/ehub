@@ -1,4 +1,4 @@
-package com.tp.ehub.common.infra.messaging.kafka.container;
+package com.tp.ehub.common.domain.messaging.container;
 
 import static java.lang.String.format;
 
@@ -10,7 +10,7 @@ import java.util.function.Function;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.messaging.Message;
 
-public abstract class AbstractTopic<K, M extends Message<K>> implements Topic<K, M> {
+public class AbstractMessageContainer<K, M extends Message<K>> implements  MessageContainer<K, M>{
 
 	protected String name;
 
@@ -20,7 +20,7 @@ public abstract class AbstractTopic<K, M extends Message<K>> implements Topic<K,
 
 	protected Class<M> messageClass;
 
-	protected AbstractTopic(String name, ObjectMapper mapper, Class<K> keyClass, Class<M> messageClass) {
+	protected AbstractMessageContainer(String name, ObjectMapper mapper, Class<K> keyClass, Class<M> messageClass) {
 		this.name = name;
 		this.mapper = mapper;
 		this.keyClass = keyClass;
@@ -86,8 +86,14 @@ public abstract class AbstractTopic<K, M extends Message<K>> implements Topic<K,
 		};
 	}
 
-	@Override
-	public Function<M, String> getPartitionSelector() {
+	/**
+	 * A function from the message to the <code>String</code> value
+	 * responsible for partition calculation.
+	 * 
+	 * @return the function of <code>M</code> to <code>String</code>
+	 * @see #partitionFn()
+	 */
+	public Function<M, String> getPartitionSelector(){
 		return message -> message.getKey().toString();
 	}
 

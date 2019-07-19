@@ -13,13 +13,14 @@ import com.tp.ehub.common.domain.messaging.container.MessageContainerRegistry;
 public class TopicRegistry implements MessageContainerRegistry{
 
 	@Inject @Any
-	Instance<Topic<?, ?>> topics;
+	Instance<MessageContainer<?, ?>> topics;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <K, M extends Message<K>> MessageContainer<K, M> get(Class<M> type) {
 		return topics.stream()
 				.filter(t -> t.getMessageClass().equals(type))
-				.map(topic -> (Topic<K, M>) topic) 
+				.map(topic -> (MessageContainer<K, M>) topic) 
 				.findAny()
 				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find topic for class %s", type.getName())));
 	}

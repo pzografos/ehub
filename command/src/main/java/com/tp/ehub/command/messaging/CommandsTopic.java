@@ -6,11 +6,11 @@ import javax.inject.Named;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.command.Command;
-import com.tp.ehub.common.infra.messaging.kafka.container.AbstractTopic;
+import com.tp.ehub.common.domain.messaging.container.AbstractMessageContainer;
 
 @ApplicationScoped
 @Named("commands")
-public class CommandsTopic extends AbstractTopic<String, Command> {
+public class CommandsTopic extends AbstractMessageContainer<String, Command> {
 
 	@Inject
 	public CommandsTopic(@Named("objectMapper") ObjectMapper objectMapper) {

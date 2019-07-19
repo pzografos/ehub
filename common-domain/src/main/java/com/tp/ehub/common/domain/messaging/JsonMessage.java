@@ -1,4 +1,4 @@
-package com.tp.ehub.common.infra.serialization;
+package com.tp.ehub.common.domain.messaging;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -7,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tp.ehub.common.infra.messaging.AbstractEvent;
-import com.tp.ehub.common.infra.serialization.JsonMessage;
+import com.tp.ehub.common.domain.messaging.AbstractEvent;
 
-@JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = ProductCreated.class, name = "Product.Created"), 
 				@Type(value = ProductDeleted.class, name = "Product.Deleted"),

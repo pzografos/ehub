@@ -56,7 +56,7 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 		throw new RuntimeException("Not implemented yet");
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private RootEntityCache<K, T> put(K key, T updatedElement, StatefulRedisConnection<String, String> connection) {
 		String storeRedisKey = storeKey().apply(key);
 

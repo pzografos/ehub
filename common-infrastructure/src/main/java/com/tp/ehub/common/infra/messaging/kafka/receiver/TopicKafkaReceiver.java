@@ -24,7 +24,7 @@ import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
 import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaCluster;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
-import com.tp.ehub.common.infra.messaging.kafka.container.Topic;
+import com.tp.ehub.common.infra.messaging.kafka.Partitioner;
 
 import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.KafkaReceiver;
@@ -35,15 +35,18 @@ import reactor.kafka.receiver.internals.ConsumerFactory;
 public class TopicKafkaReceiver implements MessageReceiver {
 
 	@Inject
-	private KafkaCluster kafka;
+	KafkaCluster kafka;
 	
 	@Inject
-	private MessageContainerRegistry registry;
+	MessageContainerRegistry registry;
+	
+	@Inject
+	Partitioner partitioner;
 
 	@Override
 	public <K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveAll(Class<M> type, MessageReceiverOptions options) {
 		
-		Topic<K, M> topic = (Topic<K, M>) registry.get(type);
+		MessageContainer<K, M> topic = registry.get(type);
 		
 		ReceiverOptions<String, byte[]> receiverOptions = ReceiverOptions.<String, byte[]> create(consumerProps(options))
 				.subscription(Collections.singleton(topic.getName()));
@@ -55,12 +58,12 @@ public class TopicKafkaReceiver implements MessageReceiver {
 	@Override
 	public <K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type, MessageReceiverOptions options) {
 		
-		Topic<K, M> topic = (Topic<K, M>) registry.get(type);
+		MessageContainer<K, M> topic = registry.get(type);
 		
 		ReceiverOptions<String, byte[]> receiverOptions = ReceiverOptions.<String, byte[]> create(consumerProps(options));
 
 		if (Objects.nonNull(options.getPartitionSelector())) {
-			Integer partition = topic.getPartition(options.getPartitionSelector());
+			Integer partition = partitioner.getPartition(options.getPartitionSelector());
 			receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(topic.getName(), partition)));
 		}
 		
