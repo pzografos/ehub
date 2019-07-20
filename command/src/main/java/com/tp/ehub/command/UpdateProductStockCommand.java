@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * A <code>Command</code> to update the stock of an existing product
  *
  */
-@JsonTypeName("Commands.UpdateProductStock")
+@JsonTypeName(UpdateProductStockCommand.NAME)
 public class UpdateProductStockCommand implements Command {
 
-	public static final String NAME = "UPDATE_PRODUCT_STOCK";
+	public static final String NAME = "Commands.UpdateProductStock";
 
 	private UUID productId;
 
@@ -62,13 +62,12 @@ public class UpdateProductStockCommand implements Command {
 
 	@Override
 	@JsonIgnore
-	public String getCommandName() {
-		return NAME;
-	}
-
-	@Override
-	@JsonIgnore
 	public String getKey() {
 		return companyId.toString();
+	}
+	
+	@Override
+	public void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
 	}
 }

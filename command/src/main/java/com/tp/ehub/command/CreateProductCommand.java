@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * A <code>Command</code> to create a new product
  *
  */
-@JsonTypeName("Commands.CreateProduct")
+@JsonTypeName(CreateProductCommand.NAME)
 public class CreateProductCommand implements Command {
 
-	public static final String NAME = "CREATE_PRODUCT";
+	public static final String NAME = "Commands.CreateProduct";
 
 	private String code;
 
@@ -79,16 +79,15 @@ public class CreateProductCommand implements Command {
 	public void setCompanyId(UUID companyId) {
 		this.companyId = companyId;
 	}
-
-	@Override
-	@JsonIgnore
-	public String getCommandName() {
-		return NAME;
-	}
-
+	
 	@Override
 	@JsonIgnore
 	public String getKey() {
 		return companyId.toString();
+	}
+	
+	@Override
+	public void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
 	}
 }

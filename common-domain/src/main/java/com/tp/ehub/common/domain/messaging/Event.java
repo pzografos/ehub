@@ -15,11 +15,4 @@ import com.tp.ehub.common.domain.model.Versionable;
  */
 public interface Event<K> extends Message<K>, Versionable {
 
-	/**
-	 * Gets a name for this event that uniquely identifies it among other events
-	 * in the system
-	 * 
-	 * @return the event name
-	 */
-	String getEventName();
 }

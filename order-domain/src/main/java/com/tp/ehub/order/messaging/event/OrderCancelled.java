@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-@JsonTypeName("Order.Cancelled")
+@JsonTypeName(OrderCancelled.NAME)
 public class OrderCancelled extends OrderEvent {
 
-	public static final String NAME = "ORDER_CANCELLED";
+	public static final String NAME = "Order.Cancelled";
 
 	private UUID orderId;
 	
@@ -34,10 +34,14 @@ public class OrderCancelled extends OrderEvent {
 	public void setBasket(Map<UUID, Long> basket) {
 		this.basket = basket;
 	}
-
+	
 	@Override
-	public String getEventName() {
-		return NAME;
+	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
+		return visitor.visit(parameter, this);
 	}
 
+	@Override
+	protected void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
+	}
 }

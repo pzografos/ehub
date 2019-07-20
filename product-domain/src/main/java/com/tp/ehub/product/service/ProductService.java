@@ -11,6 +11,8 @@ public interface ProductService {
 
 	void deleteProduct(UUID companyId, UUID productId);
 	
+	void updateProductQuantity(UUID companyId, UUID productId, Long quantity);
+	
 	void addQuantities(UUID companyId, Map<UUID, Long> productQuantities);
 	
 	void removeQuantities(UUID companyId, Map<UUID, Long> productQuantities);

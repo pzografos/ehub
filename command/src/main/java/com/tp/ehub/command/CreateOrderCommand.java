@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * A <code>Command</code> to create a new order
  *
  */
-@JsonTypeName("Commands.CreateOrder")
+@JsonTypeName(CreateOrderCommand.NAME)
 public class CreateOrderCommand implements Command {
 
-	public static final String NAME = "CREATE_ORDER";
+	public static final String NAME = "Commands.CreateOrder";
 
 	private UUID companyId;
 
@@ -53,14 +53,12 @@ public class CreateOrderCommand implements Command {
 
 	@Override
 	@JsonIgnore
-	public String getCommandName() {
-		return NAME;
-	}
-
-	@Override
-	@JsonIgnore
 	public String getKey() {
 		return companyId.toString();
 	}
 
+	@Override
+	public void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
+	}
 }
