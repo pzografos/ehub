@@ -48,6 +48,18 @@ public class ProductServiceImpl implements ProductService{
 			aggregateRepository.save(aggregate);
 		}
 	}
+	
+	@Override
+	public void updateProductQuantity(UUID companyId, UUID productId, Long quantity) {
+		ProductCatalogueAggregate aggregate = aggregateRepository.get(companyId);
+		ProductStockUpdated productStockUpdated = new ProductStockUpdated();
+		productStockUpdated.setCompanyId(companyId);
+		productStockUpdated.setProductId(productId);
+		productStockUpdated.setQuantity(quantity);
+		productStockUpdated.setTimestamp(ZonedDateTime.now());
+		aggregate.apply(productStockUpdated);
+		aggregateRepository.save(aggregate);		
+	}
 
 	@Override
 	public void addQuantities(UUID companyId, Map<UUID, Long> productQuantities) {

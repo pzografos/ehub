@@ -1,12 +1,11 @@
 package com.tp.ehub.product.messaging.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-@JsonTypeName("Product.Created")
+@JsonTypeName(ProductCreated.NAME)
 public class ProductCreated extends ProductEvent {
 
-	public static final String NAME = "PRODUCT_CREATED";
+	public static final String NAME = "Product.Created";
 
 	private String code;
 
@@ -53,8 +52,7 @@ public class ProductCreated extends ProductEvent {
 	}
 
 	@Override
-	@JsonIgnore
-	public String getEventName() {
-		return NAME;
+	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
+		return visitor.visit(parameter, this);
 	}
 }

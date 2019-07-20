@@ -93,6 +93,7 @@ public class AbstractMessageContainer<K, M extends Message<K>> implements  Messa
 	 * @return the function of <code>M</code> to <code>String</code>
 	 * @see #partitionFn()
 	 */
+	@Override
 	public Function<M, String> getPartitionSelector(){
 		return message -> message.getKey().toString();
 	}

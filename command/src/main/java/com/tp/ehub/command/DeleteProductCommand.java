@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * A <code>Command</code> to delete an existing product
  *
  */
-@JsonTypeName("Commands.DeleteProduct")
+@JsonTypeName(DeleteProductCommand.NAME)
 public class DeleteProductCommand implements Command {
 
-	public static final String NAME = "DELETE_PRODUCT";
+	public static final String NAME = "Commands.DeleteProduct";
 
 	private ZonedDateTime timestamp;
 
@@ -52,13 +52,12 @@ public class DeleteProductCommand implements Command {
 
 	@Override
 	@JsonIgnore
-	public String getCommandName() {
-		return NAME;
-	}
-
-	@Override
-	@JsonIgnore
 	public String getKey() {
 		return companyId.toString();
+	}
+	
+	@Override
+	public void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
 	}
 }

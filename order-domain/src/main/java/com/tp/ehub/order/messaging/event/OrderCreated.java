@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-@JsonTypeName("Order.Created")
+@JsonTypeName(OrderCreated.NAME)
 public class OrderCreated extends OrderEvent {
 
-	public static final String NAME = "ORDER_CREATED";
+	public static final String NAME = "Order.Created";
 	
 	private UUID orderId;
 	
@@ -35,8 +35,12 @@ public class OrderCreated extends OrderEvent {
 	}
 
 	@Override
-	public String getEventName() {
-		return NAME;
+	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
+		return visitor.visit(parameter, this);
 	}
-
+	
+	@Override
+	protected void consume(ConsumerVisitor mapper) {
+		mapper.accept(this);
+	}
 }

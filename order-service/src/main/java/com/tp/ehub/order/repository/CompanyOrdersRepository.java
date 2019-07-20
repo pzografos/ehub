@@ -9,8 +9,8 @@ import com.tp.ehub.common.infra.repository.AbstractAggregateRepository;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.CompanyOrders;
 import com.tp.ehub.order.model.aggregate.CompanyOrdersAggregate;
-import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 import com.tp.ehub.product.messaging.event.ProductCreated;
+import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 
 @Dependent
 public class CompanyOrdersRepository extends AbstractAggregateRepository<CompanyOrdersAggregate, OrderEvent, CompanyOrders, UUID> {
@@ -34,21 +34,15 @@ public class CompanyOrdersRepository extends AbstractAggregateRepository<Company
 		return new CompanyOrders(id);
 	}
 	
-	public CompanyOrdersAggregate populateStock(CompanyOrdersAggregate companyOrdersAggregate){
+	public CompanyOrdersAggregate populateStock(CompanyOrdersAggregate companyOrdersAggregate){	
 		productEventsStore.getbyKey(companyOrdersAggregate.getRoot().getId())
-			.forEach(event -> {
-				String e = event.getEventName();
-				switch (e) {
-				case ProductCreated.NAME:
+			.forEach(event -> {	
+				if (event.getClass().isInstance(ProductCreated.class)) {
 					ProductCreated created = (ProductCreated) event;
 					companyOrdersAggregate.updateStock(created.getProductId(), created.getQuantity());
-					break;
-				case ProductStockUpdated.NAME:
+				} else if (event.getClass().isInstance(ProductCreated.class)) {
 					ProductStockUpdated stockUpdated = (ProductStockUpdated) event;
 					companyOrdersAggregate.updateStock(stockUpdated.getProductId(), stockUpdated.getQuantity());
-					break;
-				default:
-					return;
 				}
 			});
 		return companyOrdersAggregate;
