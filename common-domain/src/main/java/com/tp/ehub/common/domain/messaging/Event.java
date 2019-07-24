@@ -15,4 +15,5 @@ import com.tp.ehub.common.domain.model.Versionable;
  */
 public interface Event<K> extends Message<K>, Versionable {
 
+	String getEventName();
 }

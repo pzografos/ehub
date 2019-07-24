@@ -14,19 +14,13 @@ public interface MessageReceiver {
 
 	/**
 	 * Reads messages from a broker for the given type. All keys are included.
-	 * <p>
-	 * The method allows the user to provide a consumer id so that the message
-	 * broker provider may store metadata for each consumers and allow consumers
-	 * to continue from where they left off. See Kafka consumer groups for an
-	 * example. The application relies on the existence of this feature.
-	 * </p>
 	 * 
-     * @param <K>
-     *            the exact type of message key
-     * @param <M>
-     *            the exact type of message value 
+	 * @param <K>
+	 *            the exact type of message key
+	 * @param <M>
+	 *            the exact type of message value
 	 * @param type
-	 *            the class of the message to read    
+	 *            the class of the message to read
 	 * @param options
 	 *            the receiver options to use
 	 * @return the messages for the group

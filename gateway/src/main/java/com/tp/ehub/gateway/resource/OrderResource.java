@@ -13,8 +13,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.tp.ehub.command.CreateOrderCommand;
-import com.tp.ehub.gateway.service.CommandService;
+import com.tp.ehub.common.domain.messaging.sender.MessageSender;
+import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
+import com.tp.ehub.order.messaging.command.PlaceOrderCommand;
+
+import reactor.core.publisher.Flux;
 
 @Path("orders")
 @Consumes(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -25,13 +28,13 @@ public class OrderResource {
 	UriInfo uriInfo;
 
 	@Inject
-	CommandService commandService;
+	MessageSender sender;
 
 	@POST
-	public Response createOrder(CreateOrderCommand createOrderCommand) {
+	public Response placeOrder(PlaceOrderCommand command) {
 		try {
-			commandService.create(createOrderCommand);
-			return Response.created(URI.create(uriInfo.getPath() + "/" + createOrderCommand.getKey())).build();
+			sender.send(Flux.just(new KafkaRecord<>(command.getKey(), command)), PlaceOrderCommand.class);
+			return Response.created(URI.create(uriInfo.getPath() + "/" + command.getKey())).build();
 		} catch (Exception e) {
 			throw new InternalServerErrorException(e);
 		}

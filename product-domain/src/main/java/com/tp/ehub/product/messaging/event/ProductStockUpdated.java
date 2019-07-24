@@ -1,5 +1,6 @@
 package com.tp.ehub.product.messaging.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName(ProductStockUpdated.NAME)
@@ -19,6 +20,12 @@ public class ProductStockUpdated extends ProductEvent {
 
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
+	}
+	
+	@Override
+	@JsonIgnore
+	public String getEventName() {
+		return NAME;
 	}
 
 	@Override

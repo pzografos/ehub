@@ -1,4 +1,4 @@
-package com.tp.ehub.product.repository;
+package com.tp.ehub.order.repository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -6,7 +6,7 @@ import java.util.UUID;
 import javax.enterprise.context.Dependent;
 
 import com.tp.ehub.common.domain.repository.EntityCache;
-import com.tp.ehub.product.model.ProductCatalogue;
+import com.tp.ehub.order.model.Order;
 
 /**
  * Temp implementation
@@ -14,15 +14,15 @@ import com.tp.ehub.product.model.ProductCatalogue;
  * TODO: replace by Redis implementation
  */
 @Dependent
-public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCatalogue> {
+public class OrderEntityCache implements EntityCache<UUID, Order> {
 
 	@Override
-	public Optional<ProductCatalogue> get(UUID id) {
+	public Optional<Order> get(UUID id) {
 		return Optional.empty();
 	}
 
 	@Override
-	public void cache(ProductCatalogue entity) {
+	public void cache(Order entity) {
 
 	}
 
