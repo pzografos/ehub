@@ -19,13 +19,12 @@ public class Main {
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 
-		CommandHandler commandHandler = container.select(CommandHandler.class).get();
-		OrderEventHandler orderEventHandler = container.select(OrderEventHandler.class).get();
+		CommandProcessor commandProcessor = container.select(CommandProcessor.class).get();
+		OrderEventProcessor orderEventProcessor = container.select(OrderEventProcessor.class).get();
 
 		LOGGER.info("Product Service starting ... ");
 
-		commandHandler.run(productScheduler);
-		orderEventHandler.run(productScheduler);
-
+		commandProcessor.run(productScheduler);
+		orderEventProcessor.run(productScheduler);
 	}
 }

@@ -13,6 +13,8 @@ public class Order implements Entity<UUID> {
 	private UUID companyId;
 
 	private Map<UUID, Long> basket;
+	
+	private OrderStatus status;
 
 	private ZonedDateTime timestamp;
 
@@ -27,6 +29,14 @@ public class Order implements Entity<UUID> {
 	@Override
 	public UUID getId() {
 		return id;
+	}
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 
 	public UUID getCompanyId() {

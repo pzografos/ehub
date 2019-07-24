@@ -8,17 +8,17 @@ import java.util.function.Function;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.domain.model.Entity;
-import com.tp.ehub.common.domain.repository.RootEntityCache;
+import com.tp.ehub.common.domain.repository.EntityCache;
 
 import io.lettuce.core.TransactionResult;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 
-public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implements RootEntityCache<K, T> {
+public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implements EntityCache<K, T> {
 
 	@Inject
-	private RedisCluster redisCluster;
+	RedisCluster redisCluster;
 
 	@Override
 	public final Optional<T> get(K id) {
@@ -57,7 +57,7 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private RootEntityCache<K, T> put(K key, T updatedElement, StatefulRedisConnection<String, String> connection) {
+	private EntityCache<K, T> put(K key, T updatedElement, StatefulRedisConnection<String, String> connection) {
 		String storeRedisKey = storeKey().apply(key);
 
 		RedisCommands<String, String> sync = connection.sync();

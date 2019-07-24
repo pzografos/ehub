@@ -14,7 +14,7 @@ public class Main {
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 
-		CommandHandler commandHandler = container.select(CommandHandler.class).get();
+		CommandProcessor commandHandler = container.select(CommandProcessor.class).get();
 
 		commandHandler.run(scheduler);
 

@@ -7,22 +7,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Function;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.messaging.Message;
 
 public class AbstractMessageContainer<K, M extends Message<K>> implements  MessageContainer<K, M>{
 
-	protected String name;
-
+	@Inject
+	@Named("objectMapper")
 	protected ObjectMapper mapper;
+	
+	protected String name;
 
 	protected Class<K> keyClass;
 
 	protected Class<M> messageClass;
 
-	protected AbstractMessageContainer(String name, ObjectMapper mapper, Class<K> keyClass, Class<M> messageClass) {
+	protected AbstractMessageContainer(String name, Class<K> keyClass, Class<M> messageClass) {
 		this.name = name;
-		this.mapper = mapper;
 		this.keyClass = keyClass;
 		this.messageClass = messageClass;
 	}

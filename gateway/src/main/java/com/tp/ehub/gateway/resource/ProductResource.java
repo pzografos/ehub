@@ -17,8 +17,11 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tp.ehub.command.CreateProductCommand;
-import com.tp.ehub.gateway.service.CommandService;
+import com.tp.ehub.common.domain.messaging.sender.MessageSender;
+import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
+import com.tp.ehub.product.messaging.commands.CreateProductCommand;
+
+import reactor.core.publisher.Flux;
 
 @Path("products")
 @Consumes(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -31,13 +34,13 @@ public class ProductResource {
 	UriInfo uriInfo;
 
 	@Inject
-	CommandService commandService;
+	MessageSender sender;
 
 	@POST
 	public Response createProduct(CreateProductCommand command) {
 
 		try {
-			commandService.create(command);
+			sender.send(Flux.just(new KafkaRecord<>(command.getKey(), command)), CreateProductCommand.class);
 			return Response.created(URI.create(uriInfo.getPath() + "/" + command.getCode())).build();
 		} catch (Exception e) {
 			LOGGER.error("Create product failed", e);

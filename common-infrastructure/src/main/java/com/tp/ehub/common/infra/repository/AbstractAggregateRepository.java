@@ -12,7 +12,7 @@ import com.tp.ehub.common.domain.messaging.MessageStore;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
 import com.tp.ehub.common.domain.repository.AggregateRepository;
-import com.tp.ehub.common.domain.repository.RootEntityCache;
+import com.tp.ehub.common.domain.repository.EntityCache;
 
 /**
  * Base implementation of the <code>AggregateRepository</code>.
@@ -42,7 +42,7 @@ public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, 
 	Logger log;
 
 	@Inject
-	RootEntityCache<K, T> cache;
+	EntityCache<K, T> cache;
 
 	@Inject
 	MessageStore<K, E> store;

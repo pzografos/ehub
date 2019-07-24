@@ -3,6 +3,7 @@ package com.tp.ehub.order.messaging.event;
 import java.util.Map;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName(OrderCreated.NAME)
@@ -33,14 +34,15 @@ public class OrderCreated extends OrderEvent {
 	public void setBasket(Map<UUID, Long> basket) {
 		this.basket = basket;
 	}
-
+	
 	@Override
-	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
-		return visitor.visit(parameter, this);
+	@JsonIgnore
+	public String getEventName() {
+		return NAME;
 	}
 	
 	@Override
-	protected void consume(ConsumerVisitor mapper) {
-		mapper.accept(this);
+	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
+		return visitor.visit(parameter, this);
 	}
 }

@@ -20,9 +20,11 @@
 		<io.lettuce.core>5.1.7.RELEASE</io.lettuce.core>
 		<ch.qos.logback>1.2.3</ch.qos.logback>
 		<weld.se.core.version>3.0.1.Final</weld.se.core.version>
+		<weld.junit5.version>2.0.0.Final</weld.junit5.version>
 		<java.ee.version>8.0</java.ee.version>
 		<com.fasterxml.jackson>2.9.9</com.fasterxml.jackson>
-		<org.junit.jupiter>5.1.0</org.junit.jupiter>
+		<org.junit.jupiter.version>5.5.0</org.junit.jupiter.version>
+		<org.junit.platform.version>1.5.1</org.junit.platform.version>
 	</properties>
 
 	<modules>
@@ -30,7 +32,6 @@
 		<module>../docker-base-images</module>
 		<module>../common-domain</module>
 		<module>../common-infrastructure</module>
-		<module>../command</module>
 		<module>../order-domain</module>
 		<module>../order-service</module>
 		<module>../product-domain</module>
@@ -144,10 +145,10 @@
 				<version>${io.projectreactor.kafka}</version>
 			</dependency>
 			<dependency>
-			    <groupId>io.projectreactor</groupId>
-			    <artifactId>reactor-core</artifactId>
-			    <version>${io.projectreactor.core}</version>
-			</dependency>			
+				<groupId>io.projectreactor</groupId>
+				<artifactId>reactor-core</artifactId>
+				<version>${io.projectreactor.core}</version>
+			</dependency>
 			<dependency>
 				<groupId>io.lettuce</groupId>
 				<artifactId>lettuce-core</artifactId>
@@ -169,9 +170,26 @@
 			<version>${weld.se.core.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-junit5</artifactId>
+			<version>${weld.junit5.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${org.junit.jupiter}</version>
+			<version>${org.junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${org.junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<version>${org.junit.platform.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
