@@ -11,6 +11,6 @@ package com.tp.ehub.common.domain.model;
  * @param <K>
  *            the type of this root entity's unique identifier
  */
-public interface Entity<K> extends Identifiable<K> {
+public interface Entity<K> extends Identifiable<K>{
 
 }

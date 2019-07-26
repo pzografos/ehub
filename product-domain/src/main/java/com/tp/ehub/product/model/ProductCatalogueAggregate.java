@@ -10,8 +10,19 @@ import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 
 public class ProductCatalogueAggregate extends AbstractAggregate<ProductEvent, ProductCatalogue, UUID> {
 
+	private Long version;
+
 	public ProductCatalogueAggregate(ProductCatalogue rootEntity) {
 		super(rootEntity);
+	}
+	
+	@Override
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	@Override

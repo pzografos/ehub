@@ -6,12 +6,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.tp.ehub.common.domain.messaging.container.AbstractMessageContainer;
+import com.tp.ehub.common.domain.messaging.container.AbstractKeyValueMessageContainer;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 
 @ApplicationScoped
 @Named("product-events")
-public class ProductEventsMessageContainer extends AbstractMessageContainer<UUID, ProductEvent> {
+public class ProductEventsMessageContainer extends AbstractKeyValueMessageContainer<UUID, ProductEvent> {
 
 	@Inject
 	public ProductEventsMessageContainer() {

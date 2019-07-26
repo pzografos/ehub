@@ -6,8 +6,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
-import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
 import com.tp.ehub.product.messaging.commands.ProductCommand;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
@@ -20,7 +19,7 @@ import reactor.core.scheduler.Scheduler;
 public class CommandProcessor implements Consumer<ProductCommand> {
 
 	@Inject
-	MessageReceiver receiver;
+	KafkaTopicReceiver receiver;
 	
 	@Inject
 	ProductCatalogueRepository productCatalogueRepository;
@@ -30,11 +29,9 @@ public class CommandProcessor implements Consumer<ProductCommand> {
 
 	public void run(Scheduler productScheduler) {
 		
-		MessageReceiverOptions options = new MessageReceiverOptions();
-		options.setConsumerId("product_command_receiver_v1.0");
-		options.setFromStart(true);
+		receiver.setConsumerId("product_command_receiver_v1.0");
 		
-		final Flux<ProductCommand> commandsFlux = receiver.receiveAll(ProductCommand.class, options) 
+		final Flux<ProductCommand> commandsFlux = receiver.receiveAll(ProductCommand.class) 
 				.map(MessageRecord::getMessage)
 				.subscribeOn(productScheduler);
 		commandsFlux.subscribe(this);
@@ -42,7 +39,7 @@ public class CommandProcessor implements Consumer<ProductCommand> {
 
 	@Override
 	public void accept(ProductCommand command) {
-		ProductCatalogueAggregate aggregate = productCatalogueRepository.get(command.getCompanyId());
+		ProductCatalogueAggregate aggregate = productCatalogueRepository.get(command.getCompanyId(), command.getCompanyId().toString());
 		Collection<ProductEvent> events = productCommandHandler.apply(aggregate, command);
 		events.forEach(aggregate::apply);
 		productCatalogueRepository.save(aggregate);

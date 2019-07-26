@@ -7,19 +7,13 @@ import java.nio.charset.StandardCharsets;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.tp.ehub.common.domain.messaging.container.MessageContainer;
+
 @ApplicationScoped
 public class Partitioner {
 
-	public Integer getPartition(String partitionKey) {
-		return toPositive(murmur2(partitionKey.getBytes(StandardCharsets.UTF_8))) % getPartitions();
+	public Integer getPartition(String partitionKey, MessageContainer<?, ?> container) {
+		return toPositive(murmur2(partitionKey.getBytes(StandardCharsets.UTF_8))) % container.getPartitions();
 	}
 
-	/**
-	 * The number of partitions this conatainer. Defaults to 15.
-	 * 
-	 * @return number of partitions
-	 */
-	protected int getPartitions() {
-		return 15;
-	}
 }

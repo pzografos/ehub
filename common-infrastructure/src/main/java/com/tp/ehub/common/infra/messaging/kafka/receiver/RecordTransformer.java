@@ -5,14 +5,14 @@ import java.util.function.Function;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.container.MessageContainer;
+import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
 
 class RecordTransformer<K, M extends Message<K>> implements Function<ConsumerRecord<String, byte[]>, KafkaRecord<K, M>> {
 
-	private MessageContainer<K, M> topic;
+	private KeyValueMessageContainer<K, M> topic;
 
-	public RecordTransformer(MessageContainer<K, M> topic) {
+	public RecordTransformer(KeyValueMessageContainer<K, M> topic) {
 		this.topic = topic;
 	}
 

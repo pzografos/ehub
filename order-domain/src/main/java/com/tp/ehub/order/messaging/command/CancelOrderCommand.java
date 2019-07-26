@@ -25,6 +25,7 @@ public class CancelOrderCommand implements OrderCommand {
 
 	}
 
+	@Override
 	public UUID getCompanyId() {
 		return companyId;
 	}

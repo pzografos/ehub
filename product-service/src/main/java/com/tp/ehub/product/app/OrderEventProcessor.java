@@ -6,8 +6,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.messaging.receiver.MessageReceiver;
-import com.tp.ehub.common.domain.messaging.receiver.MessageReceiverOptions;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
@@ -20,7 +19,7 @@ import reactor.core.scheduler.Scheduler;
 public class OrderEventProcessor implements Consumer<OrderEvent> {
 
 	@Inject
-	MessageReceiver receiver;
+	KafkaTopicReceiver receiver;
 	
 	@Inject
 	ProductCatalogueRepository productCatalogueRepository;
@@ -30,11 +29,9 @@ public class OrderEventProcessor implements Consumer<OrderEvent> {
 
 	public void run(Scheduler productScheduler) {
 		
-		MessageReceiverOptions options = new MessageReceiverOptions();
-		options.setConsumerId("product_order_event_receiver_v1.0");
-		options.setFromStart(true);
+		receiver.setConsumerId("product_order_event_receiver_v1.0");
 		
-		final Flux<OrderEvent> eventsFlux = receiver.receiveAll(OrderEvent.class, options) 
+		final Flux<OrderEvent> eventsFlux = receiver.receiveAll(OrderEvent.class) 
 				.map(MessageRecord::getMessage)
 				.subscribeOn(productScheduler);
 		
@@ -43,7 +40,7 @@ public class OrderEventProcessor implements Consumer<OrderEvent> {
 
 	@Override
 	public void accept(OrderEvent event) {
-		ProductCatalogueAggregate aggregate = productCatalogueRepository.get(event.getCompanyId());
+		ProductCatalogueAggregate aggregate = productCatalogueRepository.get(event.getCompanyId(), event.getCompanyId().toString());
 		Collection<ProductEvent> events = orderEventHandler.apply(aggregate, event);
 		events.forEach(aggregate::apply);
 		productCatalogueRepository.save(aggregate);
