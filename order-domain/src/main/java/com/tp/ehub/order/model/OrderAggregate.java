@@ -17,6 +17,8 @@ import com.tp.ehub.order.messaging.event.OrderEvent;
 public class OrderAggregate extends AbstractAggregate<OrderEvent, Order, UUID> {
 	
 	private Map<UUID, Long> stock = new HashMap<UUID, Long>();
+	
+	private Long version;
 
 	public OrderAggregate(Order rootEntity) {
 		super(rootEntity);
@@ -30,6 +32,15 @@ public class OrderAggregate extends AbstractAggregate<OrderEvent, Order, UUID> {
 		stock.put(productId, quantity);
 	}
 
+	@Override
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	@Override
 	public void apply(OrderEvent event) {
 		switch(event.getEventName()) {

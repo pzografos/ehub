@@ -27,6 +27,11 @@ public interface OrderCommand extends Command<UUID>{
 	 */
 	public UUID getOrderId();
 	
+	/**
+	 * @return the company Id the <code>Command</code> refers to
+	 */
+	public UUID getCompanyId();
+	
 	<P, R> R map(P parameter, BiFunctionVisitor<P, R> mapper);
 	
 	public interface BiFunctionVisitor<P, R> extends BiFunction<P, OrderCommand, R> {

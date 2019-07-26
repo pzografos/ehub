@@ -1,5 +1,8 @@
 package com.tp.ehub.common.infra.repository;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -8,11 +11,11 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.Event;
-import com.tp.ehub.common.domain.messaging.MessageStore;
+import com.tp.ehub.common.domain.messaging.store.PartitionedMessageStore;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
-import com.tp.ehub.common.domain.repository.AggregateRepository;
 import com.tp.ehub.common.domain.repository.EntityCache;
+import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
 
 /**
  * Base implementation of the <code>AggregateRepository</code>.
@@ -36,7 +39,7 @@ import com.tp.ehub.common.domain.repository.EntityCache;
  * @param <K>
  *            The type of the aggregate's root entity unique identifier
  */
-public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> implements AggregateRepository<A, E, T, K> {
+public abstract class AbstractPartitionedAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> implements PartitionedAggregateRepository<A, E, T, K> {
 
 	@Inject
 	Logger log;
@@ -45,14 +48,23 @@ public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, 
 	EntityCache<K, T> cache;
 
 	@Inject
-	MessageStore<K, E> store;
+	PartitionedMessageStore<K, E> store;
 
-	protected AbstractAggregateRepository() {
+	protected AbstractPartitionedAggregateRepository() {
 
 	}
 
 	@Override
+	public A get(K id, String partitionKey) {
+		return get(id, of(partitionKey));
+	}
+	
+	@Override
 	public final A get(K id) {
+		return get(id, empty());
+	}
+
+	private A get(K id, Optional<String> partitionKey) {
 		Optional<T> entityOpt = cache.get(id);
 		if (entityOpt.isPresent()) {
 			T rootEntity = entityOpt.get();
@@ -60,7 +72,7 @@ public abstract class AbstractAggregateRepository<A extends Aggregate<E, T, K>, 
 		} else {
 			T rootEntity = create(id);
 			A aggregate = create(rootEntity);
-			Stream<E> events = store.getbyKey(id);
+			Stream<E> events = partitionKey.isPresent() ? store.getbyKey(id, partitionKey.get()) : store.getbyKey(id);
 			events.forEach(aggregate::apply);
 			return aggregate;
 		}

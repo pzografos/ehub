@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.domain.messaging.MessageRecord;
-import com.tp.ehub.common.domain.messaging.container.MessageContainer;
+import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
 import com.tp.ehub.common.domain.messaging.container.MessageContainerRegistry;
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaCluster;
@@ -52,7 +52,7 @@ public class TopicKafkaSender implements MessageSender {
 	@Override
 	public <K, M extends Message<K>> void send(Flux<MessageRecord<K, M>> outboundFlux, Class<M> messageType) {
 		
-		MessageContainer<K, M> topic = registry.get(messageType);
+		KeyValueMessageContainer<K, M> topic = (KeyValueMessageContainer<K, M>) registry.get(messageType);
 		
 		sender.send(outboundFlux.map( r -> senderRecord(topic, r)))
 			.doOnError(e -> log.error("Send failed", e))
@@ -74,10 +74,10 @@ public class TopicKafkaSender implements MessageSender {
 				new AbstractMap.SimpleEntry<>(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class));
 	}
 
-	private <K, M extends Message<K>> SenderRecord<String, byte[], String> senderRecord(MessageContainer<K, M> topic, MessageRecord<K, M> messageRecord) {
+	private <K, M extends Message<K>> SenderRecord<String, byte[], String> senderRecord(KeyValueMessageContainer<K, M> topic, MessageRecord<K, M> messageRecord) {
 		String recordKey = topic.getKeySerializer().apply(messageRecord.getKey());
 		byte[] recordValue = topic.getValueSerializer().apply(messageRecord.getMessage());
-		Integer partition = partitioner.getPartition(topic.getPartitionSelector().apply(messageRecord.getMessage()));
+		Integer partition = partitioner.getPartition(topic.getPartitionSelector().apply(messageRecord.getMessage()), topic);
 		ProducerRecord<String, byte[]> pr = new ProducerRecord<String, byte[]>(topic.getName(), partition, recordKey, recordValue);
 		return SenderRecord.create(pr, recordKey);
 	}

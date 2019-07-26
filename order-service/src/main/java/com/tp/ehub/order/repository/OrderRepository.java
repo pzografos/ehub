@@ -6,14 +6,14 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.common.infra.repository.AbstractAggregateRepository;
+import com.tp.ehub.common.infra.repository.AbstractPartitionedAggregateRepository;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.order.model.OrderAggregate;
 import com.tp.ehub.product.messaging.event.ProductCreated;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 
-public class OrderRepository extends AbstractAggregateRepository<OrderAggregate, OrderEvent, Order, UUID> {
+public class OrderRepository extends AbstractPartitionedAggregateRepository<OrderAggregate, OrderEvent, Order, UUID> {
 
 	@Inject
 	ProductEventsStore productEventsStore;

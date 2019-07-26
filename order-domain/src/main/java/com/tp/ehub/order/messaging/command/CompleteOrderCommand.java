@@ -25,6 +25,7 @@ public class CompleteOrderCommand implements OrderCommand {
 
 	}
 
+	@Override
 	public UUID getCompanyId() {
 		return companyId;
 	}

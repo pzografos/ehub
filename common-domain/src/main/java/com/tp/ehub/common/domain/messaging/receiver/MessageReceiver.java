@@ -19,13 +19,11 @@ public interface MessageReceiver {
 	 *            the exact type of message key
 	 * @param <M>
 	 *            the exact type of message value
-	 * @param type
-	 *            the class of the message to read
 	 * @param options
 	 *            the receiver options to use
 	 * @return the messages for the group
 	 */
-	<K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveAll(Class<M> type, MessageReceiverOptions options);
+	<K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveAll(Class<M> type);
 	
 	/**
 	 * Gets a reactive stream with messages of the given type from the message
@@ -34,14 +32,12 @@ public interface MessageReceiver {
      * @param <K>
      *            the exact type of message key
      * @param <M>
-     *            the exact type of message value 
-	 * @param type
-	 *            the class of the message to read       	 
+     *            the exact type of message value        	 
 	 * @param options
 	 *            the receiver options to use	 
 	 * @return the reactive stream
 	 */
-	<K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type, MessageReceiverOptions options);
+	<K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type);
 
 	/**
 	 * Verifies if a given record is last known record for the key at the moment

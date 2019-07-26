@@ -6,12 +6,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.tp.ehub.common.domain.messaging.container.AbstractMessageContainer;
+import com.tp.ehub.common.domain.messaging.container.AbstractKeyValueMessageContainer;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 
 @ApplicationScoped
 @Named("order-events")
-public class OrderEventsMessageContainer extends AbstractMessageContainer<UUID, OrderEvent> {
+public class OrderEventsMessageContainer extends AbstractKeyValueMessageContainer<UUID, OrderEvent> {
 
 	@Inject
 	public OrderEventsMessageContainer() {

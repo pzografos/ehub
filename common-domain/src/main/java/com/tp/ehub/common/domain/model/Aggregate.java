@@ -23,7 +23,7 @@ import com.tp.ehub.common.domain.messaging.Event;
  * @param <K>
  *            The type of the aggregate's root entity unique identifier
  */
-public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> {
+public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> extends Versionable{
 
 	/**
 	 * Get the root entity

@@ -28,6 +28,7 @@ public class PlaceOrderCommand implements OrderCommand {
 
 	}
 
+	@Override
 	public UUID getCompanyId() {
 		return companyId;
 	}

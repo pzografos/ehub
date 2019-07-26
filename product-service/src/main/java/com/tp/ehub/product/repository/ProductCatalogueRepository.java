@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 
-import com.tp.ehub.common.infra.repository.AbstractAggregateRepository;
+import com.tp.ehub.common.infra.repository.AbstractPartitionedAggregateRepository;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
 @Dependent
-public class ProductCatalogueRepository extends AbstractAggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> {
+public class ProductCatalogueRepository extends AbstractPartitionedAggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> {
 
 	public ProductCatalogueRepository() {
 		super();

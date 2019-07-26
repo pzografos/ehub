@@ -17,7 +17,7 @@ public class Product implements Entity<UUID> {
 	private String description;
 
 	private Long quantity;
-
+	
 	public Product() {
 	}
 

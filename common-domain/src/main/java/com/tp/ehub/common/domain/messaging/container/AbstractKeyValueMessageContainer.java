@@ -13,7 +13,7 @@ import javax.inject.Named;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.messaging.Message;
 
-public class AbstractMessageContainer<K, M extends Message<K>> implements  MessageContainer<K, M>{
+public abstract class AbstractKeyValueMessageContainer<K, M extends Message<K>> implements KeyValueMessageContainer<K, M>{
 
 	@Inject
 	@Named("objectMapper")
@@ -25,7 +25,7 @@ public class AbstractMessageContainer<K, M extends Message<K>> implements  Messa
 
 	protected Class<M> messageClass;
 
-	protected AbstractMessageContainer(String name, Class<K> keyClass, Class<M> messageClass) {
+	protected AbstractKeyValueMessageContainer(String name, Class<K> keyClass, Class<M> messageClass) {
 		this.name = name;
 		this.keyClass = keyClass;
 		this.messageClass = messageClass;
@@ -90,16 +90,14 @@ public class AbstractMessageContainer<K, M extends Message<K>> implements  Messa
 		};
 	}
 
-	/**
-	 * A function from the message to the <code>String</code> value
-	 * responsible for partition calculation.
-	 * 
-	 * @return the function of <code>M</code> to <code>String</code>
-	 * @see #partitionFn()
-	 */
 	@Override
 	public Function<M, String> getPartitionSelector(){
 		return message -> message.getKey().toString();
+	}
+
+	@Override
+	public int getPartitions() {
+		return 15;
 	}
 
 }

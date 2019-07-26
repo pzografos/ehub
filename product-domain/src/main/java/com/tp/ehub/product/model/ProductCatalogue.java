@@ -11,7 +11,7 @@ public class ProductCatalogue implements Entity<UUID> {
 	private UUID companyId;
 
 	private Map<UUID, Product> products = new HashMap<UUID, Product>();
-
+	
 	public ProductCatalogue(UUID companyId) {
 		this.companyId = companyId;
 	}
@@ -24,5 +24,4 @@ public class ProductCatalogue implements Entity<UUID> {
 	public Map<UUID, Product> getProducts() {
 		return products;
 	}
-
 }

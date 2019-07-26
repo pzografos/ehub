@@ -17,7 +17,7 @@ public class Order implements Entity<UUID> {
 	private OrderStatus status;
 
 	private ZonedDateTime timestamp;
-
+	
 	public Order() {
 
 	}
@@ -62,5 +62,4 @@ public class Order implements Entity<UUID> {
 	public void setTimestamp(ZonedDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
-
 }

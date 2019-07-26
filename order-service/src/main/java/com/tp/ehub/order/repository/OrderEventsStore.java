@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import com.tp.ehub.common.infra.messaging.kafka.AbstractMessageStore;
+import com.tp.ehub.common.infra.messaging.kafka.AbstractPartitionedMessageStore;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 
-public class OrderEventsStore extends AbstractMessageStore<UUID, OrderEvent> {
+public class OrderEventsStore extends AbstractPartitionedMessageStore<UUID, OrderEvent> {
 
 	@Inject
 	public OrderEventsStore() {
