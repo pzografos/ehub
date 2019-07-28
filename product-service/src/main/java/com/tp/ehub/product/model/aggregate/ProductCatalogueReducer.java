@@ -12,11 +12,10 @@ class ProductCatalogueReducer implements ProductEvent.ReducerVisitor<ProductCata
 
 	@Override
 	public ProductCatalogue visit(ProductCatalogue catalogue, ProductCreated event) {
-		ProductCreated productCreated = (ProductCreated) event;
 		Product product = new Product();
-		product.setProductId(productCreated.getProductId());
+		product.setProductId(event.getProductId());
 		product.setStatus(ProductStatus.CREATED);
-		product.setCode(productCreated.getCode());
+		product.setCode(event.getCode());
 		catalogue.getProducts().put(product.getProductId(), product);
 		return catalogue;
 	}

@@ -10,18 +10,23 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tp.ehub.common.domain.function.Reducer;
 import com.tp.ehub.common.domain.messaging.AbstractEvent;
+import com.tp.ehub.common.domain.messaging.RequestOriginated;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = ProductCreated.class, name = ProductCreated.NAME), 
 				@Type(value = ProductDeleted.class, name = ProductDeleted.NAME),
 				@Type(value = ProductStockUpdated.class, name = ProductStockUpdated.NAME) })
-public abstract class ProductEvent extends AbstractEvent<UUID> {
+public abstract class ProductEvent extends AbstractEvent<UUID> implements RequestOriginated{
 
 	protected UUID productId;
 
 	private UUID companyId;
 
 	private ZonedDateTime timestamp;
+
+	protected Long version;
+	
+	protected UUID requestId;
 
 	protected ProductEvent() {
 
@@ -51,6 +56,24 @@ public abstract class ProductEvent extends AbstractEvent<UUID> {
 	@Override
 	public void setTimestamp(ZonedDateTime timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	@Override
+	public UUID getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(UUID requestId) {
+		this.requestId = requestId;
+	}
+
+	@Override
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	@JsonIgnore

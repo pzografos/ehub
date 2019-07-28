@@ -1,4 +1,4 @@
-package com.tp.ehub.order.service;
+package com.tp.ehub.order.function;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -6,13 +6,16 @@ import static java.util.Collections.singleton;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.tp.ehub.common.domain.messaging.function.CommandHandler;
 import com.tp.ehub.order.messaging.command.CancelOrderCommand;
 import com.tp.ehub.order.messaging.command.CompleteOrderCommand;
+import com.tp.ehub.order.messaging.command.OrderCommand;
 import com.tp.ehub.order.messaging.command.PlaceOrderCommand;
 import com.tp.ehub.order.messaging.event.OrderCancelled;
 import com.tp.ehub.order.messaging.event.OrderCompleted;
@@ -21,7 +24,7 @@ import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.order.model.OrderAggregate;
 
-public class OrderCommandHandlerImpl implements OrderCommandHandler {
+public class OrderCommandHandler implements CommandHandler<UUID, OrderCommand, UUID, OrderEvent, Order, OrderAggregate>, OrderCommand.BiFunctionVisitor<OrderAggregate, Collection<OrderEvent>> {
 
 	@Inject
 	Logger log;
@@ -64,5 +67,10 @@ public class OrderCommandHandlerImpl implements OrderCommandHandler {
 		orderCompleted.setBasket(order.getBasket());
 		orderCompleted.setTimestamp(ZonedDateTime.now());
 		return singleton(orderCompleted);
+	}
+	
+	@Override
+	public Collection<OrderEvent> fallback(OrderAggregate parameter, OrderCommand command) {
+		return emptyList();
 	}
 }

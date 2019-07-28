@@ -3,6 +3,8 @@ package com.tp.ehub.order.app;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
+import com.tp.ehub.order.service.CommandProcessor;
+
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 

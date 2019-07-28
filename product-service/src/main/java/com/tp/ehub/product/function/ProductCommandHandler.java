@@ -1,4 +1,4 @@
-package com.tp.ehub.product.service;
+package com.tp.ehub.product.function;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -6,21 +6,25 @@ import static java.util.Collections.singleton;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.tp.ehub.common.domain.messaging.function.CommandHandler;
 import com.tp.ehub.product.messaging.commands.CreateProductCommand;
 import com.tp.ehub.product.messaging.commands.DeleteProductCommand;
+import com.tp.ehub.product.messaging.commands.ProductCommand;
 import com.tp.ehub.product.messaging.commands.UpdateProductStockCommand;
 import com.tp.ehub.product.messaging.event.ProductCreated;
 import com.tp.ehub.product.messaging.event.ProductDeleted;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
+import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
-public class ProductCommandHandlerImpl implements ProductCommandHandler{
+public class ProductCommandHandler implements CommandHandler<UUID, ProductCommand, UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate>, ProductCommand.BiFunctionVisitor<ProductCatalogueAggregate, Collection<ProductEvent>>{
 
 	@Inject
 	Logger log;
@@ -62,6 +66,11 @@ public class ProductCommandHandlerImpl implements ProductCommandHandler{
 		productStockUpdated.setQuantity(command.getQuantity());
 		productStockUpdated.setTimestamp(ZonedDateTime.now());
 		return singleton(productStockUpdated);	
+	}
+	
+	@Override
+	public Collection<ProductEvent> fallback(ProductCatalogueAggregate parameter, ProductCommand command) {
+		return emptyList();
 	}
 
 }

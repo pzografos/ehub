@@ -14,7 +14,6 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
 import com.tp.ehub.common.domain.messaging.container.MessageContainerRegistry;
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
@@ -26,7 +25,7 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 import reactor.kafka.sender.SenderRecord;
 
-public class TopicKafkaSender implements MessageSender {
+public class KafkaTopicSender implements MessageSender {
 
 	@Inject
 	Logger log;
@@ -50,7 +49,7 @@ public class TopicKafkaSender implements MessageSender {
 	}
 
 	@Override
-	public <K, M extends Message<K>> void send(Flux<MessageRecord<K, M>> outboundFlux, Class<M> messageType) {
+	public <K, M extends Message<K>> void send(Flux<M> outboundFlux, Class<M> messageType) {
 		
 		KeyValueMessageContainer<K, M> topic = (KeyValueMessageContainer<K, M>) registry.get(messageType);
 		
@@ -74,10 +73,10 @@ public class TopicKafkaSender implements MessageSender {
 				new AbstractMap.SimpleEntry<>(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class));
 	}
 
-	private <K, M extends Message<K>> SenderRecord<String, byte[], String> senderRecord(KeyValueMessageContainer<K, M> topic, MessageRecord<K, M> messageRecord) {
-		String recordKey = topic.getKeySerializer().apply(messageRecord.getKey());
-		byte[] recordValue = topic.getValueSerializer().apply(messageRecord.getMessage());
-		Integer partition = partitioner.getPartition(topic.getPartitionSelector().apply(messageRecord.getMessage()), topic);
+	private <K, M extends Message<K>> SenderRecord<String, byte[], String> senderRecord(KeyValueMessageContainer<K, M> topic, M message) {
+		String recordKey = topic.getKeySerializer().apply(message.getKey());
+		byte[] recordValue = topic.getValueSerializer().apply(message);
+		Integer partition = partitioner.getPartition(topic.getPartitionSelector().apply(message), topic);
 		ProducerRecord<String, byte[]> pr = new ProducerRecord<String, byte[]>(topic.getName(), partition, recordKey, recordValue);
 		return SenderRecord.create(pr, recordKey);
 	}

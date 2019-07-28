@@ -36,6 +36,8 @@
 		<module>../order-service</module>
 		<module>../product-domain</module>
 		<module>../product-service</module>
+		<module>../views-domain</module>
+		<module>../views-service</module>
 		<module>../gateway</module>
 		<module>../docker-compose</module>
 	</modules>

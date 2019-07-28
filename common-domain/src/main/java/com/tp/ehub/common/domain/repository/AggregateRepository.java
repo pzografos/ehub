@@ -4,9 +4,9 @@ import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
 
-public interface AggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> {
+public interface AggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> {
 
-	A get(K id);
+	A get(K key);
 
 	void save(A aggregate);
 }

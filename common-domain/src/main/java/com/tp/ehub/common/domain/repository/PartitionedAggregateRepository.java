@@ -4,7 +4,7 @@ import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
 
-public interface PartitionedAggregateRepository<A extends Aggregate<E, T, K>, E extends Event<K>, T extends Entity<K>, K> extends AggregateRepository<A,E,T,K>{
+public interface PartitionedAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> extends AggregateRepository<K, E, T, A> {
 
-	A get(K id, String partitionKey);
+	A get(K key, String partitionKey);
 }

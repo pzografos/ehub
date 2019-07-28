@@ -17,12 +17,12 @@ import com.tp.ehub.order.model.Order;
 public class OrderEntityCache implements EntityCache<UUID, Order> {
 
 	@Override
-	public Optional<Order> get(UUID id) {
+	public Optional<Order> get(UUID key) {
 		return Optional.empty();
 	}
 
 	@Override
-	public void cache(Order entity) {
+	public void cache(UUID key, Order entity) {
 
 	}
 

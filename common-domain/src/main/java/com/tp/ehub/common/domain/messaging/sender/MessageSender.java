@@ -3,7 +3,6 @@ package com.tp.ehub.common.domain.messaging.sender;
 import java.io.Closeable;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 
 import reactor.core.publisher.Flux;
 
@@ -26,5 +25,5 @@ public interface MessageSender extends Closeable {
 	 * @param messageType
 	 *            the type of messages to send            
 	 */
-	<K, M extends Message<K>> void send(Flux<MessageRecord<K, M>> outboundFlux, Class<M> messageType);
+	<K, M extends Message<K>> void send(Flux<M> outboundFlux, Class<M> messageType);
 }

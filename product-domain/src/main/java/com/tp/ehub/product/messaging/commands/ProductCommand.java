@@ -6,8 +6,8 @@ import java.util.function.BiFunction;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.tp.ehub.common.domain.messaging.Command;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
-import com.tp.ehub.common.domain.messaging.Message;
 
 /**
  * The <code>Command</code> represents a trigger for the system. In its most
@@ -21,7 +21,7 @@ import com.tp.ehub.common.domain.messaging.Message;
 		@Type(value = DeleteProductCommand.class, name = DeleteProductCommand.NAME),
 		@Type(value = UpdateProductStockCommand.class, name = UpdateProductStockCommand.NAME)
 })
-public interface ProductCommand extends Message<UUID> {
+public interface ProductCommand extends Command<UUID> {
 		
 	public UUID getCompanyId();
 	

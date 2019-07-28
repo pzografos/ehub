@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
-import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
 import com.tp.ehub.order.messaging.command.PlaceOrderCommand;
 
 import reactor.core.publisher.Flux;
@@ -33,7 +32,7 @@ public class OrderResource {
 	@POST
 	public Response placeOrder(PlaceOrderCommand command) {
 		try {
-			sender.send(Flux.just(new KafkaRecord<>(command.getKey(), command)), PlaceOrderCommand.class);
+			sender.send(Flux.just(command), PlaceOrderCommand.class);
 			return Response.created(URI.create(uriInfo.getPath() + "/" + command.getKey())).build();
 		} catch (Exception e) {
 			throw new InternalServerErrorException(e);

@@ -15,5 +15,10 @@ import com.tp.ehub.common.domain.model.Versionable;
  */
 public interface Event<K> extends Message<K>, Versionable {
 
+	/**
+	 * Gets the name of the event. This name should be application-unique
+	 * 
+	 * @return the name of the event
+	 */
 	String getEventName();
 }

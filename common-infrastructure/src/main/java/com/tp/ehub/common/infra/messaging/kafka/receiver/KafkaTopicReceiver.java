@@ -1,28 +1,35 @@
 package com.tp.ehub.common.infra.messaging.kafka.receiver;
 
+import static java.util.Collections.singleton;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.AbstractMap;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
-import com.tp.ehub.common.domain.messaging.container.MessageContainer;
 import com.tp.ehub.common.domain.messaging.container.MessageContainerRegistry;
 import com.tp.ehub.common.domain.messaging.receiver.PartitionedMessageReceiver;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaCluster;
-import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
 import com.tp.ehub.common.infra.messaging.kafka.Partitioner;
 
 import reactor.core.publisher.Flux;
@@ -41,9 +48,11 @@ public class KafkaTopicReceiver implements PartitionedMessageReceiver {
 	@Inject
 	Partitioner partitioner;
 	
-	private String consumerId = UUID.randomUUID().toString();
+	private String consumerId;
 	
-	private Long pollingInterval = 500L;
+	private Long pollingInterval;
+	
+	private boolean attach; 
 		
 	@PostConstruct
 	public void init() {
@@ -51,76 +60,70 @@ public class KafkaTopicReceiver implements PartitionedMessageReceiver {
 	}
 	
 	@Override
-	public <K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveAll(Class<M> type) {
+	public <K, M extends Message<K>> Flux<M> receiveAll(Class<M> type) {
 		
 		KeyValueMessageContainer<K, M> topic = (KeyValueMessageContainer<K, M>) registry.get(type);
-		ReceiverOptions<String, byte[]> receiverOptions = receiverOptions().subscription(Collections.singleton(topic.getName()));
-		RecordTransformer<K, M> transformer = new RecordTransformer<K, M>(topic);
-		KafkaReceiver<String, byte[]> receiver = KafkaReceiver.create(receiverOptions);
 		
-		return receiver.receiveAtmostOnce().map(transformer);
+		Optional<Integer> partitionSelected = empty();
+		
+		Predicate<ConsumerRecord<String, byte[]>> recordFilter = $ -> true;
+		
+		return attach ? receiveAttaced(topic, partitionSelected, recordFilter) : receiveAndExitOnDrain(topic, partitionSelected, recordFilter);
 	}
 
 	@Override
-	public <K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type) {
+	public <K, M extends Message<K>> Flux<M> receiveByKey(K key, Class<M> type) {
 
 		KeyValueMessageContainer<K, M> topic = (KeyValueMessageContainer<K, M>) registry.get(type);
-
-		ReceiverOptions<String, byte[]> receiverOptions = receiverOptions();
-
-		RecordTransformer<K, M> transformer = new RecordTransformer<K, M>(topic);
-
-		KafkaReceiver<String, byte[]> receiver = KafkaReceiver.create(receiverOptions);
-		return receiver.receiveAtmostOnce().map(transformer);
+		
+		Optional<Integer> partitionSelected = empty();
+		
+		String keyAsString = topic.getKeySerializer().apply(key);
+		Predicate<ConsumerRecord<String, byte[]>> recordFilter = record -> nonNull(record.key()) && record.key().equals(keyAsString);
+		
+		return attach ? receiveAttaced(topic, partitionSelected, recordFilter) : receiveAndExitOnDrain(topic, partitionSelected, recordFilter);
 	}
 
 	@Override
-	public <K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type, String partitionKey) {
+	public <K, M extends Message<K>> Flux<M> receiveByKey(K key, Class<M> type, String partitionKey) {
 		
 		KeyValueMessageContainer<K, M> topic = (KeyValueMessageContainer<K, M>) registry.get(type);
-
-		ReceiverOptions<String, byte[]> receiverOptions = receiverOptions();
-
+		
 		Integer partition = partitioner.getPartition(partitionKey, topic);
-		receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(topic.getName(), partition)));
-
-		RecordTransformer<K, M> transformer = new RecordTransformer<K, M>(topic);
-
-		KafkaReceiver<String, byte[]> receiver = KafkaReceiver.create(receiverOptions);
-		return receiver.receiveAtmostOnce().map(transformer);
-	}
-
-	@Override
-	public <K, M extends Message<K>> boolean isLast(MessageRecord<K, M> record) {
+		Optional<Integer> partitionSelected = of(partition);
 		
-		KafkaRecord<K, M> kafkaRecord = (KafkaRecord<K, M>) record;
-		
-		@SuppressWarnings("unchecked")
-		MessageContainer<K, M> container = registry.get(record.getMessage().getClass());
-		
-		ReceiverOptions<String, byte[]> receiverOptions = receiverOptions();
-		receiverOptions = receiverOptions.assignment(Collections.singleton(new TopicPartition(container.getName(), kafkaRecord.getPartition())));
+		String keyAsString = topic.getKeySerializer().apply(key);
+		Predicate<ConsumerRecord<String, byte[]>> recordFilter = record -> nonNull(record.key()) && record.key().equals(keyAsString);
 
-		Consumer<String, byte[]> consumer = ConsumerFactory.INSTANCE.createConsumer(receiverOptions);
-
-		return kafkaRecord.getOffset().equals(getLastOffset(consumer));
+		return attach ? receiveAttaced(topic, partitionSelected, recordFilter) : receiveAndExitOnDrain(topic, partitionSelected, recordFilter);
 	}
 	
-	public Long getLastOffset(Consumer<String, byte[]> consumer) {
-		Set<TopicPartition> topicPartitions = consumer.assignment();
-
-		return consumer.endOffsets(topicPartitions).entrySet().stream().map(entry -> entry.getValue()).findFirst().get();
+	private <K, M extends Message<K>> Flux<M> receiveAttaced(KeyValueMessageContainer<K, M> topic, Optional<Integer> partitionSelected, Predicate<ConsumerRecord<String, byte[]>> recordFilter){
+		return KafkaReceiver.create(getReceiverOptions(topic.getName(), partitionSelected)).receiveAtmostOnce()
+				.filter(recordFilter)
+				.map(new RecordTransformer<K, M>(topic));
+	}
+	
+	private <K, M extends Message<K>> Flux<M> receiveAndExitOnDrain(KeyValueMessageContainer<K, M> topic, Optional<Integer> partitionSelected, Predicate<ConsumerRecord<String, byte[]>> recordFilter){
+		
+		Map<Integer, Long> partitionOffsets = readPartitionOffsets(topic.getName(), partitionSelected); 
+		List<Integer> partitionsWithData = partitionOffsets.keySet().stream().collect(toList());
+		
+		return KafkaReceiver.create(getReceiverOptions(topic.getName(), partitionSelected)).receiveAtmostOnce()
+				.filter(recordFilter)
+				.doOnNext(record -> {
+					if (record.offset() == partitionOffsets.get(record.partition())) {
+						partitionsWithData.remove(record.partition());
+					}
+				})
+				.takeUntil(record -> partitionsWithData.isEmpty())
+				.map(new RecordTransformer<K, M>(topic));
 	}
 	
 	public void reset() {
 		configureDefault();		
 	}
 
-	private void configureDefault() {
-		this.consumerId = UUID.randomUUID().toString();
-		this.pollingInterval = 500L;
-	}
-	
 	public void setConsumerId(String consumerId) {
 		this.consumerId = consumerId;
 	}
@@ -129,8 +132,33 @@ public class KafkaTopicReceiver implements PartitionedMessageReceiver {
 		this.pollingInterval = pollingInterval;
 	}
 
-	private ReceiverOptions<String, byte[]> receiverOptions() {
-		return ReceiverOptions.<String, byte[]> create(consumerProps());
+	public void setAttach(boolean attach) {
+		this.attach = attach;
+	}
+
+	private void configureDefault() {
+		this.consumerId = UUID.randomUUID().toString();
+		this.pollingInterval = 500L;
+		this.attach = true;
+	}
+	
+	private Map<Integer, Long>  readPartitionOffsets(String topic, Optional<Integer> partitionSelected){
+		
+		ReceiverOptions<String, byte[]> receiverOptions = getReceiverOptions(topic, partitionSelected);
+		Consumer<String, byte[]> consumer = ConsumerFactory.INSTANCE.createConsumer(receiverOptions);
+		
+		Collection<TopicPartition> partitions = receiverOptions.assignment();
+		
+		return consumer.endOffsets(partitions).entrySet().stream()				
+			.collect(toMap(
+					entry -> entry.getKey().partition(), 
+					Map.Entry::getValue));
+	}
+	
+	private ReceiverOptions<String, byte[]> getReceiverOptions(String topic, Optional<Integer> partitionSelected) {
+		ReceiverOptions<String, byte[]> options =  ReceiverOptions.<String, byte[]> create(consumerProps()).subscription(singleton(topic));
+		if (partitionSelected.isPresent()) options = options.assignment(singleton(new TopicPartition(topic, partitionSelected.get())));
+		return options;
 	}
 	
 	private Map<String, Object> consumerProps() {

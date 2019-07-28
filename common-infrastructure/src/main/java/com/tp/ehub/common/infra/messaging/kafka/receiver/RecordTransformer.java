@@ -6,9 +6,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
-import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
 
-class RecordTransformer<K, M extends Message<K>> implements Function<ConsumerRecord<String, byte[]>, KafkaRecord<K, M>> {
+class RecordTransformer<K, M extends Message<K>> implements Function<ConsumerRecord<String, byte[]>, M> {
 
 	private KeyValueMessageContainer<K, M> topic;
 
@@ -17,12 +16,9 @@ class RecordTransformer<K, M extends Message<K>> implements Function<ConsumerRec
 	}
 
 	@Override
-	public KafkaRecord<K, M> apply(ConsumerRecord<String, byte[]> record) {
-		K key = topic.getKeyDeserializer().apply(record.key());
+	public M apply(ConsumerRecord<String, byte[]> record) {
 		M message = topic.getValueDeserializer().apply(record.value());
-		Integer partition = record.partition();
-		Long offset = record.offset();
-		return new KafkaRecord<K, M>(key, message, partition, offset);
+		return message;
 	}
 
 }

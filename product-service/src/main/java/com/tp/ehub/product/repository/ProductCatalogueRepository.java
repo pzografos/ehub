@@ -10,15 +10,15 @@ import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
 @Dependent
-public class ProductCatalogueRepository extends AbstractPartitionedAggregateRepository<ProductCatalogueAggregate, ProductEvent, ProductCatalogue, UUID> {
+public class ProductCatalogueRepository extends AbstractPartitionedAggregateRepository<UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate> {
 
 	public ProductCatalogueRepository() {
 		super();
 	}
 
 	@Override
-	protected ProductCatalogueAggregate create(ProductCatalogue root) {
-		return new ProductCatalogueAggregate(root);
+	protected ProductCatalogueAggregate create(UUID key, ProductCatalogue root) {
+		return new ProductCatalogueAggregate(key, root);
 	}
 
 	@Override

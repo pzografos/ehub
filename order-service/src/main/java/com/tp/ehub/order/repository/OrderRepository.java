@@ -13,18 +13,14 @@ import com.tp.ehub.order.model.OrderAggregate;
 import com.tp.ehub.product.messaging.event.ProductCreated;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 
-public class OrderRepository extends AbstractPartitionedAggregateRepository<OrderAggregate, OrderEvent, Order, UUID> {
+public class OrderRepository extends AbstractPartitionedAggregateRepository<UUID, OrderEvent, Order, OrderAggregate> {
 
 	@Inject
 	ProductEventsStore productEventsStore;
 	
-	public OrderRepository() {
-		super();
-	}
-
 	@Override
-	protected OrderAggregate create(Order root) {
-		OrderAggregate aggregate =  new OrderAggregate(root);
+	protected OrderAggregate create(UUID key, Order root) {
+		OrderAggregate aggregate =  new OrderAggregate(key, root);
 		aggregate = populateStock(aggregate);
 		return aggregate;
 	}
@@ -38,7 +34,7 @@ public class OrderRepository extends AbstractPartitionedAggregateRepository<Orde
 	}
 	
 	public OrderAggregate populateStock(OrderAggregate companyOrdersAggregate){	
-		productEventsStore.getbyKey(companyOrdersAggregate.getRoot().getId())
+		productEventsStore.getbyKey(companyOrdersAggregate.getKey())
 			.forEach(event -> {	
 				if (event.getClass().isInstance(ProductCreated.class)) {
 					ProductCreated created = (ProductCreated) event;
@@ -50,5 +46,4 @@ public class OrderRepository extends AbstractPartitionedAggregateRepository<Orde
 			});
 		return companyOrdersAggregate;
 	}
-
 }

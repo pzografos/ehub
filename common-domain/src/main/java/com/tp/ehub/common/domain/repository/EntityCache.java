@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import com.tp.ehub.common.domain.model.Entity;
 
-public interface EntityCache<K, T extends Entity<K>> {
+public interface EntityCache<K, T extends Entity> {
 
-	Optional<T> get(K id);
+	Optional<T> get(K key);
 
-	void cache(T entity);
+	void cache(K key, T entity);
 
-	void evict(K id);
+	void evict(K key);
 }
