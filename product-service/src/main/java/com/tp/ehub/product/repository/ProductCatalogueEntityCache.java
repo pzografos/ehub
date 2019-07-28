@@ -17,12 +17,12 @@ import com.tp.ehub.product.model.ProductCatalogue;
 public class ProductCatalogueEntityCache implements EntityCache<UUID, ProductCatalogue> {
 
 	@Override
-	public Optional<ProductCatalogue> get(UUID id) {
+	public Optional<ProductCatalogue> get(UUID key) {
 		return Optional.empty();
 	}
 
 	@Override
-	public void cache(ProductCatalogue entity) {
+	public void cache(UUID key, ProductCatalogue entity) {
 
 	}
 

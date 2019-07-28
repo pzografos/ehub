@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
 import com.tp.ehub.common.domain.messaging.store.PartitionedMessageStore;
 import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
@@ -38,10 +37,9 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 
 		List<M> messages = new ArrayList<>();
 
+		receiver.setAttach(false);
 		receiver.receiveByKey(key, messageClass)
 				.doOnError(e -> log.error("Receive failed", e))
-				.takeUntil(receiver::isLast)
-				.map(MessageRecord::getMessage)
 				.doOnNext(m -> messages.add(m))
 				.doOnComplete(() -> log.info("Drain for key {} completed", key));
 		receiver.reset();
@@ -54,10 +52,9 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 		
 		List<M> messages = new ArrayList<>();
 
+		receiver.setAttach(false);
 		receiver.receiveByKey(key, messageClass, partitionKey)
 				.doOnError(e -> log.error("Receive failed", e))
-				.takeUntil(receiver::isLast)
-				.map(MessageRecord::getMessage)
 				.doOnNext(m -> messages.add(m))
 				.doOnComplete(() -> log.info("Drain for key {} completed", key));
 		receiver.reset();
@@ -66,7 +63,7 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 	}
 
 	@Override
-	public void publish(Stream<MessageRecord<K, M>> messages) {
+	public void publish(Stream<M> messages) {
 		sender.send(Flux.fromStream(messages), messageClass);
 	}
 

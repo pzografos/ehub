@@ -1,17 +1,22 @@
-package com.tp.ehub.product.service;
+package com.tp.ehub.product.function;
+
+import static java.util.Collections.emptyList;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+import com.tp.ehub.common.domain.messaging.function.EventHandler;
 import com.tp.ehub.order.messaging.event.OrderCancelled;
 import com.tp.ehub.order.messaging.event.OrderCreated;
+import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
+import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
-public class OrderEventHandlerImpl implements OrderEventHandler{
+public class OrderEventHandler implements EventHandler<UUID, OrderEvent, UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate>, OrderEvent.BiFunctionVisitor<ProductCatalogueAggregate, Collection<ProductEvent>>{
 
 	@Override
 	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, OrderCreated event) {
@@ -51,4 +56,8 @@ public class OrderEventHandlerImpl implements OrderEventHandler{
 		return events;
 	}
 
+	@Override
+	public Collection<ProductEvent> fallback(ProductCatalogueAggregate parameter, OrderEvent event) {
+		return emptyList();
+	}
 }

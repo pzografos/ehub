@@ -3,7 +3,6 @@ package com.tp.ehub.common.domain.messaging.store;
 import java.util.stream.Stream;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 
 /**
  * The interface <code>MessageStore</code> specifies how to implement a class
@@ -31,5 +30,5 @@ public interface MessageStore<K, M extends Message<K>> {
 	 * @param messages
 	 *            the messages to publish
 	 */
-	void publish(Stream<MessageRecord<K, M>> messages);
+	void publish(Stream<M> messages);
 }

@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tp.ehub.common.domain.messaging.sender.MessageSender;
-import com.tp.ehub.common.infra.messaging.kafka.KafkaRecord;
 import com.tp.ehub.product.messaging.commands.CreateProductCommand;
 
 import reactor.core.publisher.Flux;
@@ -40,7 +39,7 @@ public class ProductResource {
 	public Response createProduct(CreateProductCommand command) {
 
 		try {
-			sender.send(Flux.just(new KafkaRecord<>(command.getKey(), command)), CreateProductCommand.class);
+			sender.send(Flux.just(command), CreateProductCommand.class);
 			return Response.created(URI.create(uriInfo.getPath() + "/" + command.getCode())).build();
 		} catch (Exception e) {
 			LOGGER.error("Create product failed", e);

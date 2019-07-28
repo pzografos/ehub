@@ -16,14 +16,14 @@ import com.tp.ehub.common.domain.messaging.Event;
  * </ul>
  * </p>
  * 
+ * @param <K>
+ *            The type of the aggregate's unique identifier 
  * @param <E> 
  * 			  The type of the <code>Event</code> that the aggregate is made of
  * @param <T>
  *            The type of the aggregate's root entity
- * @param <K>
- *            The type of the aggregate's root entity unique identifier
  */
-public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> extends Versionable{
+public interface Aggregate<K, E extends Event<K>, T extends Entity> extends Versionable{
 
 	/**
 	 * Get the root entity
@@ -31,15 +31,14 @@ public interface Aggregate<E extends Event<K>, T extends Entity<K>, K> extends V
 	 * @return the root entity
 	 */
 	T getRoot();
-
+	
 	/**
-	 * Applies a new Event to the aggregate
+	 * Get the aggregate key
 	 * 
-	 * @param event
-	 *            the event to apply
+	 * @return the aggregate key
 	 */
-	void apply(E event);
-
+	K getKey();
+	
 	/**
 	 * 
 	 * @return the events to publish

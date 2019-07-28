@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.tp.ehub.common.domain.model.Entity;
 
-public class Order implements Entity<UUID> {
+public class Order implements Entity {
 
 	private UUID id;
 	
@@ -26,7 +26,6 @@ public class Order implements Entity<UUID> {
 		this.id = id;
 	}
 
-	@Override
 	public UUID getId() {
 		return id;
 	}

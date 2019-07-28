@@ -1,7 +1,6 @@
 package com.tp.ehub.common.domain.messaging.receiver;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.MessageRecord;
 
 import reactor.core.publisher.Flux;
 
@@ -23,5 +22,5 @@ public interface PartitionedMessageReceiver extends MessageReceiver {
 	 *            the partition key
 	 * @return the reactive stream
 	 */
-	<K, M extends Message<K>> Flux<MessageRecord<K, M>> receiveByKey(K key, Class<M> type, String partitionKey);
+	<K, M extends Message<K>> Flux<M> receiveByKey(K key, Class<M> type, String partitionKey);
 }

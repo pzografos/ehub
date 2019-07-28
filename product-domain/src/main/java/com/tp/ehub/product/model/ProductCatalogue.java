@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.tp.ehub.common.domain.model.Entity;
 
-public class ProductCatalogue implements Entity<UUID> {
+public class ProductCatalogue implements Entity {
 
 	private UUID companyId;
 
@@ -16,7 +16,6 @@ public class ProductCatalogue implements Entity<UUID> {
 		this.companyId = companyId;
 	}
 
-	@Override
 	public UUID getId() {
 		return companyId;
 	}

@@ -1,5 +1,9 @@
 package com.tp.ehub.common.infra.repository.redis;
 
+
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.of;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -10,23 +14,22 @@ import javax.inject.Inject;
 import com.tp.ehub.common.domain.model.Entity;
 import com.tp.ehub.common.domain.repository.EntityCache;
 
-import io.lettuce.core.TransactionResult;
-import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 
-public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implements EntityCache<K, T> {
+public abstract class AbstractRedisEntityCache<K, T extends Entity> implements EntityCache<K, T> {
 
 	@Inject
 	RedisCluster redisCluster;
 
 	@Override
-	public final Optional<T> get(K id) {
+	public final Optional<T> get(K key) {
+		
+		requireNonNull(key);
 
-		String storeRedisKey = storeKey().apply(id);
+		String storeRedisKey = storeKey().apply(key);
 
-		RedisAdvancedClusterCommands<String, String> sync = redisCluster.clusterConnection().sync();
-
+		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
+		
 		Map<String, String> hashValue = sync.hgetall(storeRedisKey);
 		if (hashValue.isEmpty()) {
 			return Optional.empty();
@@ -35,62 +38,33 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity<K>> implement
 		Properties properties = new Properties();
 		properties.putAll(hashValue);
 
-		return Optional.of(readProperties(properties));
+		return of(readProperties(properties));
 	}
 
 	@Override
-	public final void cache(T entity) {
-		String storeRedisKey = storeKey().apply(entity.getId());
-		try {
-			this.redisCluster.nodeCommandSyncExecutor().call(storeRedisKey, nc -> this.put(entity.getId(), entity, nc));
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public final void cache(K key, T entity) {
+		
+		requireNonNull(key);
+		requireNonNull(entity);
+		
+		String storeRedisKey = storeKey().apply(key);
+		
+		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
+		
+		Map<Object, Object> hashValue = writeValueAsProperties(entity);
+		sync.hmset(storeRedisKey, (Map) hashValue);
 	}
 
 	@Override
-	public final void evict(K id) {
-		// TODO implement
-		throw new RuntimeException("Not implemented yet");
-	}
+	public final void evict(K key) {
+		
+		requireNonNull(key);
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private EntityCache<K, T> put(K key, T updatedElement, StatefulRedisConnection<String, String> connection) {
 		String storeRedisKey = storeKey().apply(key);
 
-		RedisCommands<String, String> sync = connection.sync();
+		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 
-		boolean exists = sync.exists(storeRedisKey) != 0L;
-
-		if (!exists && updatedElement == null) {
-			// no-op delete for migrated old state values (e.g. multiple
-			// tombstones)
-			return this;
-		}
-
-		sync.multi();
-		if (updatedElement != null) {
-			Map<Object, Object> hashValue = writeValueAsProperties(updatedElement);
-			sync.del(storeRedisKey);
-			sync.hmset(storeRedisKey, (Map) hashValue);
-		} else {
-			sync.del(storeRedisKey);
-		}
-		TransactionResult result = sync.exec();
-
-		Exception exception = result.stream()
-				.filter(commandResult -> Exception.class.isAssignableFrom(commandResult.getClass()))
-				.map(Exception.class::cast)
-				.findFirst()
-				.orElse(null);
-
-		if (exception != null) {
-			throw new RuntimeException(exception);
-		}
-
-		return this;
+		sync.del(storeRedisKey);
 	}
 
 	protected abstract Function<K, String> storeKey();

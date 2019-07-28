@@ -46,4 +46,5 @@ public class OrderCancelled extends OrderEvent {
 	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) {
 		return visitor.visit(parameter, this);
 	}
+
 }

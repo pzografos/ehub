@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.tp.ehub.common.domain.model.Entity;
 
-public class Product implements Entity<UUID> {
+public class Product implements Entity {
 
 	private UUID productId;
 
@@ -17,11 +17,10 @@ public class Product implements Entity<UUID> {
 	private String description;
 
 	private Long quantity;
-	
+
 	public Product() {
 	}
 
-	@Override
 	public UUID getId() {
 		return productId;
 	}
