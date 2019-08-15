@@ -1,6 +1,7 @@
 package com.tp.ehub.common.domain.messaging;
 
 import com.tp.ehub.common.domain.model.Versionable;
+import com.tp.ehub.common.domain.request.RequestOriginated;
 
 /**
  * The <code>Event</code> represents something that has happened in the domain.
@@ -13,7 +14,7 @@ import com.tp.ehub.common.domain.model.Versionable;
  * @param <K>
  *            the type of key to user for the event
  */
-public interface Event<K> extends Message<K>, Versionable {
+public interface Event<K> extends Message<K>, RequestOriginated, Versionable {
 
 	/**
 	 * Gets the name of the event. This name should be application-unique

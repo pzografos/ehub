@@ -44,19 +44,21 @@ import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
 public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> implements PartitionedAggregateRepository<K, E, T, A> {
 
 	@Inject
-	Logger log;
+	protected Logger log;
 
 	@Inject
-	EntityCache<K,T> cache;
+	protected EntityCache<K,T> cache;
 
 	@Inject
-	PartitionedMessageStore<K, E> store;
+	protected PartitionedMessageStore store;
 	
 	@Inject
-	AggregateReducer <K, E, T, A> aggregateEventReducer;
+	protected AggregateReducer <K, E, T, A> aggregateEventReducer;
 	
-	public AbstractPartitionedAggregateRepository() {
-
+	private Class<E> eventClass;
+	
+	protected AbstractPartitionedAggregateRepository(Class<E> eventClass) {
+		this.eventClass = eventClass;
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 		} else {
 			T rootEntity = create(key);
 			A aggregate = create(key, rootEntity);
-			Collection<E> events = (partitionKey.isPresent() ? store.getbyKey(key, partitionKey.get()) : store.getbyKey(key)).collect(toList());
+			Collection<E> events = (partitionKey.isPresent() ? store.getbyKey(key, partitionKey.get(), eventClass) : store.getbyKey(key, eventClass)).collect(toList());
 			aggregate = aggregateEventReducer.apply(aggregate, events);
 			return aggregate;
 		}
@@ -86,7 +88,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 	@Override
 	public final void save(A aggregate) {
 		try {
-			store.publish(aggregate.getNewEvents());
+			store.publish(aggregate.getNewEvents(), eventClass);
 			cache.cache(aggregate.getKey(), aggregate.getRoot());
 		} catch (Exception ex) {
 			log.error(String.format("Failed to save %s. Reason: %s.", aggregate.getRoot().toString(), ex.getMessage()), ex);

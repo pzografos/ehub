@@ -13,25 +13,24 @@ public class ProductCatalogueView implements View<UUID> {
 
 	private Map<UUID, Product> products = new HashMap<UUID, Product>();
 	
-	public ProductCatalogueView() {
+	public ProductCatalogueView(UUID companyId) {
+		this.companyId = companyId;
 	}
 
 	public UUID getCompanyId() {
 		return companyId;
 	}
 
-
-	public void setCompanyId(UUID companyId) {
-		this.companyId = companyId;
-	}
-
-
 	public void setProducts(Map<UUID, Product> products) {
 		this.products = products;
 	}
 
-
 	public Map<UUID, Product> getProducts() {
 		return products;
+	}
+
+	@Override
+	public UUID getKey() {
+		return companyId;
 	}
 }

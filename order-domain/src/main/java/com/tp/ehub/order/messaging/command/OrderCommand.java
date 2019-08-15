@@ -1,12 +1,14 @@
 package com.tp.ehub.order.messaging.command;
 
 import java.util.UUID;
-import java.util.function.BiFunction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tp.ehub.common.domain.messaging.Command;
+import com.tp.ehub.common.domain.exception.BusinessException;
+import com.tp.ehub.common.domain.function.CheckedBiFunction;
+import com.tp.ehub.common.domain.messaging.AbstractCommand;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
 
 /**
@@ -20,31 +22,47 @@ import com.tp.ehub.common.domain.messaging.JsonMessage;
 		@Type(value = CancelOrderCommand.class, name = CancelOrderCommand.NAME), 
 		@Type(value = CompleteOrderCommand.class, name = CompleteOrderCommand.NAME)
 })
-public interface OrderCommand extends Command<UUID>{
+public abstract class OrderCommand extends AbstractCommand<UUID>{
 
-	/**
-	 * @return the order Id the <code>Command</code> refers to
-	 */
-	public UUID getOrderId();
+	protected UUID orderId;
+
+	protected UUID companyId;
 	
-	/**
-	 * @return the company Id the <code>Command</code> refers to
-	 */
-	public UUID getCompanyId();
+	public UUID getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(UUID orderId) {
+		this.orderId = orderId;
+	}
+
+	public UUID getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(UUID companyId) {
+		this.companyId = companyId;
+	}
+
+	@Override
+	@JsonIgnore
+	public UUID getKey() {
+		return orderId;
+	}
+
+	protected abstract <P, R> R map(P parameter, BiFunctionVisitor<P, R> mapper) throws BusinessException;
 	
-	<P, R> R map(P parameter, BiFunctionVisitor<P, R> mapper);
-	
-	public interface BiFunctionVisitor<P, R> extends BiFunction<P, OrderCommand, R> {
+	public interface BiFunctionVisitor<P, R> extends CheckedBiFunction<P, OrderCommand, R> {
 
 		@Override
-		default R apply(P parameter, OrderCommand command) {
+		default R apply(P parameter, OrderCommand command) throws BusinessException{
 			return command.map(parameter, this);
 		}
 
-		default R visit(P parameter, PlaceOrderCommand command) {return fallback(parameter, command);}
-		default R visit(P parameter, CancelOrderCommand command) {return fallback(parameter, command);}
-		default R visit(P parameter, CompleteOrderCommand command) {return fallback(parameter, command);}
+		default R visit(P parameter, PlaceOrderCommand command) throws BusinessException {return fallback(parameter, command);}
+		default R visit(P parameter, CancelOrderCommand command) throws BusinessException {return fallback(parameter, command);}
+		default R visit(P parameter, CompleteOrderCommand command) throws BusinessException {return fallback(parameter, command);}
 
-		R fallback(P parameter, OrderCommand command);
+		R fallback(P parameter, OrderCommand command) throws BusinessException;
 	}
 }

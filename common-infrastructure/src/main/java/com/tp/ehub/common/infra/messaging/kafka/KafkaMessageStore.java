@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -15,7 +16,8 @@ import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
 
 import reactor.core.publisher.Flux;
 
-public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> implements PartitionedMessageStore<K, M> {
+@ApplicationScoped
+public class KafkaMessageStore implements PartitionedMessageStore {
 
 	@Inject
 	Logger log;
@@ -26,14 +28,8 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 	@Inject
 	MessageSender sender;
 	
-	Class<M> messageClass;
-
-	protected AbstractPartitionedMessageStore(Class<M> messageClass) {
-		this.messageClass = messageClass;
-	}
-
 	@Override
-	public Stream<M> getbyKey(K key) {
+	public <K, M extends Message<K>> Stream<M> getbyKey(K key, Class<M> messageClass) {
 
 		List<M> messages = new ArrayList<>();
 
@@ -48,7 +44,7 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 	}
 	
 	@Override
-	public Stream<M> getbyKey(K key, String partitionKey) {
+	public <K, M extends Message<K>> Stream<M> getbyKey(K key, String partitionKey, Class<M> messageClass) {
 		
 		List<M> messages = new ArrayList<>();
 
@@ -63,7 +59,7 @@ public abstract class AbstractPartitionedMessageStore<K, M extends Message<K>> i
 	}
 
 	@Override
-	public void publish(Stream<M> messages) {
+	public <K, M extends Message<K>> void publish(Stream<M> messages, Class<M> messageClass) {
 		sender.send(Flux.fromStream(messages), messageClass);
 	}
 

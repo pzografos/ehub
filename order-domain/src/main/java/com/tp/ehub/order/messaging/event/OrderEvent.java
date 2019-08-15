@@ -9,20 +9,17 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tp.ehub.common.domain.function.Reducer;
 import com.tp.ehub.common.domain.messaging.AbstractEvent;
-import com.tp.ehub.common.domain.messaging.RequestOriginated;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = OrderCreated.class, name = OrderCreated.NAME),
 				@Type(value = OrderCancelled.class, name = OrderCancelled.NAME),
 				@Type(value = OrderCompleted.class, name = OrderCompleted.NAME)})
-public abstract class OrderEvent extends AbstractEvent<UUID> implements RequestOriginated{
+public abstract class OrderEvent extends AbstractEvent<UUID>{
 
 	protected UUID companyId;
 	
 	protected Long version;
 	
-	protected UUID requestId;
-
 	protected OrderEvent(UUID companyId) {
 		this.companyId = companyId;
 	}
@@ -34,21 +31,13 @@ public abstract class OrderEvent extends AbstractEvent<UUID> implements RequestO
 	public void setCompanyId(UUID companyId) {
 		this.companyId = companyId;
 	}
-
-	@Override
-	public UUID getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(UUID requestId) {
-		this.requestId = requestId;
-	}
 	
 	@Override
 	public Long getVersion() {
 		return version;
 	}
 
+	@Override
 	public void setVersion(Long version) {
 		this.version = version;
 	}

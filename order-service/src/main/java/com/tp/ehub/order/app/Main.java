@@ -12,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Scheduler scheduler = Schedulers.newParallel("order-service-scheduler", 2);
+		Scheduler scheduler = Schedulers.newParallel("order-service-scheduler", 1);
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 
