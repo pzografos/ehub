@@ -1,16 +1,8 @@
-package com.tp.ehub.product.messaging.commands;
+package com.tp.ehub.gateway.dto;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.tp.ehub.common.domain.exception.BusinessException;
+import java.util.UUID;
 
-/**
- * A <code>Command</code> to create a new product
- *
- */
-@JsonTypeName(CreateProductCommand.NAME)
-public class CreateProductCommand extends ProductCommand {
-
-	public static final String NAME = "Commands.CreateProduct";
+public class CreateProductRequest {
 
 	private String code;
 
@@ -20,7 +12,11 @@ public class CreateProductCommand extends ProductCommand {
 
 	private Long quantity;
 
-	public CreateProductCommand() {
+	private UUID companyId;
+
+	private UUID productId;
+
+	public CreateProductRequest() {
 
 	}
 
@@ -56,8 +52,19 @@ public class CreateProductCommand extends ProductCommand {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) throws BusinessException {
-		return visitor.visit(parameter, this);
+	public UUID getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(UUID companyId) {
+		this.companyId = companyId;
+	}
+
+	public UUID getProductId() {
+		return productId;
+	}
+
+	public void setProductId(UUID productId) {
+		this.productId = productId;
 	}
 }

@@ -2,18 +2,18 @@ package com.tp.ehub.product.repository;
 
 import java.util.UUID;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 
 import com.tp.ehub.common.infra.repository.AbstractPartitionedAggregateRepository;
 import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
-@Dependent
+@ApplicationScoped
 public class ProductCatalogueRepository extends AbstractPartitionedAggregateRepository<UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate> {
 
 	public ProductCatalogueRepository() {
-		super();
+		super(ProductEvent.class);
 	}
 
 	@Override

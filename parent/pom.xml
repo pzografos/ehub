@@ -142,6 +142,11 @@
 				<version>${com.fasterxml.jackson}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-properties</artifactId>
+				<version>${com.fasterxml.jackson}</version>
+			</dependency>				
+			<dependency>
 				<groupId>io.projectreactor.kafka</groupId>
 				<artifactId>reactor-kafka</artifactId>
 				<version>${io.projectreactor.kafka}</version>

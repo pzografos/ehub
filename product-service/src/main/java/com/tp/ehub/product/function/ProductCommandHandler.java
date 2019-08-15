@@ -8,10 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-
+import com.tp.ehub.common.domain.exception.BusinessException;
 import com.tp.ehub.common.domain.messaging.function.CommandHandler;
 import com.tp.ehub.product.messaging.commands.CreateProductCommand;
 import com.tp.ehub.product.messaging.commands.DeleteProductCommand;
@@ -25,12 +22,9 @@ import com.tp.ehub.product.model.ProductCatalogue;
 import com.tp.ehub.product.model.ProductCatalogueAggregate;
 
 public class ProductCommandHandler implements CommandHandler<UUID, ProductCommand, UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate>, ProductCommand.BiFunctionVisitor<ProductCatalogueAggregate, Collection<ProductEvent>>{
-
-	@Inject
-	Logger log;
 	
 	@Override
-	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, CreateProductCommand command) {
+	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, CreateProductCommand command) throws BusinessException {
 		boolean createProductAllowed = aggregate.getRoot().getProducts().values().stream().noneMatch(p -> p.getCode().equals(command.getCode()));
 		if (createProductAllowed) {
 			ProductCreated productCreated = new ProductCreated();
@@ -41,25 +35,25 @@ public class ProductCommandHandler implements CommandHandler<UUID, ProductComman
 			productCreated.setQuantity(command.getQuantity());
 			productCreated.setCompanyId(command.getCompanyId());
 			return singleton(productCreated);
+		} else {
+			throw new BusinessException(format("There is already a product with code %s for company %s", command.getCode(), command.getCompanyId()));
 		}
-		log.warn(format("Could not create product %s for company %s", command.getProductId(), command.getCompanyId()));
-		return emptyList();
 	}
 
 	@Override
-	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, DeleteProductCommand command) {
+	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, DeleteProductCommand command) throws BusinessException {
 		boolean deleteProductAllowed = aggregate.getRoot().getProducts().containsKey(command.getProductId());
 		if (deleteProductAllowed) {
 			ProductDeleted productDeleted = new ProductDeleted();
 			productDeleted.setProductId(productDeleted.getProductId());
 			return singleton(productDeleted);
+		} else {
+			throw new BusinessException(format("Product %s does not exist for company %s", command.getProductId(), command.getCompanyId()));
 		}
-		log.warn(format("Could not delete product %s for company %s", command.getProductId(), command.getCompanyId()));
-		return emptyList();
 	}
 
 	@Override
-	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, UpdateProductStockCommand command) {
+	public Collection<ProductEvent> visit(ProductCatalogueAggregate aggregate, UpdateProductStockCommand command) throws BusinessException {
 		ProductStockUpdated productStockUpdated = new ProductStockUpdated();
 		productStockUpdated.setCompanyId(command.getCompanyId());
 		productStockUpdated.setProductId(command.getProductId());
@@ -69,7 +63,7 @@ public class ProductCommandHandler implements CommandHandler<UUID, ProductComman
 	}
 	
 	@Override
-	public Collection<ProductEvent> fallback(ProductCatalogueAggregate parameter, ProductCommand command) {
+	public Collection<ProductEvent> fallback(ProductCatalogueAggregate parameter, ProductCommand command) throws BusinessException {
 		return emptyList();
 	}
 

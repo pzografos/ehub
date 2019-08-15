@@ -1,4 +1,4 @@
-package com.tp.ehub.common.domain.messaging;
+package com.tp.ehub.common.domain.request;
 
 import java.util.UUID;
 
