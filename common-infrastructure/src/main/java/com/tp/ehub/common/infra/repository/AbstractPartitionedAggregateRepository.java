@@ -44,9 +44,6 @@ import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
 public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> implements PartitionedAggregateRepository<K, E, T, A> {
 
 	@Inject
-	protected Logger log;
-
-	@Inject
 	protected EntityCache<K,T> cache;
 
 	@Inject
@@ -54,6 +51,9 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 	
 	@Inject
 	protected AggregateReducer <K, E, T, A> aggregateEventReducer;
+	
+	@Inject
+	Logger log;
 	
 	private Class<E> eventClass;
 	
@@ -72,6 +72,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 	}
 
 	private A get(K key, Optional<String> partitionKey) {
+		log.debug("Getting aggregate for key {}", key.toString());
 		Optional<T> entityOpt = cache.get(key);
 		if (entityOpt.isPresent()) {
 			T rootEntity = entityOpt.get();

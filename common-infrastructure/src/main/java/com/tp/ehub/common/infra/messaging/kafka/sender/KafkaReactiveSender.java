@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
 import com.tp.ehub.common.domain.messaging.container.MessageContainerRegistry;
-import com.tp.ehub.common.domain.messaging.sender.MessageSender;
+import com.tp.ehub.common.domain.messaging.sender.ReactiveMessageSender;
 import com.tp.ehub.common.infra.messaging.kafka.KafkaCluster;
 import com.tp.ehub.common.infra.messaging.kafka.Partitioner;
 
@@ -25,7 +25,7 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 import reactor.kafka.sender.SenderRecord;
 
-public class KafkaTopicSender implements MessageSender {
+public class KafkaReactiveSender implements ReactiveMessageSender {
 
 	@Inject
 	Logger log;

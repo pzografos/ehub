@@ -1,4 +1,4 @@
-package com.tp.ehub.gateway.resource;
+package com.tp.ehub.rest.resource;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

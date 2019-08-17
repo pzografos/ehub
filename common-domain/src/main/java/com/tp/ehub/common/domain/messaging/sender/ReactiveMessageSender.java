@@ -7,21 +7,21 @@ import com.tp.ehub.common.domain.messaging.Message;
 import reactor.core.publisher.Flux;
 
 /**
- * The <code>MessageReceiver</code> sends a reactive stream with messages of the
- * given type to the message broker.
+ * The <code>ReactiveMessageSender</code> provides methods to send a reactive
+ * stream with messages to the message broker.
  *
  */
-public interface MessageSender extends Closeable {
+public interface ReactiveMessageSender extends Closeable {
 
 	/**
-	 * The sender function
+	 * Sends messages of the given type to the message broker
 	 * 
 	 * @param <K>
 	 *            the type of message key
 	 * @param <M>
 	 *            the type of message value	 
 	 * @param outboundFlux
-	 *            the stream of messages to send
+	 *            the reactive stream of messages to send
 	 * @param messageType
 	 *            the type of messages to send            
 	 */

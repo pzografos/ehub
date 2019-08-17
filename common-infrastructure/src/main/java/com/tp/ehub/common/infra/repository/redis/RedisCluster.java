@@ -1,6 +1,10 @@
 package com.tp.ehub.common.infra.repository.redis;
 
-import java.util.Objects;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import com.tp.ehub.common.infra.property.EhubProperty;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -12,21 +16,27 @@ import io.lettuce.core.api.StatefulRedisConnection;
  * Maintains the cluster hosts and a thread-safe <code>RedisClusterClient</code>
  * </p>
  */
+@ApplicationScoped
 public class RedisCluster {
 
-	private final RedisClient client;
+	@Inject
+	@EhubProperty("REDIS_NODES")
+	String nodes;
+		
+	private RedisClient client;
 
-	private RedisCluster(RedisClient client) {
-		this.client = client;
+	@PostConstruct
+	public void init() {
+		this.client = RedisClient.create(nodes);
 	}
-
+	
 	/**
 	 * Get the <code>RedisClusterClient</code>
 	 * 
 	 * @return the underlying <code>RedisClusterClient</code>
 	 */
 	public RedisClient getClient() {
-		return client;
+		return this.client;
 	}
 
 	/**
@@ -36,19 +46,5 @@ public class RedisCluster {
 	 */
 	public StatefulRedisConnection<String, String> getConnection() {
 		return client.connect();
-	}
-
-	/**
-	 * Create a new <code>RedisCluster</code> instance. <code>RedisClusterClient</code> is initialized
-	 * and configured.
-	 *
-	 * @param nodes
-	 *            a comma-separated list of nodes
-	 * @return a new <code>RedisCluster</code> instance
-	 */
-	public static RedisCluster at(String nodes) {
-		Objects.requireNonNull(nodes);
-		RedisClient client = RedisClient.create(nodes);
-		return new RedisCluster(client);
 	}
 }

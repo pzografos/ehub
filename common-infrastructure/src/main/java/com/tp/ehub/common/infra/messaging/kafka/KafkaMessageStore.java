@@ -1,7 +1,7 @@
 package com.tp.ehub.common.infra.messaging.kafka;
 
-import java.util.ArrayList;
-import java.util.List;
+import static java.util.UUID.randomUUID;
+
 import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -10,57 +10,37 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.domain.messaging.sender.MessageSender;
 import com.tp.ehub.common.domain.messaging.store.PartitionedMessageStore;
-import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
-
-import reactor.core.publisher.Flux;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaBlockingReceiver;
+import com.tp.ehub.common.infra.messaging.kafka.sender.KafkaBlockingSender;
 
 @ApplicationScoped
 public class KafkaMessageStore implements PartitionedMessageStore {
 
 	@Inject
-	Logger log;
+	KafkaBlockingReceiver receiver;
 
 	@Inject
-	KafkaTopicReceiver receiver;
-
-	@Inject
-	MessageSender sender;
+	KafkaBlockingSender sender;
 	
+	@Inject
+	Logger log;
+			
 	@Override
 	public <K, M extends Message<K>> Stream<M> getbyKey(K key, Class<M> messageClass) {
-
-		List<M> messages = new ArrayList<>();
-
-		receiver.setAttach(false);
-		receiver.receiveByKey(key, messageClass)
-				.doOnError(e -> log.error("Receive failed", e))
-				.doOnNext(m -> messages.add(m))
-				.doOnComplete(() -> log.info("Drain for key {} completed", key));
-		receiver.reset();
-
-		return messages.stream();
+		receiver.setConsumerId(randomUUID().toString());
+		return receiver.getByKey(key, messageClass);
 	}
 	
 	@Override
 	public <K, M extends Message<K>> Stream<M> getbyKey(K key, String partitionKey, Class<M> messageClass) {
-		
-		List<M> messages = new ArrayList<>();
-
-		receiver.setAttach(false);
-		receiver.receiveByKey(key, messageClass, partitionKey)
-				.doOnError(e -> log.error("Receive failed", e))
-				.doOnNext(m -> messages.add(m))
-				.doOnComplete(() -> log.info("Drain for key {} completed", key));
-		receiver.reset();
-
-		return messages.stream();
+		receiver.setConsumerId(randomUUID().toString());
+		return receiver.getByKeyAndPartition(key, messageClass, partitionKey);
 	}
 
 	@Override
 	public <K, M extends Message<K>> void publish(Stream<M> messages, Class<M> messageClass) {
-		sender.send(Flux.fromStream(messages), messageClass);
+		sender.send(messages, messageClass);
 	}
 
 }

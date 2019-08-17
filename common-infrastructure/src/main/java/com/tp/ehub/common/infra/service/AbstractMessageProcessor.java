@@ -5,15 +5,14 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import com.tp.ehub.common.domain.messaging.Message;
-import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaTopicReceiver;
+import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaReactiveReceiver;
 
-import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Scheduler;
 
 public abstract class AbstractMessageProcessor<K, M extends Message<K>> implements Consumer<M> {
 
 	@Inject
-	KafkaTopicReceiver receiver;
+	KafkaReactiveReceiver receiver;
 	
 	private String consumerId;
 
@@ -28,9 +27,9 @@ public abstract class AbstractMessageProcessor<K, M extends Message<K>> implemen
 		
 		receiver.setConsumerId(consumerId);
 		
-		final Flux<M> commandsFlux = receiver.receiveAll(messageClass) 
-				.subscribeOn(productScheduler);
-		commandsFlux.subscribe(this);
+		receiver.receive(messageClass) 
+				.subscribeOn(productScheduler)
+				.subscribe(this);
 	}
 	
 	@Override

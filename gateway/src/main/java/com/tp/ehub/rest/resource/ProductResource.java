@@ -1,5 +1,6 @@
-package com.tp.ehub.gateway.resource;
+package com.tp.ehub.rest.resource;
 
+import static java.util.UUID.randomUUID;
 import static javax.ws.rs.core.Response.created;
 import static reactor.core.publisher.Flux.just;
 
@@ -25,11 +26,11 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tp.ehub.common.domain.messaging.sender.MessageSender;
+import com.tp.ehub.common.domain.messaging.sender.ReactiveMessageSender;
 import com.tp.ehub.common.domain.request.Request;
 import com.tp.ehub.common.infra.request.RequestHandler;
-import com.tp.ehub.gateway.dto.CreateProductRequest;
 import com.tp.ehub.product.messaging.commands.CreateProductCommand;
+import com.tp.ehub.rest.resource.dto.CreateProductRequest;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,7 +46,7 @@ public class ProductResource {
 	UriInfo uriInfo;
 
 	@Inject
-	MessageSender sender;
+	ReactiveMessageSender sender;
 
 	@Inject
 	RequestHandler requestHandler;
@@ -53,18 +54,19 @@ public class ProductResource {
 	@POST
 	public Response createProduct(CreateProductRequest createProductRequest) {
 
-		Request request = requestHandler.createRequest();
+		LOGGER.debug("Received request {}", createProductRequest);
+
+		Request request = requestHandler.createRequest();		
 
 		CreateProductCommand command = new CreateProductCommand();
 		command.setCode(createProductRequest.getCode());
 		command.setCompanyId(createProductRequest.getCompanyId());
 		command.setDescription(createProductRequest.getDescription());
 		command.setName(createProductRequest.getName());
-		command.setProductId(createProductRequest.getProductId());
 		command.setQuantity(createProductRequest.getQuantity());
+		command.setProductId(randomUUID());
 		command.setRequestId(request.getId());
 		command.setTimestamp(ZonedDateTime.now());
-
 			
 		sender.send(just(command), CreateProductCommand.class);
 		
@@ -74,7 +76,7 @@ public class ProductResource {
 								.map(Optional::get)
 								.takeUntil(r -> r.getStatus() == Request.Status.ACCEPTED || r.getStatus() == Request.Status.FAILED);
 		
-		Request readRequest = poller.blockFirst(Duration.ofSeconds(5L));
+		Request readRequest = poller.blockLast(Duration.ofSeconds(60L));
 			
 		if (Objects.isNull(readRequest) || readRequest.getStatus() == Request.Status.PENDING) {
 			LOGGER.error("Create product timed out");
