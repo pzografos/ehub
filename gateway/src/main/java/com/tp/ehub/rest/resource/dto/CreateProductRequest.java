@@ -1,8 +1,9 @@
-package com.tp.ehub.gateway.dto;
+package com.tp.ehub.rest.resource.dto;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class CreateProductRequest {
+public class CreateProductRequest implements Serializable{
 
 	private String code;
 
@@ -13,8 +14,6 @@ public class CreateProductRequest {
 	private Long quantity;
 
 	private UUID companyId;
-
-	private UUID productId;
 
 	public CreateProductRequest() {
 
@@ -60,11 +59,8 @@ public class CreateProductRequest {
 		this.companyId = companyId;
 	}
 
-	public UUID getProductId() {
-		return productId;
-	}
-
-	public void setProductId(UUID productId) {
-		this.productId = productId;
+	@Override
+	public String toString() {
+		return "CreateProductRequest [code=" + code + ", name=" + name + ", description=" + description + ", quantity=" + quantity + ", companyId=" + companyId + "]";
 	}
 }

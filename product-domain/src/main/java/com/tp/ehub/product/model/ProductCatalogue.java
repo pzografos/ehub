@@ -23,4 +23,10 @@ public class ProductCatalogue implements Entity {
 	public Map<UUID, Product> getProducts() {
 		return products;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductCatalogue [companyId=" + companyId + ", products=" + products + "]";
+	}
+	
 }

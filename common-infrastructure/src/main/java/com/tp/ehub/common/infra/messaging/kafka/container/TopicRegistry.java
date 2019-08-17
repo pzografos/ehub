@@ -1,5 +1,7 @@
 package com.tp.ehub.common.infra.messaging.kafka.container;
 
+import static java.lang.String.format;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
@@ -19,10 +21,10 @@ public class TopicRegistry implements MessageContainerRegistry{
 	@Override
 	public <K, M extends Message<K>> MessageContainer<K, M> get(Class<M> type) {
 		return topics.stream()
-				.filter(t -> t.getMessageClass().equals(type))
+				.filter(t -> t.getMessageClass().isAssignableFrom(type))
 				.map(topic -> (MessageContainer<K, M>) topic) 
 				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find topic for class %s", type.getName())));
+				.orElseThrow(() -> new IllegalArgumentException(format("Could not find topic for class %s", type.getName())));
 	}
 
 }

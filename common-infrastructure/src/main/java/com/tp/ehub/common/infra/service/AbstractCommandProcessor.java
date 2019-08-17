@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+
 import com.tp.ehub.common.domain.exception.BusinessException;
 import com.tp.ehub.common.domain.messaging.Command;
 import com.tp.ehub.common.domain.messaging.Event;
@@ -28,12 +30,16 @@ public abstract class AbstractCommandProcessor<K1, C extends Command<K1>, K2, E 
 	@Inject
 	RequestHandler requestHandler;
 	
+	@Inject
+	Logger log;
+	
 	protected AbstractCommandProcessor(String consumerId, Class<C> messageClass) {
 		super(consumerId, messageClass);
 	}
 
 	@Override
 	public void accept(C command) {
+		log.debug("Processing command {}", command);
 		A aggregate = aggregateRepository.get(getAggregateKey(command), getAggregatePartitionKey(command));
 		try {
 			Collection<E> events = commandHandler.apply(aggregate, command);

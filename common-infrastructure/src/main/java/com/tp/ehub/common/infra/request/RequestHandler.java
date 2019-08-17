@@ -26,7 +26,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 @ApplicationScoped
 public class RequestHandler {
 
-	private static int timeout = 5;
+	private static int timeout = 5 * 60;
 
 	@Inject
 	Logger log;
@@ -34,6 +34,7 @@ public class RequestHandler {
 	@Inject
 	RedisCluster redisCluster;
 
+	@Inject
 	@Named("objectMapper")
 	ObjectMapper mapper;
 
@@ -50,14 +51,14 @@ public class RequestHandler {
 		try {
 
 			String redisValue = mapper.writeValueAsString(request);
-
-			sync.psetex(redisKey, timeout, redisValue);
+			
+			sync.setex(redisKey, timeout, redisValue);
 
 			return request;
 
 		} catch (JsonProcessingException e) {
 			log.error("Failed to create request. Reason {}", e.getMessage());
-			throw new RuntimeException(e);
+			return null;
 		}
 	}
 	
@@ -66,7 +67,7 @@ public class RequestHandler {
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 
 		String redisKey = getKeyForId(requestId);
-
+		
 		try {
 			
 			String redisValue = sync.get(redisKey);
@@ -79,7 +80,7 @@ public class RequestHandler {
 
 		} catch (IOException e) {
 			log.error("Failed to update request. Reason {}", e.getMessage());
-			throw new RuntimeException(e);
+			return empty();
 		}
 	}
 	
@@ -88,19 +89,27 @@ public class RequestHandler {
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 		
 		String redisKey = getKeyForId(requestId);
-
+				
 		try {
 			
 			String redisValue = sync.get(redisKey);
 			
-			Request request = mapper.readValue(redisValue, Request.class);
-			request.setStatus(Status.ACCEPTED);
+			if (nonNull(redisValue)) {
 			
-			sync.psetex(redisKey, timeout, redisValue);
+				Request request = mapper.readValue(redisValue, Request.class);
+				request.setStatus(Status.ACCEPTED);
+				
+				String updatedValue = mapper.writeValueAsString(request);
+				
+				sync.del(redisKey);
+				sync.setex(redisKey, timeout, updatedValue);
+			
+			} else {
+				log.error("Invalid request key  {}", redisKey);
+			}
 
 		} catch (IOException e) {
 			log.error("Failed to update request. Reason {}", e.getMessage());
-			throw new RuntimeException(e);
 		}
 	}
 	
@@ -114,15 +123,23 @@ public class RequestHandler {
 			
 			String redisValue = sync.get(redisKey);
 			
-			Request request = mapper.readValue(redisValue, Request.class);
-			request.setStatus(Status.FAILED);
-			request.setMessage(message);
+			if (nonNull(redisValue)) {
+
+				Request request = mapper.readValue(redisValue, Request.class);
+				request.setStatus(Status.FAILED);
+				request.setMessage(message);
+				
+				String updatedValue = mapper.writeValueAsString(request);
+
+				sync.del(redisKey);
+				sync.setex(redisKey, timeout, updatedValue);
 			
-			sync.psetex(redisKey, timeout, redisValue);
+			} else {
+				throw new IllegalArgumentException(format("Invalid request key %s", redisKey));
+			}
 
 		} catch (IOException e) {
 			log.error("Failed to update request. Reason {}", e.getMessage());	
-			throw new RuntimeException(e);
 		}
 	}
 	
