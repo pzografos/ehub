@@ -1,4 +1,4 @@
-package com.tp.ehub.common.domain.messaging.container;
+package com.tp.ehub.common.infra.messaging.kafka.container;
 
 import static java.lang.String.format;
 
@@ -7,17 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Function;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.messaging.Message;
+import com.tp.ehub.common.domain.messaging.container.KeyValueMessageContainer;
 
-public abstract class AbstractKeyValueMessageContainer<K, M extends Message<K>> implements KeyValueMessageContainer<K, M>{
-
-	@Inject
-	@Named("objectMapper")
-	protected ObjectMapper mapper;
+public class Topic<K, M extends Message<K>> implements KeyValueMessageContainer<K, M>{
 	
 	protected String name;
 
@@ -25,10 +19,13 @@ public abstract class AbstractKeyValueMessageContainer<K, M extends Message<K>> 
 
 	protected Class<M> messageClass;
 
-	protected AbstractKeyValueMessageContainer(String name, Class<K> keyClass, Class<M> messageClass) {
+	protected ObjectMapper mapper;
+
+	public Topic(String name, Class<K> keyClass, Class<M> messageClass, ObjectMapper mapper) {
 		this.name = name;
 		this.keyClass = keyClass;
 		this.messageClass = messageClass;
+		this.mapper = mapper;
 	}
 
 	@Override

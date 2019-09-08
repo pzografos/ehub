@@ -1,4 +1,4 @@
-package com.tp.ehub.common.domain.messaging.container;
+package com.tp.ehub.common.infra.messaging.kafka.container;
 
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;

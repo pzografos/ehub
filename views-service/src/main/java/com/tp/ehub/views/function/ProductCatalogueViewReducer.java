@@ -1,4 +1,4 @@
-package com.tp.ehub.common.views.function;
+package com.tp.ehub.views.function;
 
 import java.util.UUID;
 

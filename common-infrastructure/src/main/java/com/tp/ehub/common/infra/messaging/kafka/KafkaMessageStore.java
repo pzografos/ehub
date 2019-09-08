@@ -7,8 +7,6 @@ import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import com.tp.ehub.common.domain.messaging.Message;
 import com.tp.ehub.common.domain.messaging.store.PartitionedMessageStore;
 import com.tp.ehub.common.infra.messaging.kafka.receiver.KafkaBlockingReceiver;
@@ -22,9 +20,6 @@ public class KafkaMessageStore implements PartitionedMessageStore {
 
 	@Inject
 	KafkaBlockingSender sender;
-	
-	@Inject
-	Logger log;
 			
 	@Override
 	public <K, M extends Message<K>> Stream<M> getbyKey(K key, Class<M> messageClass) {

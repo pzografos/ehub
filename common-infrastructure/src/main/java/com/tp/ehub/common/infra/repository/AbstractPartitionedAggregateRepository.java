@@ -44,7 +44,7 @@ import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
 public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> implements PartitionedAggregateRepository<K, E, T, A> {
 
 	@Inject
-	protected EntityCache<K,T> cache;
+	protected EntityCache cache;
 
 	@Inject
 	protected PartitionedMessageStore store;
@@ -57,8 +57,11 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 	
 	private Class<E> eventClass;
 	
-	protected AbstractPartitionedAggregateRepository(Class<E> eventClass) {
+	private Class<T> rootEntityClass;
+	
+	protected AbstractPartitionedAggregateRepository(Class<E> eventClass, Class<T> rootEntityClass) {
 		this.eventClass = eventClass;
+		this.rootEntityClass = rootEntityClass;
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 
 	private A get(K key, Optional<String> partitionKey) {
 		log.debug("Getting aggregate for key {}", key.toString());
-		Optional<T> entityOpt = cache.get(key);
+		Optional<T> entityOpt = cache.get(key, rootEntityClass);
 		if (entityOpt.isPresent()) {
 			T rootEntity = entityOpt.get();
 			return create(key, rootEntity);
@@ -81,7 +84,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 			T rootEntity = create(key);
 			A aggregate = create(key, rootEntity);
 			Collection<E> events = (partitionKey.isPresent() ? store.getbyKey(key, partitionKey.get(), eventClass) : store.getbyKey(key, eventClass)).collect(toList());
-			aggregate = aggregateEventReducer.apply(aggregate, events);
+			aggregate = aggregateEventReducer.apply(aggregate, events);			
 			return aggregate;
 		}
 	}
@@ -93,7 +96,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 			cache.cache(aggregate.getKey(), aggregate.getRoot());
 		} catch (Exception ex) {
 			log.error(String.format("Failed to save %s. Reason: %s.", aggregate.getRoot().toString(), ex.getMessage()), ex);
-			cache.evict(aggregate.getKey());
+			cache.evict(aggregate.getKey(), rootEntityClass);
 			throw new RuntimeException(ex);
 		}
 	}

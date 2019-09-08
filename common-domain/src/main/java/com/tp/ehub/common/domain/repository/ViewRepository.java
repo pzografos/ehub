@@ -1,10 +1,12 @@
 package com.tp.ehub.common.domain.repository;
 
+import java.util.Optional;
+
 import com.tp.ehub.common.domain.model.View;
 
-public interface ViewRepository<K, V extends View<K>>{
+public interface ViewRepository{
 
-	V get(K key);
+	<K, V extends View<K>> Optional<V> get(K key, Class<V> viewClass);
 
-	void save(V view);
+	<K, V extends View<K>> void save(V view, Class<V> viewClass);
 }

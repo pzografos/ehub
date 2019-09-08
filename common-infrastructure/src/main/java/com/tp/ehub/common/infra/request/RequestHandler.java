@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tp.ehub.common.domain.request.Request;
 import com.tp.ehub.common.domain.request.Request.Status;
-import com.tp.ehub.common.infra.repository.redis.RedisCluster;
+import com.tp.ehub.common.infra.redis.RedisCluster;
 
 import io.lettuce.core.api.sync.RedisCommands;
 

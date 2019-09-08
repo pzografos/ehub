@@ -13,6 +13,10 @@ public class ProductCatalogueView implements View<UUID> {
 
 	private Map<UUID, Product> products = new HashMap<UUID, Product>();
 	
+	public ProductCatalogueView() {
+		
+	}
+	
 	public ProductCatalogueView(UUID companyId) {
 		this.companyId = companyId;
 	}

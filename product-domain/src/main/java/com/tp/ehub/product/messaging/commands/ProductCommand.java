@@ -10,6 +10,7 @@ import com.tp.ehub.common.domain.exception.BusinessException;
 import com.tp.ehub.common.domain.function.CheckedBiFunction;
 import com.tp.ehub.common.domain.messaging.AbstractCommand;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
+import com.tp.ehub.common.domain.messaging.container.Container;
 
 /**
  * The <code>Command</code> represents a trigger for the system. In its most
@@ -23,6 +24,7 @@ import com.tp.ehub.common.domain.messaging.JsonMessage;
 		@Type(value = DeleteProductCommand.class, name = DeleteProductCommand.NAME),
 		@Type(value = UpdateProductStockCommand.class, name = UpdateProductStockCommand.NAME)
 })
+@Container( name = "product-commands", keyClass = UUID.class)
 public abstract class ProductCommand extends AbstractCommand<UUID> {
 		
 	protected UUID companyId;

@@ -1,12 +1,17 @@
-package com.tp.ehub.common.infra.repository.redis;
+package com.tp.ehub.common.infra.repository;
+
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.function.Function;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonFactory.Feature;
@@ -15,12 +20,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tp.ehub.common.domain.model.View;
-import com.tp.ehub.common.domain.repository.ViewRepository;
+import com.tp.ehub.common.domain.model.Entity;
+import com.tp.ehub.common.domain.repository.EntityCache;
+import com.tp.ehub.common.infra.redis.RedisCluster;
 
 import io.lettuce.core.api.sync.RedisCommands;
 
-public abstract class AbstractViewRepository<K, V extends View<K>> implements ViewRepository<K, V>{
+@Alternative
+@ApplicationScoped
+public class RedisEntityCache implements EntityCache {
 
 	@Inject
 	RedisCluster redisCluster;
@@ -28,13 +36,9 @@ public abstract class AbstractViewRepository<K, V extends View<K>> implements Vi
 	private final JavaPropsMapper javaPropsMapper;
 	
 	private final JavaPropsSchema javaPropsSchema;
-	
-	private Class<V> viewClass;
-	
-	protected AbstractViewRepository(Class<V> viewClass) {
 		
-		this.viewClass = viewClass;
-		
+	public RedisEntityCache() {
+				
 		this.javaPropsMapper = new JavaPropsMapper();
 		this.javaPropsMapper
 			.registerModules(new JavaTimeModule())
@@ -48,50 +52,54 @@ public abstract class AbstractViewRepository<K, V extends View<K>> implements Vi
 				.withParseSimpleIndexes(false)
 				.withPathSeparator("->");
 	}
-	
-	
+
 	@Override
-	public V get(K key) {
-		
+	public <K, T extends Entity> Optional<T> get(K key, Class<T> entityClass) {
 		requireNonNull(key);
 
-		String storeRedisKey = storeKey().apply(key);
+		String storeRedisKey = key.toString();
 
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 		
 		Map<String, String> hashValue = sync.hgetall(storeRedisKey);
 		if (hashValue.isEmpty()) {
-			return getNewView(key);
+			return empty();
 		}
 
 		Properties properties = new Properties();
 		properties.putAll(hashValue);
 
-		return readProperties(properties);
+		return of(readProperties(properties, entityClass));
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void save(V view) {
-
-		requireNonNull(view);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <K, T extends Entity> void cache(K key, T entity) {
 		
-		String storeRedisKey = storeKey().apply(view.getKey());
+		requireNonNull(key);
+		requireNonNull(entity);
+		
+		String storeRedisKey = key.toString();
 		
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 		
-		Map<Object, Object> hashValue = writeValueAsProperties(view);
-		sync.hmset(storeRedisKey, (Map) hashValue);
-		
+		Map<Object, Object> hashValue = writeValueAsProperties(entity);
+		sync.hmset(storeRedisKey, (Map) hashValue);		
 	}
 
-	protected abstract V getNewView(K key);
-	
-	protected Function<K, String> storeKey(){
-		return k -> k.toString();
-	}
+	@Override
+	public <K, T extends Entity> void evict(K key, Class<T> entityClass) {
 		
-	protected Map<Object, Object> writeValueAsProperties(V element){
+		requireNonNull(key);
+
+		String storeRedisKey = key.toString();
+
+		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
+
+		sync.del(storeRedisKey);		
+	}
+	
+	<T> Map<Object, Object> writeValueAsProperties(T element){
 		try {
 			return this.javaPropsMapper.writeValueAsProperties(element, javaPropsSchema);
 		} catch (IOException e) {
@@ -99,9 +107,9 @@ public abstract class AbstractViewRepository<K, V extends View<K>> implements Vi
 		}
 	}
 
-	protected V readProperties(Properties properties) {
+	<T> T readProperties(Properties properties, Class<T> entityClass) {
 		try {
-			return this.javaPropsMapper.readPropertiesAs(properties, javaPropsSchema, this.viewClass);
+			return this.javaPropsMapper.readPropertiesAs(properties, javaPropsSchema, entityClass);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
