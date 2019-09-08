@@ -1,4 +1,4 @@
-package com.tp.ehub.common.infra.repository.redis;
+package com.tp.ehub.common.infra.redis;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

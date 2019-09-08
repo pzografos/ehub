@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
@@ -17,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -27,15 +29,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tp.ehub.common.domain.messaging.sender.ReactiveMessageSender;
+import com.tp.ehub.common.domain.repository.ViewRepository;
 import com.tp.ehub.common.domain.request.Request;
 import com.tp.ehub.common.infra.request.RequestHandler;
+import com.tp.ehub.common.views.model.ProductCatalogueView;
 import com.tp.ehub.product.messaging.commands.CreateProductCommand;
+import com.tp.ehub.product.model.Product;
 import com.tp.ehub.rest.resource.dto.CreateProductRequest;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Path("product")
+@Path("{companyUUID}/product")
 @Consumes(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Produces(value = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class ProductResource {
@@ -50,9 +55,12 @@ public class ProductResource {
 
 	@Inject
 	RequestHandler requestHandler;
+	
+	@Inject
+	ViewRepository viewRepository;
 
 	@POST
-	public Response createProduct(CreateProductRequest createProductRequest) {
+	public Response createProduct(@PathParam("companyUUID") String companyUUID, CreateProductRequest createProductRequest) {
 
 		LOGGER.debug("Received request {}", createProductRequest);
 
@@ -89,9 +97,37 @@ public class ProductResource {
 	}
 
 	@GET
-	public Response getProducts() {
+	public Response getProducts(@PathParam("companyUUID") String companyUUID) {
 		LOGGER.info("This is a test info log");
 		LOGGER.debug("This is a test debug log");
 		return Response.ok("Hello from products").build();
+	}
+	
+	@GET
+	@Path("{productUUID}")
+	public Response getProduct(@PathParam("companyUUID") String companyUUID, @PathParam("productUUID") String productUUID) {
+		UUID productKey = UUID.fromString(productUUID);
+		UUID companyKey = UUID.fromString(companyUUID);
+		ProductCatalogueView view = viewRepository.get(companyKey, ProductCatalogueView.class).orElseThrow(() -> new BadRequestException("Could not find company catalogue"));
+		if (view.getProducts().containsKey(productKey)) {
+			Product product = view.getProducts().get(productKey);
+			return Response.ok(product).build();
+		} else {
+			throw new BadRequestException("Could not find product");
+		}
+	}
+	
+	@GET
+	@Path("code/{code}")
+	public Response getProductByCode(@PathParam("companyUUID") String companyUUID, @PathParam("code") String code) {
+		UUID companyKey = UUID.fromString(companyUUID);
+		ProductCatalogueView view = viewRepository.get(companyKey, ProductCatalogueView.class).orElseThrow(() -> new BadRequestException("Could not find company catalogue"));
+		
+		Product product = view.getProducts().values().stream()
+			.filter( p -> p.getCode().equals(code))
+			.findAny()
+			.orElseThrow(() -> new BadRequestException("Could not find product"));
+		
+		return Response.ok(product).build();
 	}
 }

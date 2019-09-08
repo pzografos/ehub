@@ -9,11 +9,13 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tp.ehub.common.domain.function.Reducer;
 import com.tp.ehub.common.domain.messaging.AbstractEvent;
+import com.tp.ehub.common.domain.messaging.container.Container;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = OrderCreated.class, name = OrderCreated.NAME),
 				@Type(value = OrderCancelled.class, name = OrderCancelled.NAME),
 				@Type(value = OrderCompleted.class, name = OrderCompleted.NAME)})
+@Container( name = "order-events", keyClass = UUID.class)
 public abstract class OrderEvent extends AbstractEvent<UUID>{
 
 	protected UUID companyId;

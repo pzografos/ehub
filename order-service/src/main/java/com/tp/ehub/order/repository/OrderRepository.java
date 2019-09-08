@@ -18,7 +18,7 @@ import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 public class OrderRepository extends AbstractPartitionedAggregateRepository<UUID, OrderEvent, Order, OrderAggregate> {
 	
 	public OrderRepository() {
-		super(OrderEvent.class);
+		super(OrderEvent.class, Order.class);
 	}
 
 	@Override

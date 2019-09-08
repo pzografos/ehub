@@ -82,9 +82,7 @@ public class KafkaBlockingReceiver implements BlockingMessageReceiver{
 
 		Integer partition = partitioner.getPartition(partitionKey, topic);
 		Optional<Integer> partitionSelected = of(partition);
-		
-		log.debug("Looking for key {} in partition {}", key.toString(), partition);
-		
+				
 		String keyAsString = topic.getKeySerializer().apply(key);
 		Predicate<ConsumerRecord<String, byte[]>> recordFilter = record -> nonNull(record.key()) && record.key().equals(keyAsString);
 
@@ -119,20 +117,21 @@ public class KafkaBlockingReceiver implements BlockingMessageReceiver{
 		} else {
 			consumer.subscribe(singleton(topic.getName()));
 		}
-		
-		consumer.seekToBeginning(consumer.assignment());
-		
+						
 		Map<Integer, Long> lastOffsets = readPartitionOffsets(consumer); 
 		
 		List<M> messages = new ArrayList<>();
 						
 		try {
+			
+			consumer.seekToBeginning(consumer.assignment());
 
 			while(!lastOffsets.isEmpty()) {
 				
 				ConsumerRecords<String, byte[]> records = consumer.poll(pollingInterval);
 				
 				for (ConsumerRecord<String, byte[]> record : records) {
+					
 					if (recordFilter.test(record)) {
 						messages.add(new RecordTransformer<K, M>(topic).apply(record));
 					}

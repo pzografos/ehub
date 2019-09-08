@@ -13,7 +13,7 @@ import com.tp.ehub.product.model.ProductCatalogueAggregate;
 public class ProductCatalogueRepository extends AbstractPartitionedAggregateRepository<UUID, ProductEvent, ProductCatalogue, ProductCatalogueAggregate> {
 
 	public ProductCatalogueRepository() {
-		super(ProductEvent.class);
+		super(ProductEvent.class, ProductCatalogue.class);
 	}
 
 	@Override

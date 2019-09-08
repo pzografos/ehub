@@ -10,21 +10,27 @@ import com.tp.ehub.common.domain.repository.ViewRepository;
 public abstract class AbstractViewProcessor<K1, E extends Event<K1>, K2, V extends View<K2>> extends AbstractMessageProcessor<K1, E>{
 
 	@Inject
-	ViewRepository<K2, V> viewRepository;
+	ViewRepository viewRepository;
 	
 	@Inject
 	ViewReducer<K1, E, K2, V> viewReducer;
 	
-	protected AbstractViewProcessor(String consumerId, Class<E> messageClass) {
+	Class<V> viewClass;
+	
+	protected AbstractViewProcessor(String consumerId, Class<E> messageClass, Class<V> viewClass) {
 		super(consumerId, messageClass);
+		this.viewClass = viewClass;
 	}
 
 	@Override
 	public void accept(E event) {
-		V view = viewRepository.get(getViewKey(event));
+		K2 key = getViewKey(event);
+		V view = viewRepository.get(key, viewClass).orElse(createView(key));
 		view = viewReducer.apply(view, event);
-		viewRepository.save(view);		
+		viewRepository.save(view, viewClass);		
 	}
 		
 	protected abstract K2 getViewKey(E event);
+	
+	protected abstract V createView(K2 key);
 }

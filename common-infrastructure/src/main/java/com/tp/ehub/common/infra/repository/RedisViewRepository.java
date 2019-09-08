@@ -1,9 +1,7 @@
-package com.tp.ehub.common.infra.repository.redis;
+package com.tp.ehub.common.infra.repository;
 
-
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 import java.io.IOException;
 import java.util.Map;
@@ -11,6 +9,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonFactory.Feature;
@@ -19,12 +18,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tp.ehub.common.domain.model.Entity;
-import com.tp.ehub.common.domain.repository.EntityCache;
+import com.tp.ehub.common.domain.model.View;
+import com.tp.ehub.common.domain.repository.ViewRepository;
+import com.tp.ehub.common.infra.redis.RedisCluster;
 
 import io.lettuce.core.api.sync.RedisCommands;
 
-public abstract class AbstractRedisEntityCache<K, T extends Entity> implements EntityCache<K, T> {
+@ApplicationScoped
+public class RedisViewRepository implements ViewRepository{
 
 	@Inject
 	RedisCluster redisCluster;
@@ -33,12 +34,8 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity> implements E
 	
 	private final JavaPropsSchema javaPropsSchema;
 	
-	private Class<T> entityClass;
-	
-	protected AbstractRedisEntityCache(Class<T> entityClass) {
-		
-		this.entityClass = entityClass;
-		
+	public RedisViewRepository() {
+				
 		this.javaPropsMapper = new JavaPropsMapper();
 		this.javaPropsMapper
 			.registerModules(new JavaTimeModule())
@@ -53,59 +50,47 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity> implements E
 				.withPathSeparator("->");
 	}
 	
-
+	
 	@Override
-	public final Optional<T> get(K key) {
-		
+	public <K, V extends View<K>> Optional<V> get(K key, Class<V> viewClass) {
 		requireNonNull(key);
 
-		String storeRedisKey = storeKey().apply(key);
+		String storeRedisKey = storeKey(viewClass).apply(key);
 
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 		
 		Map<String, String> hashValue = sync.hgetall(storeRedisKey);
 		if (hashValue.isEmpty()) {
-			return empty();
+			return Optional.empty();
+		} else {
+			
+			Properties properties = new Properties();
+			properties.putAll(hashValue);
+
+			return Optional.of(readProperties(properties, viewClass));
 		}
-
-		Properties properties = new Properties();
-		properties.putAll(hashValue);
-
-		return of(readProperties(properties));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public final void cache(K key, T entity) {
+	public <K, V extends View<K>> void save(V view, Class<V> viewClass) {
 		
-		requireNonNull(key);
-		requireNonNull(entity);
+		requireNonNull(view);
 		
-		String storeRedisKey = storeKey().apply(key);
+		String storeRedisKey = storeKey(viewClass).apply(view.getKey());
 		
 		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
 		
-		Map<Object, Object> hashValue = writeValueAsProperties(entity);
-		sync.hmset(storeRedisKey, (Map) hashValue);
+		Map<Object, Object> hashValue = writeValueAsProperties(view);
+		sync.hmset(storeRedisKey, (Map) hashValue);		
 	}
 
-	@Override
-	public final void evict(K key) {
-		
-		requireNonNull(key);
-
-		String storeRedisKey = storeKey().apply(key);
-
-		RedisCommands<String, String> sync = redisCluster.getConnection().sync();
-
-		sync.del(storeRedisKey);
-	}
-
-	protected Function<K, String> storeKey(){
-		return k -> k.toString();
+	
+	<K, V extends View<K>> Function<K, String> storeKey(Class<V> viewClass){
+		return k -> format("view_%s_%s", viewClass.getSimpleName(), k.toString());
 	}
 		
-	protected Map<Object, Object> writeValueAsProperties(T element){
+	<K, V extends View<K>> Map<Object, Object> writeValueAsProperties(V element){
 		try {
 			return this.javaPropsMapper.writeValueAsProperties(element, javaPropsSchema);
 		} catch (IOException e) {
@@ -113,9 +98,9 @@ public abstract class AbstractRedisEntityCache<K, T extends Entity> implements E
 		}
 	}
 
-	protected T readProperties(Properties properties) {
+	<K, V extends View<K>> V readProperties(Properties properties, Class<V> viewClass) {
 		try {
-			return this.javaPropsMapper.readPropertiesAs(properties, javaPropsSchema, this.entityClass);
+			return this.javaPropsMapper.readPropertiesAs(properties, javaPropsSchema, viewClass);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -43,6 +43,20 @@ services:
       core:
         aliases:
           - product-service
+  views-service:
+    image: tp/views-service:latest
+    ports:
+      - 8789:8789
+    depends_on:
+      - kafka
+      - redis
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_NODES=redis://redis:6379
+    networks:
+      core:
+        aliases:
+          - views-service
   redis:
     image: redis
     ports:

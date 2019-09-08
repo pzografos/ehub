@@ -1,9 +1,9 @@
-package com.tp.ehub.common.views.app;
+package com.tp.ehub.views.app;
 
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
-import com.tp.ehub.common.views.service.ProductCatalogueViewProcessor;
+import com.tp.ehub.views.service.ProductCatalogueViewProcessor;
 
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;

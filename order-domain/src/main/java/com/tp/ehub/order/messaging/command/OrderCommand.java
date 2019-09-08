@@ -10,6 +10,7 @@ import com.tp.ehub.common.domain.exception.BusinessException;
 import com.tp.ehub.common.domain.function.CheckedBiFunction;
 import com.tp.ehub.common.domain.messaging.AbstractCommand;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
+import com.tp.ehub.common.domain.messaging.container.Container;
 
 /**
  * Represents a <code>Command</code> that refers to an order
@@ -22,6 +23,7 @@ import com.tp.ehub.common.domain.messaging.JsonMessage;
 		@Type(value = CancelOrderCommand.class, name = CancelOrderCommand.NAME), 
 		@Type(value = CompleteOrderCommand.class, name = CompleteOrderCommand.NAME)
 })
+@Container( name = "order-commands", keyClass = UUID.class)
 public abstract class OrderCommand extends AbstractCommand<UUID>{
 
 	protected UUID orderId;

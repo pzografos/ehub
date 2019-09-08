@@ -39,10 +39,11 @@ public abstract class AbstractCommandProcessor<K1, C extends Command<K1>, K2, E 
 
 	@Override
 	public void accept(C command) {
-		log.debug("Processing command {}", command);
+		log.info("Processing command {}", command);
 		A aggregate = aggregateRepository.get(getAggregateKey(command), getAggregatePartitionKey(command));
 		try {
 			Collection<E> events = commandHandler.apply(aggregate, command);
+			log.info("Adding events {}", events.size());
 			aggregate = aggregateEventReducer.apply(aggregate, events);
 			aggregateRepository.save(aggregate);
 			requestHandler.acceptRequest(command.getRequestId());

@@ -16,6 +16,48 @@
 
 	<build>
 		<finalName>views-service</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/libs
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>libs/</classpathPrefix>
+							<mainClass>
+								com.tp.ehub.views.app.Main
+							</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<skipDockerBuild>false</skipDockerBuild>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 	<dependencies>
@@ -24,6 +66,11 @@
 			<artifactId>common-domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.tp.ehub</groupId>
+			<artifactId>views-domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
 			<artifactId>order-domain</artifactId>
@@ -36,14 +83,9 @@
 		</dependency>
 		<dependency>
 			<groupId>com.tp.ehub</groupId>
-			<artifactId>views-domain</artifactId>
-			<version>${project.version}</version>
-		</dependency>		
-		<dependency>
-			<groupId>com.tp.ehub</groupId>
 			<artifactId>common-infrastructure</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 </project>
