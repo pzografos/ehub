@@ -42,6 +42,7 @@ public abstract class AbstractCommandProcessor<K1, C extends Command<K1>, K2, E 
 		log.info("Processing command {}", command);
 		A aggregate = aggregateRepository.get(getAggregateKey(command), getAggregatePartitionKey(command));
 		try {
+			
 			Collection<E> events = commandHandler.apply(aggregate, command);
 			log.info("Adding events {}", events.size());
 			aggregate = aggregateEventReducer.apply(aggregate, events);

@@ -3,7 +3,7 @@ package com.tp.ehub.order.app;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
-import com.tp.ehub.order.service.CommandProcessor;
+import com.tp.ehub.order.service.OrderCommandProcessor;
 
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
@@ -16,7 +16,7 @@ public class Main {
 
 		SeContainer container = SeContainerInitializer.newInstance().initialize();
 
-		CommandProcessor commandHandler = container.select(CommandProcessor.class).get();
+		OrderCommandProcessor commandHandler = container.select(OrderCommandProcessor.class).get();
 
 		commandHandler.run(scheduler);
 

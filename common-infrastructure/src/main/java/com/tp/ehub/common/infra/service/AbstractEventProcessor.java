@@ -10,6 +10,7 @@ import com.tp.ehub.common.domain.messaging.function.EventHandler;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
 import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
+import com.tp.ehub.common.infra.messaging.kafka.AbstractMessageProcessor;
 
 public abstract class AbstractEventProcessor<K1, E1 extends Event<K1>, K2, E2 extends Event<K2>, T extends Entity, A extends Aggregate<K2, E2, T>> extends AbstractMessageProcessor<K1, E1>{
 

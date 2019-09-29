@@ -6,6 +6,7 @@ import com.tp.ehub.common.domain.messaging.Event;
 import com.tp.ehub.common.domain.messaging.function.ViewReducer;
 import com.tp.ehub.common.domain.model.View;
 import com.tp.ehub.common.domain.repository.ViewRepository;
+import com.tp.ehub.common.infra.messaging.kafka.AbstractMessageProcessor;
 
 public abstract class AbstractViewProcessor<K1, E extends Event<K1>, K2, V extends View<K2>> extends AbstractMessageProcessor<K1, E>{
 
