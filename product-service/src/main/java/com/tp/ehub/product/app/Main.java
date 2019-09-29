@@ -6,9 +6,6 @@ import javax.enterprise.inject.se.SeContainerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tp.ehub.product.service.OrderEventProcessor;
-import com.tp.ehub.product.service.ProductCommandProcessor;
-
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 

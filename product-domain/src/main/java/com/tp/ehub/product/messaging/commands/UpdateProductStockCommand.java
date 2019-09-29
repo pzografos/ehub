@@ -1,7 +1,6 @@
 package com.tp.ehub.product.messaging.commands;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.tp.ehub.common.domain.exception.BusinessException;
 
 /**
  * A <code>Command</code> to update the stock of an existing product
@@ -27,7 +26,7 @@ public class UpdateProductStockCommand extends ProductCommand {
 	}
 
 	@Override
-	public <P, R> R map(P parameter, BiFunctionVisitor<P, R> visitor) throws BusinessException {
-		return visitor.visit(parameter, this);
+	public void accept(ConsumerVisitor visitor){
+		visitor.visit(this);
 	}
 }

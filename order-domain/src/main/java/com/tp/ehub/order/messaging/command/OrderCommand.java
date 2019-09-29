@@ -1,13 +1,12 @@
 package com.tp.ehub.order.messaging.command;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tp.ehub.common.domain.exception.BusinessException;
-import com.tp.ehub.common.domain.function.CheckedBiFunction;
 import com.tp.ehub.common.domain.messaging.AbstractCommand;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
 import com.tp.ehub.common.domain.messaging.container.Container;
@@ -19,7 +18,7 @@ import com.tp.ehub.common.domain.messaging.container.Container;
 @JsonMessage
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ 
-		@Type(value = PlaceOrderCommand.class, name = PlaceOrderCommand.NAME), 
+		@Type(value = CreateOrderCommand.class, name = CreateOrderCommand.NAME), 
 		@Type(value = CancelOrderCommand.class, name = CancelOrderCommand.NAME), 
 		@Type(value = CompleteOrderCommand.class, name = CompleteOrderCommand.NAME)
 })
@@ -52,19 +51,20 @@ public abstract class OrderCommand extends AbstractCommand<UUID>{
 		return orderId;
 	}
 
-	protected abstract <P, R> R map(P parameter, BiFunctionVisitor<P, R> mapper) throws BusinessException;
+
+	protected abstract void accept(ConsumerVisitor mapper);
 	
-	public interface BiFunctionVisitor<P, R> extends CheckedBiFunction<P, OrderCommand, R> {
+	public interface ConsumerVisitor extends Consumer<OrderCommand> {
 
 		@Override
-		default R apply(P parameter, OrderCommand command) throws BusinessException{
-			return command.map(parameter, this);
+		default void accept(OrderCommand command){
+			command.accept(this);
 		}
 
-		default R visit(P parameter, PlaceOrderCommand command) throws BusinessException {return fallback(parameter, command);}
-		default R visit(P parameter, CancelOrderCommand command) throws BusinessException {return fallback(parameter, command);}
-		default R visit(P parameter, CompleteOrderCommand command) throws BusinessException {return fallback(parameter, command);}
+		default void visit(CancelOrderCommand command) {fallback(command);}
+		default void visit(CompleteOrderCommand command) {fallback(command);}
+		default void visit(CreateOrderCommand command) {fallback(command);}
 
-		R fallback(P parameter, OrderCommand command) throws BusinessException;
+		void fallback(OrderCommand command);
 	}
 }

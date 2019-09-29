@@ -1,4 +1,4 @@
-package com.tp.ehub.product.service;
+package com.tp.ehub.product.app;
 
 import java.util.UUID;
 

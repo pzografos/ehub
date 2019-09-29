@@ -13,7 +13,7 @@ import com.tp.ehub.common.domain.messaging.function.CommandHandler;
 import com.tp.ehub.order.messaging.command.CancelOrderCommand;
 import com.tp.ehub.order.messaging.command.CompleteOrderCommand;
 import com.tp.ehub.order.messaging.command.OrderCommand;
-import com.tp.ehub.order.messaging.command.PlaceOrderCommand;
+import com.tp.ehub.order.messaging.command.CreateOrderCommand;
 import com.tp.ehub.order.messaging.event.OrderCancelled;
 import com.tp.ehub.order.messaging.event.OrderCompleted;
 import com.tp.ehub.order.messaging.event.OrderCreated;
@@ -25,7 +25,7 @@ public class OrderCommandHandler
 		implements CommandHandler<UUID, OrderCommand, UUID, OrderEvent, Order, OrderAggregate>, OrderCommand.BiFunctionVisitor<OrderAggregate, Collection<OrderEvent>> {
 
 	@Override
-	public Collection<OrderEvent> visit(OrderAggregate aggregate, PlaceOrderCommand command) throws BusinessException {
+	public Collection<OrderEvent> visit(OrderAggregate aggregate, CreateOrderCommand command) throws BusinessException {
 
 		boolean placeOrderAllowed = command.getBasket().entrySet().stream().noneMatch(basketItem -> aggregate.getStock().get(basketItem.getKey()) < basketItem.getValue());
 
