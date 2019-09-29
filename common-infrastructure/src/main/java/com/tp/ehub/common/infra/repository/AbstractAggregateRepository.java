@@ -1,7 +1,5 @@
 package com.tp.ehub.common.infra.repository;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
@@ -16,8 +14,8 @@ import com.tp.ehub.common.domain.messaging.function.AggregateReducer;
 import com.tp.ehub.common.domain.messaging.store.PartitionedMessageStore;
 import com.tp.ehub.common.domain.model.Aggregate;
 import com.tp.ehub.common.domain.model.Entity;
+import com.tp.ehub.common.domain.repository.AggregateRepository;
 import com.tp.ehub.common.domain.repository.EntityCache;
-import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
 
 /**
  * Base implementation of the <code>AggregateRepository</code>.
@@ -41,7 +39,7 @@ import com.tp.ehub.common.domain.repository.PartitionedAggregateRepository;
  * @param <A>
  *            The type of the <code>Aggregate</code> 
  */
-public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> implements PartitionedAggregateRepository<K, E, T, A> {
+public abstract class AbstractAggregateRepository<K, E extends Event<K>, T extends Entity, A extends Aggregate<K, E, T>> implements AggregateRepository<K, E, T, A> {
 
 	@Inject
 	protected EntityCache cache;
@@ -59,22 +57,13 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 	
 	private Class<T> rootEntityClass;
 	
-	protected AbstractPartitionedAggregateRepository(Class<E> eventClass, Class<T> rootEntityClass) {
+	protected AbstractAggregateRepository(Class<E> eventClass, Class<T> rootEntityClass) {
 		this.eventClass = eventClass;
 		this.rootEntityClass = rootEntityClass;
 	}
-
-	@Override
-	public A get(K id, String partitionKey) {
-		return get(id, of(partitionKey));
-	}
 	
 	@Override
-	public final A get(K id) {
-		return get(id, empty());
-	}
-
-	private A get(K key, Optional<String> partitionKey) {
+	public final A get(K key) {
 		log.debug("Getting aggregate for key {}", key.toString());
 		Optional<T> entityOpt = cache.get(key, rootEntityClass);
 		if (entityOpt.isPresent()) {
@@ -83,7 +72,7 @@ public abstract class AbstractPartitionedAggregateRepository<K, E extends Event<
 		} else {
 			T rootEntity = create(key);
 			A aggregate = create(key, rootEntity);
-			Collection<E> events = (partitionKey.isPresent() ? store.getbyKey(key, partitionKey.get(), eventClass) : store.getbyKey(key, eventClass)).collect(toList());
+			Collection<E> events = store.getbyKey(key, eventClass).collect(toList());
 			aggregate = aggregateEventReducer.apply(aggregate, events);			
 			return aggregate;
 		}

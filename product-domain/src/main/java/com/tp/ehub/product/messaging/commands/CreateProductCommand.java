@@ -1,6 +1,7 @@
 package com.tp.ehub.product.messaging.commands;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.tp.ehub.common.domain.exception.BusinessException;
 
 /**
  * A <code>Command</code> to create a new product
@@ -56,7 +57,7 @@ public class CreateProductCommand extends ProductCommand {
 	}
 
 	@Override
-	public void accept(ConsumerVisitor visitor){
+	public void accept(ConsumerVisitor visitor) throws BusinessException {
 		visitor.visit(this);
 	}
 }

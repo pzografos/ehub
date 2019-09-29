@@ -51,7 +51,6 @@ public abstract class OrderCommand extends AbstractCommand<UUID>{
 		return orderId;
 	}
 
-
 	protected abstract void accept(ConsumerVisitor mapper);
 	
 	public interface ConsumerVisitor extends Consumer<OrderCommand> {

@@ -1,12 +1,13 @@
 package com.tp.ehub.product.messaging.commands;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.tp.ehub.common.domain.exception.BusinessException;
+import com.tp.ehub.common.domain.function.CheckedConsumer;
 import com.tp.ehub.common.domain.messaging.AbstractCommand;
 import com.tp.ehub.common.domain.messaging.JsonMessage;
 import com.tp.ehub.common.domain.messaging.container.Container;
@@ -52,19 +53,19 @@ public abstract class ProductCommand extends AbstractCommand<UUID> {
 		return companyId;
 	}
 
-	public abstract void accept(ConsumerVisitor mapper);
+	public abstract void accept(ConsumerVisitor mapper) throws BusinessException;
 	
-	public interface ConsumerVisitor extends Consumer<ProductCommand> {
+	public interface ConsumerVisitor extends CheckedConsumer<ProductCommand> {
 
 		@Override
-		default void accept(ProductCommand command){
+		default void accept(ProductCommand command) throws BusinessException {
 			command.accept(this);
 		}
 
-		default void visit(CreateProductCommand command) {fallback(command);}
-		default void visit(DeleteProductCommand command) {fallback(command);}
-		default void visit(UpdateProductStockCommand command) {fallback(command);}
+		default void visit(CreateProductCommand command) throws BusinessException {fallback(command);}
+		default void visit(DeleteProductCommand command) throws BusinessException {fallback(command);}
+		default void visit(UpdateProductStockCommand command) throws BusinessException {fallback(command);}
 
-		default void fallback(ProductCommand command) {}
+		default void fallback(ProductCommand command) throws BusinessException {}
 	}
 }

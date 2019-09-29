@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.tp.ehub.common.infra.messaging.kafka.AbstractMessageProcessor;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 
-public class OrderEventProcessor extends AbstractMessageProcessor<UUID, OrderEvent> {
+public class OrderEventProcessor extends AbstractMessageProcessor<UUID, OrderEvent> implements OrderEvent.ConsumerVisitor {
 	
 	public OrderEventProcessor() {
 		super("product_service_order_event_processor_v1.0", OrderEvent.class);
@@ -13,6 +13,12 @@ public class OrderEventProcessor extends AbstractMessageProcessor<UUID, OrderEve
 
 	@Override
 	public void process(OrderEvent message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void fallback(OrderEvent event) {
 		// TODO Auto-generated method stub
 		
 	}

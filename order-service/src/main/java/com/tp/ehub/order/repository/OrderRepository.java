@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.tp.ehub.common.infra.repository.AbstractPartitionedAggregateRepository;
+import com.tp.ehub.common.infra.repository.AbstractAggregateRepository;
 import com.tp.ehub.order.messaging.event.OrderEvent;
 import com.tp.ehub.order.model.Order;
 import com.tp.ehub.order.model.OrderAggregate;
@@ -15,7 +15,7 @@ import com.tp.ehub.product.messaging.event.ProductEvent;
 import com.tp.ehub.product.messaging.event.ProductStockUpdated;
 
 @ApplicationScoped
-public class OrderRepository extends AbstractPartitionedAggregateRepository<UUID, OrderEvent, Order, OrderAggregate> {
+public class OrderRepository extends AbstractAggregateRepository<UUID, OrderEvent, Order, OrderAggregate> {
 	
 	public OrderRepository() {
 		super(OrderEvent.class, Order.class);

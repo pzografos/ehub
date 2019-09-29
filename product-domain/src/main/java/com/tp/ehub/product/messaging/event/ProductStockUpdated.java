@@ -21,7 +21,7 @@ public class ProductStockUpdated extends ProductEvent {
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	@Override
 	@JsonIgnore
 	public String getEventName() {

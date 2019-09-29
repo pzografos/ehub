@@ -6,7 +6,6 @@ import static java.util.Collections.singleton;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -28,7 +27,7 @@ import reactor.kafka.receiver.ReceiverOptions;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 
-public abstract class AbstractMessageProcessor<K, M extends Message<K>> implements Consumer<M>{
+public abstract class AbstractMessageProcessor<K, M extends Message<K>>{
 	
 	@Inject
 	KafkaCluster kafka;

@@ -1,13 +1,16 @@
 package com.tp.ehub.product.service;
 
+import java.util.UUID;
+
+import com.tp.ehub.common.domain.exception.BusinessException;
 import com.tp.ehub.product.model.Product;
 
 public interface ProductService {
 
-	public Product create(Product product);
+	public Product create(UUID companyId, Product product) throws BusinessException;
 	
-	public void delete(Product product);
+	public void delete(UUID companyId, UUID productId) throws BusinessException;
 
-	public Product updateStock(Product product, long stock);
+	public Product updateStock(UUID companyId, UUID productId, long quantity) throws BusinessException;
 
 }

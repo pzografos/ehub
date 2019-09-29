@@ -2,6 +2,7 @@ package com.tp.ehub.order.messaging.event;
 
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -51,6 +52,8 @@ public abstract class OrderEvent extends AbstractEvent<UUID>{
 	}
 	
 	protected abstract <P, R> R map(P parameter, BiFunctionVisitor<P, R> mapper);
+
+	protected abstract void accept(ConsumerVisitor mapper);
 	
 	public interface BiFunctionVisitor<P, R> extends BiFunction<P, OrderEvent, R> {
 
@@ -71,4 +74,18 @@ public abstract class OrderEvent extends AbstractEvent<UUID>{
         @Override
         default S fallback(S value, OrderEvent event) {return value;}
     }
+	
+	public interface ConsumerVisitor extends Consumer<OrderEvent> {
+
+		@Override
+		default void accept(OrderEvent event){
+			event.accept(this);
+		}
+
+		default void visit(OrderCreated event) {fallback(event);}
+		default void visit(OrderCancelled event) {fallback(event);}
+		default void visit(OrderCompleted event) {fallback(event);}
+
+		default void fallback(OrderEvent event) {}
+	}	
 }
